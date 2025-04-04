@@ -38,6 +38,10 @@ dependencies:
   flutter_screenutil: ^5.9.3
   device_preview: ^1.2.0
   shared_preferences: ^2.5.2
+  flutter_riverpod: ^2.6.1
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  path_provider: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -49,6 +53,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -81,10 +87,10 @@ flutter:
     - family: Cairo
       fonts:
         - asset: assets/fonts/Cairo-Regular.ttf
-        - asset: fonts/Cairo-Bold.ttf
+        - asset: assets/fonts/Cairo-Bold.ttf
           weight: 700
-        - asset: fonts/Cairo-Medium.ttf
-        - asset: fonts/Cairo-SemiBold.ttf
+        - asset: assets/fonts/Cairo-Medium.ttf
+        - asset: assets/fonts/Cairo-SemiBold.ttf
           
   #   - family: Trajan Pro
   #     fonts:

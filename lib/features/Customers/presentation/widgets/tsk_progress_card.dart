@@ -1,5 +1,6 @@
-import 'package:bookkeeping_flutter_app/utils/responsive.dart';
 import 'package:flutter/material.dart';
+
+
 
 class TaskProgressCard extends StatefulWidget {
   const TaskProgressCard({super.key});
@@ -35,12 +36,12 @@ class TaskProgressCardState extends State<TaskProgressCard>
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: Responsive.responsiveHeight(context, 200),
+      height: 200,
 
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Colors.white,
+        border: Border.all(color: Theme.of(context).primaryColor, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,12 +68,12 @@ class TaskProgressCardState extends State<TaskProgressCard>
               fontWeight: FontWeight.w600,
             ),
           ),
-          const Text(
+           Text(
             'Lorem ipsum dolor sit amet,',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w100,
-              color: Colors.black54,
+              
             ),
           ),
           const SizedBox(height: 10),
