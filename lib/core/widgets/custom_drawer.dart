@@ -1,23 +1,26 @@
 // import 'package:bookkeeping_flutter_app/utils/add_text_style.dart';
+import 'package:bookkeeping_flutter_app/core/providers/theme_data_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'theme_switcher.dart';
 
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends ConsumerWidget {
   const CustomDrawer({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+  Widget build(BuildContext context, WidgetRef ref) {
+    
+    final theme=ref.watch(themeDataProvider);
     return Drawer(
-      backgroundColor: colorScheme.primary,
+      backgroundColor: theme.colorScheme.surface,
       
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
             decoration: BoxDecoration(
-              color: colorScheme.secondary,
+              color: theme.colorScheme.secondary,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -25,7 +28,7 @@ class CustomDrawer extends StatelessWidget {
                 Text(
                   'القائمة الجانبية',
                  style: TextStyle(
-                   color: colorScheme.onSecondary,
+                   color: theme.colorScheme.onSecondary,
                  ),
                   
                 ),
@@ -35,8 +38,8 @@ class CustomDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            iconColor: colorScheme.onPrimary,
-            textColor: colorScheme.onPrimary,
+            iconColor: theme.colorScheme.onSurface,
+            textColor: theme.colorScheme.onSurface,
             leading: Icon(Icons.home,),
             title: Text('الرئيسية',
             ),
@@ -46,8 +49,8 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            iconColor: colorScheme.onPrimary,
-            textColor: colorScheme.onPrimary,
+            iconColor: theme.colorScheme.onSurface,
+            textColor: theme.colorScheme.onSurface,
             leading: Icon(Icons.settings),
             title: Text('الإعدادات'),
             onTap: () {
@@ -56,8 +59,8 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            iconColor: colorScheme.onPrimary,
-            textColor: colorScheme.onPrimary,
+            iconColor: theme.colorScheme.onSurface,
+            textColor: theme.colorScheme.onSurface,
             
             
             leading: Icon(Icons.help),

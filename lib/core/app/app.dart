@@ -1,5 +1,5 @@
-import 'package:bookkeeping_flutter_app/core/providers/dark_mode_provider.dart';
 import 'package:bookkeeping_flutter_app/core/providers/device_size_notifier.dart';
+import 'package:bookkeeping_flutter_app/core/providers/settings_provider.dart';
 import 'package:bookkeeping_flutter_app/core/providers/theme_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,13 +29,16 @@ class _BookkeepingAppState extends ConsumerState<BookkeepingApp> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = ref.watch(darkModeProvider);
+    // Initialize SharedPreferences and settings provider
+    final isDark = ref.read(settingsProvider)['isDarkMode'] ?? false;
+
     final theme = ref.watch(themeDataProvider);
 
     return MaterialApp(
       title: 'Bookkeeping App',
       theme: theme,
-      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+      
       home: const CustomersScreen(),
       debugShowCheckedModeBanner: false,
     );

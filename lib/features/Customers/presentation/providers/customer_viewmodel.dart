@@ -7,9 +7,8 @@ import '../../domain/repositories/customer_service.dart';
 class CustomerViewModel extends StateNotifier<List<Customer>> {
   final CustomerService _service;
   bool _isAscending = true;
-  String _sortColumn = "name";
   int _currentPage = 0;
-  int _pageSize = 5; // Pagination size
+  final int _pageSize = 5; // Pagination size
 
   CustomerViewModel(this._service) : super(_service.getAllCustomers());
 
@@ -30,11 +29,10 @@ class CustomerViewModel extends StateNotifier<List<Customer>> {
 
   void refresh() {
     state = _service.getAllCustomers();
-    paginate(); // Apply pagination after refresh
+    // paginate(); // Apply pagination after refresh
   }
 
   void sortBy(String column) {
-    _sortColumn = column;
     _isAscending = !_isAscending;
 
     state.sort((a, b) {
@@ -47,7 +45,7 @@ class CustomerViewModel extends StateNotifier<List<Customer>> {
       }
     });
 
-    paginate();
+    // paginate();
   }
 
   void paginate() {
@@ -61,14 +59,14 @@ class CustomerViewModel extends StateNotifier<List<Customer>> {
     final totalPages = (_service.getAllCustomers().length / _pageSize).ceil();
     if (_currentPage < totalPages - 1) {
       _currentPage++;
-      paginate();
+      // paginate();
     }
   }
 
   void previousPage() {
     if (_currentPage > 0) {
       _currentPage--;
-      paginate();
+      // paginate();
     }
   }
 
@@ -77,6 +75,6 @@ class CustomerViewModel extends StateNotifier<List<Customer>> {
     state = allCustomers
         .where((customer) => customer.name.toLowerCase().contains(query.toLowerCase()))
         .toList();
-    paginate();
+    // paginate();
   }
 }

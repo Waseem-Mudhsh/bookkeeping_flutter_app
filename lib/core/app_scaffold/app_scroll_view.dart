@@ -1,12 +1,12 @@
+import 'package:bookkeeping_flutter_app/core/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../providers/direction_layout_state.dart';
 
 class AppScrollView extends ConsumerWidget {
   final List<Widget> slivers;
   final Widget? floatingActionButton;
   final Widget? drawer;
+
   final ScrollPhysics? physics;
 
   const AppScrollView({
@@ -15,14 +15,16 @@ class AppScrollView extends ConsumerWidget {
 
     this.floatingActionButton,
     this.drawer,
-    
+
     this.physics,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-     final isDirectionRTL = ref.watch(directionLayoutProvider);
-    return Directionality( 
+    final settings = ref.watch(settingsProvider);
+
+    final isDirectionRTL = settings['isRTL'] ?? true; // Default to true for RTL
+    return Directionality(
       textDirection: isDirectionRTL ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         drawer: drawer,
@@ -30,11 +32,10 @@ class AppScrollView extends ConsumerWidget {
         body: CustomScrollView(
           physics: physics ?? const BouncingScrollPhysics(),
           slivers: [
-            const SliverPadding(
-              padding: EdgeInsets.only(top: kToolbarHeight ),
-            ),
+           
             ...slivers,
-            const SliverSafeArea(sliver: SliverToBoxAdapter()),
+
+            
           ],
         ),
       ),
