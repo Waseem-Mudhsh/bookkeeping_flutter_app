@@ -1,6 +1,7 @@
-import 'package:bookkeeping_flutter_app/core/providers/responsive_notifier.dart';
 import 'package:bookkeeping_flutter_app/core/utils/add_color.dart';
 import 'package:flutter/material.dart';
+
+import 'responsive_values.dart';
 
 class AppTypography {
   static TextTheme getTextTheme(ResponsiveValues responsive, bool isDarkMode) {

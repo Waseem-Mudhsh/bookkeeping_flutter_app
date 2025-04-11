@@ -1,4 +1,4 @@
-import 'package:bookkeeping_flutter_app/core/providers/device_size_notifier.dart';
+import 'package:bookkeeping_flutter_app/core/providers/media_query_provider.dart';
 import 'package:bookkeeping_flutter_app/core/providers/settings_provider.dart';
 import 'package:bookkeeping_flutter_app/core/providers/theme_data_provider.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +17,14 @@ class _BookkeepingAppState extends ConsumerState<BookkeepingApp> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _updateDeviceSize();
+    _updateMediaQuery();
   }
 
-  void _updateDeviceSize() {
+  void _updateMediaQuery() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final deviceSize = MediaQuery.of(context).size;
-      ref.read(deviceSizeProvider.notifier).updateSize(deviceSize);
+      final mediaQuery = MediaQuery.of(context);
+      ref.read(mediaQueryProvider.notifier).updateMediaQuery(mediaQuery);
+      
     });
   }
 
@@ -31,9 +32,7 @@ class _BookkeepingAppState extends ConsumerState<BookkeepingApp> {
   Widget build(BuildContext context) {
     // Initialize SharedPreferences and settings provider
     final isDark = ref.read(settingsProvider)['isDarkMode'] ?? false;
-
     final theme = ref.watch(themeDataProvider);
-
     return MaterialApp(
       title: 'Bookkeeping App',
       theme: theme,
