@@ -4,7 +4,7 @@ import '../../../../core/widgets/custom_button.dart';
 
 import '../../../../core/widgets/custom_drawer.dart';
 import 'responsive_card.dart';
-import 'tsk_progress_card.dart';
+import 'timer_progress_card.dart';
 
 class AppBarWidget extends ConsumerWidget {
   const AppBarWidget({super.key});
@@ -72,7 +72,10 @@ class AppBarWidget extends ConsumerWidget {
             delegate: _SliverAppBarDelegate(
               minHeight: 300, // الارتفاع الأدنى عند التمرير لأسفل
               maxHeight: 400, // الارتفاع الأقصى عند التمرير لأعلى
-              child: TaskProgressCard(),
+              child: TimerProgressCard(
+  startDate: DateTime(2023, 12, 1), // When task started
+  totalDays: 5, // Must complete within 5 days
+),
             ),
           ),
           SliverToBoxAdapter(

@@ -1,4 +1,5 @@
 import 'package:bookkeeping_flutter_app/core/providers/media_query_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../utils/responsive_values.dart';
@@ -17,8 +18,11 @@ class ResponsiveNotifier extends Notifier<ResponsiveValues> {
     final size = mediaQuery.size;
     final orientation = mediaQuery.orientation;
 
-    print('Size: ${size.width} x ${size.height}');
-    print('Orientation: $orientation');
+    if (kDebugMode) {
+      debugPrint('Device Size: ${size.width} x ${size.height}');
+      debugPrint('Device Orientation: $orientation');
+    }
+    
     
     
     return ResponsiveValues(

@@ -17,7 +17,7 @@ extension ResponsiveSlivers on WidgetRef {
     final responsive = watch(responsiveProvider);
     
     return SliverAppBar(
-      title: Text(title, style:  TextStyle(fontSize: responsive.sp(20))),
+      title: Text(title, ),
       expandedHeight: expandedHeight ?? responsive.w(56),
       pinned: pinned,
       floating: floating,
@@ -65,6 +65,7 @@ extension ResponsiveSlivers on WidgetRef {
     required int itemCount,
     required Widget Function(BuildContext, int) itemBuilder,
     double spacing = 0,
+    Axis? scrollDirection,
   }) {
     final responsive = watch(responsiveProvider);
     return SliverList(
@@ -120,6 +121,8 @@ extension ResponsiveSlivers on WidgetRef {
       child: child,
     );
   }
+  // Responsive SizeBox with returning a width or height
+  
 
   // Responsive SliverFillViewport for filling the viewport
   SliverFillViewport responsiveSliverFillViewport({
@@ -187,4 +190,6 @@ class _CustomSliverPersistentHeaderDelegate extends SliverPersistentHeaderDelega
     return true;
   }
 
+
 }
+// Responsive SliverList with optional spacing between items

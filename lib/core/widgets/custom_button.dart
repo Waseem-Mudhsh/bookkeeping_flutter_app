@@ -45,8 +45,7 @@ class CustomButton extends ConsumerWidget {
       borderRadius: BorderRadius.circular(borderRadius),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        padding: EdgeInsets.symmetric(vertical: responsive.p(0.03),
-         horizontal: responsive.p(0.03)),
+        padding: responsive.paddingSym(h: 16, v: 12),
         decoration: BoxDecoration(
           color: isDisabled ? Colors.grey : backgroundColor,
           gradient: (gradientColors != null && !isDisabled)

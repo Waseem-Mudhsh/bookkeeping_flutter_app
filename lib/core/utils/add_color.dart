@@ -4,16 +4,19 @@ class AppColors {
   // Light Mode Colors
   static const Color lightPrimary = Color(0xFF3D455A);
   static const Color lightSecondary = Color(0xFFFFFFFF);
-  static const Color lightSurface = Color(0xFFFFFFFF);
+  static const Color lightSurface = Color(0xFFFBFBFB);
   static const Color lightError = Color(0xFFDC3545);
   static const Color lightAccent = Color(0xFF28A745);
+  static const Color lightTertiary = Color(0xFFC2C8D6);
+  
 
   // Dark Mode Colors
   static const Color darkPrimary = Color(0xFFFFFFFF);
   static const Color darkSecondary = Color(0xFF3D455A);
-  static const Color darkSurface = Color(0xFF3D455A);
+  static const Color darkSurface = Color(0xFF525E7A);
   static const Color darkError = Color(0xFFCF6679);
   static const Color darkAccent = Color(0xFF28A745);
+  static const Color darkTertiary = Color(0xFF8591AD);
 
   // Method to get the appropriate color scheme
   static ColorScheme getColorScheme(bool isDarkMode) {
@@ -27,6 +30,8 @@ class AppColors {
       onSurface: isDarkMode ? lightSurface : darkSurface,
       error: isDarkMode ? darkError : lightError,
       onError: Colors.white,
+      tertiary: isDarkMode ? darkTertiary : lightTertiary,
+      onTertiary: isDarkMode ? lightTertiary : darkTertiary,
     );
   }
 }

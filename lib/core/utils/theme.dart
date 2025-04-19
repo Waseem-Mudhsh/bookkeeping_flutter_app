@@ -11,13 +11,13 @@ class AppTheme {
     return ThemeData(
       useMaterial3: false,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: colorScheme.surface,
+      scaffoldBackgroundColor: colorScheme.secondary,
       appBarTheme: AppBarTheme(
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
         titleTextStyle: TextStyle(
           fontFamily: 'Cairo',
-          fontSize: responsive.sp(18),
+          fontSize: responsive.sp(16),
           fontWeight: FontWeight.bold,
           color: colorScheme.onPrimary,
         ),

@@ -24,7 +24,6 @@ class _BookkeepingAppState extends ConsumerState<BookkeepingApp> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final mediaQuery = MediaQuery.of(context);
       ref.read(mediaQueryProvider.notifier).updateMediaQuery(mediaQuery);
-      
     });
   }
 
@@ -33,11 +32,12 @@ class _BookkeepingAppState extends ConsumerState<BookkeepingApp> {
     // Initialize SharedPreferences and settings provider
     final isDark = ref.read(settingsProvider)['isDarkMode'] ?? false;
     final theme = ref.watch(themeDataProvider);
+
     return MaterialApp(
       title: 'Bookkeeping App',
       theme: theme,
       themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
-      
+
       home: const CustomersScreen(),
       debugShowCheckedModeBanner: false,
     );

@@ -2,6 +2,8 @@ import 'package:bookkeeping_flutter_app/core/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../providers/responsive_notifier.dart';
+
 class AppScrollView extends ConsumerWidget {
   final List<Widget> slivers;
   final Widget? floatingActionButton;
@@ -22,6 +24,7 @@ class AppScrollView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
+    final responsive = ref.watch(responsiveProvider);
 
     final isDirectionRTL = settings['isRTL'] ?? true; // Default to true for RTL
     return Directionality(
@@ -29,14 +32,20 @@ class AppScrollView extends ConsumerWidget {
       child: Scaffold(
         drawer: drawer,
         floatingActionButton: floatingActionButton,
-        body: CustomScrollView(
-          physics: physics ?? const BouncingScrollPhysics(),
-          slivers: [
-           
-            ...slivers,
-
-            
-          ],
+        body: SafeArea(
+          top: responsive.orientation == Orientation.portrait?
+              true
+              : false, // Adjust based on orientation
+          child: CustomScrollView(
+            shrinkWrap: true,
+            physics: physics ?? const BouncingScrollPhysics(),
+            slivers: [
+             
+              ...slivers,
+          
+              
+            ],
+          ),
         ),
       ),
     );

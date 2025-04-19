@@ -1,165 +1,116 @@
-import 'package:bookkeeping_flutter_app/core/app_scaffold/page_builder.dart';
 import 'package:bookkeeping_flutter_app/core/app_scaffold/sliver_extensions.dart';
-import 'package:bookkeeping_flutter_app/core/providers/responsive_notifier.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/custom_drawer.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/theme_switcher.dart';
-import 'package:bookkeeping_flutter_app/features/Customers/presentation/providers/customer_provider.dart';
-import 'package:bookkeeping_flutter_app/features/Customers/presentation/widgets/custom_customer_list.dart';
+import 'package:bookkeeping_flutter_app/features/Currencies/presentation/screens/currency_selector.dart';
+import 'package:bookkeeping_flutter_app/features/Customers/presentation/screens/customer_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/app_scaffold/page_builder.dart';
+import '../../../../core/providers/responsive_notifier.dart';
 import '../../../../core/providers/theme_data_provider.dart';
-import '../../domain/entities/customer.dart';
+import '../providers/customer_provider.dart';
+import '../providers/customer_search_provider.dart';
+import '../widgets/customer_empty_state.dart';
+import '../widgets/customer_search_bar.dart';
+import 'customer_list.dart';
 
-class CustomersScreen extends ConsumerStatefulWidget {
+class CustomersScreen extends ConsumerWidget {
   const CustomersScreen({super.key});
 
   @override
-  CustomersScreenState createState() => CustomersScreenState();
-}
-
-class CustomersScreenState extends ConsumerState<CustomersScreen> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController searchController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    ref.watch(customerProvider);
-    final customerViewModel = ref.read(customerProvider.notifier);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final customersAsync = ref.watch(customerViewModelProvider);
+    final actions = CustomerActions(ref: ref, context: context);
     final responsive = ref.watch(responsiveProvider);
     final theme = ref.watch(themeDataProvider);
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.invalidate(customerViewModelProvider);
+      },
+      edgeOffset: responsive.h(100),
+      child: PageBuilder.build(
+        slivers: [
+          ref.responsiveSliverAppBar(
+            "العملاء",
+            pinned: true,
+            floating: true,
+            snap: false,
 
-    return PageBuilder.build(
-      drawer: CustomDrawer(),
-      slivers: [
-        ref.responsiveSliverAppBar(
-          "العملاء",
-          pinned: true,
-          floating: true,
-          snap: false,
-          
-          actions: [
-            PopupMenuButton(
-              icon: Icon(Icons.more_vert), // الأيقونة هنا
-              itemBuilder:
-                  (context) => [
-                    PopupMenuItem(
-                      value: 'edit',
-                      child: Text('تعديل', style: theme.textTheme.bodySmall),
-                    ),
-                    PopupMenuItem(
-                      value: 'delete',
-                      child: Text('حذف', style: theme.textTheme.bodySmall),
-                    ),
-                  ],
-              onSelected: (value) {
-                // التعامل مع الاختيار هنا
-              },
-            ),
-          ],
-        ),
-        ref.responsiveSliverPersistentHeader(
-          minHeightFactor: 60, // Minimum height as a factor of screen height
-          maxHeightFactor: 100, // Maximum height as a factor of screen height
-          pinned: true,
-          floating: false,
-          builder: (context, progress) {
-            return Container(
-              
-              color: Colors.blue, // Fade effect
-              alignment: Alignment.center,
-              child:ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  for (int i = 0; i < 10; i++)
-                    Container(
-                      width: responsive.w(100),
-                      height: responsive.h(50),
-                      color: Colors.blueAccent,
-                      child: Center(
-                        child: Text(
-                          'Item $i',
-                          style: TextStyle(color: Colors.white, fontSize: responsive.sp(12)),
-                        ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed:
+                    () =>
+                        ref
+                            .read(customerViewModelProvider.notifier)
+                            .loadCustomers(),
+              ),
+              PopupMenuButton(
+                icon: Icon(Icons.more_vert), // الأيقونة هنا
+                itemBuilder:
+                    (context) => [
+                      PopupMenuItem(
+                        value: 'edit',
+                        child: Text('تعديل', style: theme.textTheme.bodySmall),
                       ),
-                    ),
-                ],
-              )
-            );
-          },
-        ),
-
-        ref.responsiveSliverPadding(
-          all: 16,
-          sliver: ref.responsiveSliverBox(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ThemeSwitcher(),
-                SizedBox(height: 20),
-                // Add New Customer
-                Text(
-                  "Add New Customer",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: nameController,
-                        decoration: InputDecoration(labelText: "Customer Name"),
+                      PopupMenuItem(
+                        value: 'delete',
+                        child: Text('حذف', style: theme.textTheme.bodySmall),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (nameController.text.isNotEmpty) {
-                          final customer = Customer(
-                            id: DateTime.now().toString(),
-                            name: nameController.text,
-                            balance: 0,
-                          );
-                          customerViewModel.addCustomer(customer);
-                          nameController.clear();
-                        }
-                      },
-                      child: Text("Add"),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-
-                // Search Bar
-                TextField(
-                  controller: searchController,
-                  decoration: InputDecoration(
-                    labelText: "Search Customer",
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged:
-                      (query) => customerViewModel.filterCustomers(query),
-                ),
-                SizedBox(height: 20),
-
-                // Table Header
-                Text(
-                  "Customer List",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-
-                // Data Table
-                SizedBox(height: responsive.w(20)),
-
-                // Pagination Controls
-              ],
-            ),
+                    ],
+                onSelected: (value) {
+                  // التعامل مع الاختيار هنا
+                },
+              ),
+            ],
           ),
+          ref.responsiveSliverPadding(
+            all: 16,
+            sliver: ref.responsiveSliverBox(child: CurrencySelectorScreen()),
+          ),
+          ref.responsiveSliverBox(
+            child: CustomerSearchBar(), // حقل البحث + زر الترتيب
+          ),
+
+          customersAsync.when(
+            loading:
+                () => ref.responsiveSliverBox(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: responsive.h(32)),
+                    child: const CircularProgressIndicator(),
+                  ),
+                ),
+            error:
+                (error, _) => ref.responsiveSliverBox(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: responsive.h(32)),
+                    child: Text('حدث خطأ: $error'),
+                  ),
+                ),
+            data: (customers) {
+              // تمرير البيانات إلى فلتر البحث عند أول تحميل أو تغيير
+
+
+              // الآن نستخدم النتائج المفلترة بدلًا من البيانات الأصلية
+              
+
+              if (customers.isEmpty) {
+                return ref.responsiveSliverBox(
+                  child: const CustomerEmptyState(),
+                );
+              }
+
+              return ref.responsiveSliverPadding(
+                all: 16,
+                sliver: CustomerList(customers: customers, actions: actions),
+              );
+            },
+          ),
+        ],
+        floatingActionButton: FloatingActionButton(
+          onPressed: actions.showAddCustomerSheet,
+          child: const Icon(Icons.add),
         ),
-        ref.responsiveSliverBox(child: CustomCustomerList()),
-      ],
+      ),
     );
   }
 }

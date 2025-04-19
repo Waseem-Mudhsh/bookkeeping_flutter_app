@@ -39,9 +39,23 @@ class ResponsiveValues {
   double p(double value) => w(value);
 
   EdgeInsets paddingAll(double value) => EdgeInsets.all(p(value));
+  EdgeInsets paddingOnly({
+    double left = 0,
+    double right = 0,
+    double top = 0,
+    double bottom = 0,
+  }) =>
+      EdgeInsets.only(
+        left: p(left),
+        right: p(right),
+        top: p(top),
+        bottom: p(bottom),
+      );
 
   EdgeInsets paddingSym({double h = 0, double v = 0}) =>
       EdgeInsets.symmetric(horizontal: p(h), vertical: p(v));
+
+     
 }
   
 
