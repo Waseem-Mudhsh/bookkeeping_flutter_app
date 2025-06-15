@@ -54,6 +54,9 @@ class Customer {
   
   @HiveField(5)
   final int? taskTotalDays;
+  
+  @HiveField(6)
+  final String? currency;
 
   Customer({
     required this.id,
@@ -62,6 +65,7 @@ class Customer {
     this.phone,
     this.taskStartDate,
     this.taskTotalDays,
+    this.currency,
   });
 
   Customer copyWith({
@@ -71,6 +75,7 @@ class Customer {
     String? phone,
     DateTime? taskStartDate,
     int? taskTotalDays,
+    String? currency,
   }) {
     return Customer(
       id: id ?? this.id,
@@ -79,6 +84,7 @@ class Customer {
       phone: phone ?? this.phone,
       taskStartDate: taskStartDate ?? this.taskStartDate,
       taskTotalDays: taskTotalDays ?? this.taskTotalDays,
+      currency: currency ?? this.currency,
     );
   }
 }

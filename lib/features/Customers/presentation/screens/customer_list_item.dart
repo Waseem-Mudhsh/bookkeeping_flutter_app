@@ -32,6 +32,7 @@ class CustomerListItem extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeaderRow(responsive,theme),
+            if (customer.phone != null) _buildPhoneInfo(ref),
             
             if (customer.taskStartDate != null && customer.taskTotalDays != null)
               TimerProgressCard(
@@ -76,16 +77,21 @@ class CustomerListItem extends ConsumerWidget {
             ),
         ),
         _buildActionButtons(),
+        
       ],
     );
   }
 
-  Widget _buildPhoneInfo() {
+  Widget _buildPhoneInfo( WidgetRef ref) {
+    final theme = ref.watch(themeDataProvider);
+    final responsive = ref.watch(responsiveProvider);
     return Padding(
-      padding: const EdgeInsets.only(top: 4),
+      padding:responsive.paddingOnly(top: 2,),
       child: Text(
-        'Phone: ${customer.phone}',
-        style: const TextStyle(fontSize: 14),
+        textDirection: TextDirection.rtl,
+        textAlign: TextAlign.center,
+        'رقم الهاتف : ${customer.phone} ',
+        style: theme.textTheme.bodySmall,
       ),
     );
   }

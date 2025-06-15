@@ -1,4 +1,6 @@
+import 'package:bookkeeping_flutter_app/core/providers/responsive_notifier.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../constants/design_constants.dart';
 
@@ -58,6 +60,11 @@ class ResponsiveValues {
      
 }
   
+extension ResponsiveRefExtension on WidgetRef {
+  double sp(double value) => watch(responsiveProvider.select((r) => r.sp(value)));
+  double w(double value) => watch(responsiveProvider.select((r) => r.w(value)));
+  double h(double value) => watch(responsiveProvider.select((r) => r.h(value)));
+}
 
   /// حجم مستجيب للمكونات (مع تحديد الحدود)
   // double responsiveSize({

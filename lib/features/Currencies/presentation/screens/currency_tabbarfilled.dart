@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/currency.dart';
 import '../providers/currency_provider.dart';
-import '../widgets/animated_rounded_tabbar_filled.dart';
 
 class CurrencyTabbarfilled extends ConsumerStatefulWidget {
   const CurrencyTabbarfilled({super.key});
@@ -16,7 +15,6 @@ class CurrencyTabbarfilled extends ConsumerStatefulWidget {
 }
 
 class _CurrencyTabbarfilledState extends ConsumerState<CurrencyTabbarfilled> {
-   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     final currencies = ref.watch(currencyListProvider);

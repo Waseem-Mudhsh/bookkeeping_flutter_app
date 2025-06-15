@@ -159,10 +159,15 @@
 //   }
 // }
 
+import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class TimerProgressCard extends StatelessWidget {
+import '../../../../core/providers/responsive_notifier.dart';
+import '../../../../core/providers/theme_data_provider.dart' show themeDataProvider;
+
+class TimerProgressCard extends ConsumerWidget {
   final DateTime startDate;
   final int totalDays;
   
@@ -173,7 +178,9 @@ class TimerProgressCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final responsive = ref.watch(responsiveProvider);
+    final theme = ref.watch(themeDataProvider);
     final now = DateTime.now();
     final endDate = startDate.add(Duration(days: totalDays));
     final isExpired = now.isAfter(endDate);
@@ -184,7 +191,7 @@ class TimerProgressCard extends StatelessWidget {
     final progress = isExpired ? 1.0 : 1 - (remainingDays / totalDays);
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: responsive.paddingAll(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -192,16 +199,16 @@ class TimerProgressCard extends StatelessWidget {
             value: progress,
             backgroundColor: Colors.grey[300],
             valueColor: AlwaysStoppedAnimation(
-              isExpired ? Colors.red : Theme.of(context).colorScheme.primary,
+              isExpired ?theme.colorScheme.error : theme.colorScheme.primary,
             ),
           ),
-          const SizedBox(height: 8),
+          ResponsiveSpace(height: 8),
           Text(
             isExpired 
                 ? 'أنتهت المدة ${DateFormat.yMd().format(endDate)}'
                 : '$remainingDays متبقى (${DateFormat.yMd().format(endDate)}) يوم',
             style: TextStyle(
-              color: isExpired ? Colors.red : null,
+              color: isExpired ? theme.colorScheme.error : null,
             ),
           ),
         ],

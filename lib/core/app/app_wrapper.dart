@@ -11,6 +11,7 @@ class AppWrapper extends StatelessWidget {
     return ProviderScope(
       child: DevicePreview(
         enabled: true,
+       
         builder: (context) => const BookkeepingApp(),
       ),
     );

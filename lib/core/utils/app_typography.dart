@@ -1,4 +1,3 @@
-import 'package:bookkeeping_flutter_app/core/utils/add_color.dart';
 import 'package:flutter/material.dart';
 
 import 'responsive_values.dart';
@@ -12,9 +11,9 @@ class AppTypography {
       bodyMedium: TextStyle(fontSize: responsive.sp(14), fontWeight: FontWeight.w600),
       bodySmall: TextStyle(fontSize: responsive.sp(12)),
     ).apply(
-      fontFamily: 'Cairo',
-      bodyColor: isDarkMode ? AppColors.darkPrimary : AppColors.lightPrimary,
-      displayColor: isDarkMode ? AppColors.darkPrimary : AppColors.lightPrimary,
+      fontFamily: 'Tajawal',
+      // bodyColor: isDarkMode ? AppColors.darkPrimary : AppColors.lightPrimary,
+      // displayColor: isDarkMode ? AppColors.darkPrimary : AppColors.lightPrimary,
     );
   }
 }

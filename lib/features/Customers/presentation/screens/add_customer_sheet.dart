@@ -1,12 +1,13 @@
-import 'package:bookkeeping_flutter_app/core/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/providers/responsive_notifier.dart';
 import '../../../../core/providers/theme_data_provider.dart';
+import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/custom_text_form_field.dart';
+import '../../../../core/widgets/responsive_space.dart';
 import '../../domain/entities/customer.dart';
-
 import '../providers/customer_provider.dart';
 import '../widgets/timer_progress_card.dart';
 
@@ -20,17 +21,26 @@ class AddCustomerSheet extends ConsumerStatefulWidget {
 }
 
 class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
-  final _formKey = GlobalKey<FormState>();
+final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _balanceController;
   late TextEditingController _phoneController;
+  late TextEditingController _dateController;
   DateTime? _taskStartDate;
   int? _taskTotalDays;
+  bool _isSaving = false;
+  String? _currencyValue;
+
+  final List<String> _currencies = [
+    'ريال سعودي',
+    'درهم',
+  ];
+  
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(
+     _nameController = TextEditingController(
       text: widget.existingCustomer?.name ?? '',
     );
     _balanceController = TextEditingController(
@@ -39,6 +49,13 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
     _phoneController = TextEditingController(
       text: widget.existingCustomer?.phone ?? '',
     );
+    _dateController = TextEditingController(
+      text: widget.existingCustomer?.taskStartDate != null
+          ? DateFormat('dd-MM-yyyy').format(widget.existingCustomer!.taskStartDate!)
+          : '',
+    );
+    _currencyValue = widget.existingCustomer?.currency ?? _currencies[0];
+   
     _taskStartDate = widget.existingCustomer?.taskStartDate;
     _taskTotalDays = widget.existingCustomer?.taskTotalDays;
   }
@@ -48,6 +65,7 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
     _nameController.dispose();
     _balanceController.dispose();
     _phoneController.dispose();
+    _dateController.dispose();
     super.dispose();
   }
 
@@ -60,13 +78,23 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
     );
     if (picked != null) {
       setState(() => _taskStartDate = picked);
+      _dateController.text = DateFormat('dd-MM-yyyy').format(picked);
     }
+    
   }
 
   Future<void> _saveCustomer() async {
-    if (_formKey.currentState?.validate() ?? false) {
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      return;
+    }
+
+    setState(() => _isSaving = true);
+
+    try {
       final customer = Customer(
-        id: widget.existingCustomer?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+        id:
+            widget.existingCustomer?.id ??
+            DateTime.now().millisecondsSinceEpoch.toString(),
         name: _nameController.text,
         balance: double.parse(_balanceController.text),
         phone: _phoneController.text.isNotEmpty ? _phoneController.text : null,
@@ -75,64 +103,168 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
       );
 
       if (widget.existingCustomer == null) {
-        await ref.read(customerViewModelProvider.notifier).addCustomer(customer);
+        await ref
+            .read(customerViewModelProvider.notifier)
+            .addCustomer(customer);
       } else {
-        await ref.read(customerViewModelProvider.notifier).updateCustomer(customer);
+        await ref
+            .read(customerViewModelProvider.notifier)
+            .updateCustomer(customer);
       }
-      Navigator.pop(context);
+
+      if (mounted) {
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('حدث خطأ أثناء الحفظ: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
     }
   }
+
+
+  String? _validateName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'هذا الحقل مطلوب';
+    }
+    return null;
+  }
+
+  String? _validateAmount(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'يرجى إدخال المبلغ';
+    }
+    if (double.tryParse(value) == null) {
+      return 'يرجى إدخال رقم صحيح';
+    }
+    return null;
+  }
+
+  String? _validateDate(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'يرجى إدخال التاريخ';
+    }
+    try {
+
+      DateFormat('dd-MM-yyyy').parseStrict(value);
+      
+    } catch (e) {
+      return 'تاريخ غير صالح';
+    }
+    return null;
+  }
+
+  String? _validateCurrency(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'يرجى اختيار العملة';
+    }
+    return null;
+  }
+  String? _validatePhone(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'يرجى إدخال رقم الهاتف';
+    }
+    if (value.length < 10) {
+      return 'رقم الهاتف يجب أن يكون 10 أرقام على الأقل';
+    }
+    return null;
+  }
+  
 
   @override
   Widget build(BuildContext context) {
     final responsive = ref.watch(responsiveProvider);
-    
     final theme = ref.watch(themeDataProvider);
-    
+
     return Dialog(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       insetPadding: responsive.paddingAll(16),
       child: Form(
         key: _formKey,
+        // autovalidateMode: AutovalidateMode.onUserInteraction,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               AppBar(
-                title: Text(widget.existingCustomer == null ? 'Add Customer' : 'Edit Customer'),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.save),
-                    onPressed: _saveCustomer,
-                  ),
-                ],
+                title: Text(
+                  widget.existingCustomer == null ? 'إضافة عميل' : 'تعديل عميل',
+                ),
+                centerTitle: true,
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    TextFormField(
+                    const ResponsiveSpace(height: 16),
+                    CustomTextField(
                       controller: _nameController,
-                      decoration: const InputDecoration(labelText: 'Name*'),
-                      validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                      label: 'اسم العميل',
+                      hint: 'ادخل اسم العميل',
+                      validator: _validateName,
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () => _nameController.clear(),
+                      ),
                     ),
-                    TextFormField(
+                    const ResponsiveSpace(height: 16),
+                    CustomTextField(
                       controller: _balanceController,
-                      decoration: const InputDecoration(labelText: 'Balance*'),
+                      label: 'الرصيد',
+                      hint: 'أدخل الرصيد',
                       keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value?.isEmpty ?? true) return 'Required';
-                        if (double.tryParse(value!) == null) return 'Invalid number';
-                        return null;
-                      },
+                      validator: _validateAmount,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          Icons.calculate_outlined,
+                          color: theme.colorScheme.primary,
+                        ),
+                        onPressed: () {
+                          // Handle calculation logic here
+                        },
+                      ),
                     ),
-                    TextFormField(
+                    const ResponsiveSpace(height: 16),
+                    CustomTextField(
                       controller: _phoneController,
-                      decoration: const InputDecoration(labelText: 'Phone'),
+                      label: 'هاتف',
+                      hint: 'أدخل رقم الهاتف',
                       keyboardType: TextInputType.phone,
+                      validator: _validatePhone,
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () => _phoneController.clear(),
+                      ),
                     ),
-                    const SizedBox(height: 20),
+                    const ResponsiveSpace(height: 16),
+                    DropdownButtonFormField<String>(
+                      value: _currencyValue,
+                      hint: const Text('اختر العملة'),
+                      items: _currencies
+                          .map(
+                            (currency) => DropdownMenuItem(
+                              value: currency,
+                              child: Text(currency),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _currencyValue = value;
+                        });
+                      },
+                      validator: _validateCurrency,
+                    ),
                     // Task Management Section
                     if (_taskStartDate != null && _taskTotalDays != null)
                       TimerProgressCard(
@@ -140,23 +272,29 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
                         totalDays: _taskTotalDays!,
                       ),
                     ListTile(
-                      title: const Text('Task Start Date'),
-                      subtitle: Text(_taskStartDate != null
-                          ? DateFormat.yMd().format(_taskStartDate!)
-                          : 'Not set'),
+                      title: const Text('تاريخ بداية المهمة'),
+                      subtitle: Text(
+                        _taskStartDate != null
+                            ? DateFormat.yMd().format(_taskStartDate!)
+                            : 'غير محدد',
+                      ),
                       trailing: const Icon(Icons.calendar_today),
                       onTap: () => _selectDate(context),
                     ),
                     DropdownButtonFormField<int>(
                       value: _taskTotalDays,
-                      hint: const Text('Select task duration'),
-                      items: List.generate(30, (i) => i + 1)
-                          .map((days) => DropdownMenuItem(
-                                value: days,
-                                child: Text('$days days'),
-                              ))
-                          .toList(),
-                      onChanged: (value) => setState(() => _taskTotalDays = value),
+                      hint: const Text('اختر مدة المهمة'),
+                      items:
+                          List.generate(30, (i) => i + 1)
+                              .map(
+                                (days) => DropdownMenuItem(
+                                  value: days,
+                                  child: Text('$days يوم'),
+                                ),
+                              )
+                              .toList(),
+                      onChanged:
+                          (value) => setState(() => _taskTotalDays = value),
                     ),
                     if (widget.existingCustomer != null)
                       TextButton(
@@ -167,19 +305,29 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
                           });
                         },
                         child: const Text(
-                          'Remove Task',
+                          'حذف المهمة',
                           style: TextStyle(color: Colors.red),
                         ),
                       ),
-                      Row(
-                        children: [
-                          CustomButton(text: "text",
-                           textColor: theme.colorScheme.onPrimary,
-                            backgroundColor: theme.colorScheme.primary,),
-                          const Spacer(),
-                          TextButton(onPressed: _saveCustomer, child: const Text('Save')),
-                        ],
-                      )
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        CustomButton(
+                          text: "إلغاء",
+                          textColor: theme.colorScheme.onSurface,
+                          backgroundColor: theme.colorScheme.surface,
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                        const Spacer(),
+                        CustomButton(
+                          text: "حفظ",
+                          textColor: theme.colorScheme.onPrimary,
+                          backgroundColor: theme.colorScheme.primary,
+                          // isLoading: _isSaving, // أضف هذه السطر
+                          onPressed: _saveCustomer,
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),

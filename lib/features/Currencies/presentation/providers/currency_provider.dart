@@ -19,10 +19,18 @@ final currencyListProvider = StateNotifierProvider<CurrencyNotifier, List<Curren
 class CurrencyNotifier extends StateNotifier<List<Currency>> {
   final CurrencyService _service;
 
-  CurrencyNotifier(this._service) : super(_service.fetchCurrencies());
+ CurrencyNotifier(this._service) : super([]) {
+    // Initialize the state with the fetched currencies
+    _initializeCurrencies();
+  }
+
+  // Fetch currencies and update the state
+  void _initializeCurrencies() {
+    state = _service.fetchCurrencies();
+  }
 
   void addCurrency(Currency currency) {
     _service.addCurrency(currency);
-    state = _service.fetchCurrencies();
+    state = _service.fetchCurrencies(); // Update the state with the new list of currencies
   }
 }

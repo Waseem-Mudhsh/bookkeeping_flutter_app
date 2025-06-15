@@ -1,45 +1,47 @@
 // import 'package:bookkeeping_flutter_app/utils/add_text_style.dart';
-import 'package:bookkeeping_flutter_app/core/providers/theme_data_provider.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'theme_switcher.dart';
 
-class CustomDrawer extends ConsumerWidget {
+class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     
-    final theme=ref.watch(themeDataProvider);
+    
     return Drawer(
-      backgroundColor: theme.colorScheme.surface,
+      // width: responsive.deviceSize.width * 0.50,
+      // backgroundColor: theme.colorScheme.surface,
       
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            decoration: BoxDecoration(
-              color: theme.colorScheme.secondary,
-            ),
+            // decoration: BoxDecoration(
+            //   color: theme.colorScheme.secondary,
+            // ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+            
               children: [
                 Text(
-                  'القائمة الجانبية',
-                 style: TextStyle(
-                   color: theme.colorScheme.onSecondary,
-                 ),
+                 'القائمة الجانبية',
+                //  style: TextStyle(
+                //    color: theme.colorScheme.onSecondary,
+                //  ),
                   
                 ),
-                Spacer(),
+                
                 ThemeSwitcher(),
               ],
             ),
           ),
           ListTile(
-            iconColor: theme.colorScheme.onSurface,
-            textColor: theme.colorScheme.onSurface,
+            // iconColor: theme.colorScheme.onSurface,
+            // textColor: theme.colorScheme.onSurface,
             leading: Icon(Icons.home,),
             title: Text('الرئيسية',
             ),
@@ -49,8 +51,8 @@ class CustomDrawer extends ConsumerWidget {
             },
           ),
           ListTile(
-            iconColor: theme.colorScheme.onSurface,
-            textColor: theme.colorScheme.onSurface,
+            // iconColor: theme.colorScheme.onSurface,
+            // textColor: theme.colorScheme.onSurface,
             leading: Icon(Icons.settings),
             title: Text('الإعدادات'),
             onTap: () {
@@ -59,8 +61,8 @@ class CustomDrawer extends ConsumerWidget {
             },
           ),
           ListTile(
-            iconColor: theme.colorScheme.onSurface,
-            textColor: theme.colorScheme.onSurface,
+            // iconColor: theme.colorScheme.onSurface,
+            // textColor: theme.colorScheme.onSurface,
             
             
             leading: Icon(Icons.help),

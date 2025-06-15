@@ -20,19 +20,31 @@ class CustomerAdapter extends TypeAdapter<Customer> {
       id: fields[0] as String,
       name: fields[1] as String,
       balance: fields[2] as double,
+      phone: fields[3] as String?,
+      taskStartDate: fields[4] as DateTime?,
+      taskTotalDays: fields[5] as int?,
+      currency: fields[6] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Customer obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.balance);
+      ..write(obj.balance)
+      ..writeByte(3)
+      ..write(obj.phone)
+      ..writeByte(4)
+      ..write(obj.taskStartDate)
+      ..writeByte(5)
+      ..write(obj.taskTotalDays)
+      ..writeByte(6)
+      ..write(obj.currency);
   }
 
   @override

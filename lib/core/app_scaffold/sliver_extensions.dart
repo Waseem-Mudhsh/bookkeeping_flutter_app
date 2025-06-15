@@ -1,31 +1,48 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/responsive_notifier.dart';
+import '../providers/theme_data_provider.dart';
 
 extension ResponsiveSlivers on WidgetRef {
   // Responsive SliverAppBar with more customization options
   SliverAppBar responsiveSliverAppBar(
-    String title, {
+     {
+    Widget? title,
     bool pinned = true,
     bool floating = true,
     bool snap = false,
     double? expandedHeight,
+    double? toolbarHeight,
     List<Widget>? actions,
-    Widget? flexibleSpace,
+    FlexibleSpaceBar ? flexibleSpace,
+    Widget? leading,
+    double? elevation,
+    Color? backgroundColor,
+    Color? foregroundColor,
+    bool hasBorder = false
+    
   }) {
     final responsive = watch(responsiveProvider);
     
+    
     return SliverAppBar(
-      title: Text(title, ),
-      expandedHeight: expandedHeight ?? responsive.w(56),
+      shadowColor: backgroundColor,
+      title: title ?? const Text(''),
+      expandedHeight: responsive.w(expandedHeight ?? 56),
+      toolbarHeight: responsive.w(toolbarHeight ?? 56),
       pinned: pinned,
       floating: floating,
       snap: snap,
-      toolbarHeight: responsive.w(56),
+      leading: leading,
       actions: actions,
       flexibleSpace: flexibleSpace,
-      elevation: 0,
+      elevation: elevation ?? 0,
+      backgroundColor: backgroundColor ?? Colors.transparent,
+      foregroundColor: foregroundColor ?? Colors.transparent,
+      shape: hasBorder ? Border(bottom:BorderSide(color:Colors.black12,width: 1)) : null,
+     
     );
   }
 
@@ -50,11 +67,17 @@ extension ResponsiveSlivers on WidgetRef {
   // Responsive SliverToBoxAdapter with optional alignment
   SliverToBoxAdapter responsiveSliverBox({
     required Widget child,
-    Alignment alignment = Alignment.center,
+    Alignment? alignment,
+    Color? backgroundColor,
+    bool hasBorder = false,
   }) {
     return SliverToBoxAdapter(
-      child: Align(
-        alignment: alignment,
+      child: Container(
+       alignment:alignment ?? Alignment.center,
+        decoration: BoxDecoration(
+          color: backgroundColor?? Colors.transparent,
+          border: hasBorder ? Border(bottom:BorderSide(color:Colors.black12,width: 1)) : null,
+          ),
         child: child,
       ),
     );
@@ -146,8 +169,11 @@ extension ResponsiveSlivers on WidgetRef {
     required double maxHeightFactor,
     bool? pinned ,
     bool? floating ,
+    Color? backgroundColor,
+    bool? showShadowOnOverlap ,
   }) {
     final responsive = watch(responsiveProvider);
+    final theme = watch(themeDataProvider);
 
     return SliverPersistentHeader(
       pinned: pinned ?? true,
@@ -156,6 +182,8 @@ extension ResponsiveSlivers on WidgetRef {
         builder: builder,
         minHeight: responsive.h(minHeightFactor),
         maxHeight: responsive.h(maxHeightFactor),
+        showShadowOnOverlap: showShadowOnOverlap ?? true,
+        backgroundColor: backgroundColor ??theme.colorScheme.secondary,
       ),
     );
   }
@@ -166,11 +194,15 @@ class _CustomSliverPersistentHeaderDelegate extends SliverPersistentHeaderDelega
   final Widget Function(BuildContext, double) builder;
   final double minHeight;
   final double maxHeight;
+  final Color backgroundColor;
+  final bool showShadowOnOverlap;
 
   _CustomSliverPersistentHeaderDelegate({
     required this.builder,
     required this.minHeight,
     required this.maxHeight,
+    required this.backgroundColor,
+    required this.showShadowOnOverlap ,
   });
 
   @override
@@ -187,7 +219,11 @@ class _CustomSliverPersistentHeaderDelegate extends SliverPersistentHeaderDelega
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
-    return true;
+    return oldDelegate is _CustomSliverPersistentHeaderDelegate &&
+        (oldDelegate.minHeight != minHeight ||
+            oldDelegate.maxHeight != maxHeight ||
+            oldDelegate.backgroundColor != backgroundColor ||
+            oldDelegate.showShadowOnOverlap != showShadowOnOverlap);
   }
 
 

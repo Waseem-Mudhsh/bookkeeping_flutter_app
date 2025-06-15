@@ -19,4 +19,7 @@ class CurrencyService {
   bool _currencyExists(String code) {
     return repository.getAllCurrencies().any((c) => c.code == code);
   }
+  void updateCurrency(Currency currency){
+    repository.updateCurrency(currency);
+  }
 }

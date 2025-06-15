@@ -1,78 +1,95 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/providers/responsive_notifier.dart';
+import '../../../../core/providers/theme_data_provider.dart';
 import '../providers/currency_provider.dart';
 import '../../domain/entities/currency.dart';
 
-class CurrencyTabBar extends ConsumerWidget {
-  final void Function(Currency currency) onCurrencySelected;
+class CurrencyTabBar extends ConsumerStatefulWidget {
+  final Function(Currency) onCurrencySelected;
 
   const CurrencyTabBar({super.key, required this.onCurrencySelected});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CurrencyTabBar> createState() => _CurrencyTabBarState();
+}
+
+class _CurrencyTabBarState extends ConsumerState<CurrencyTabBar> {
+  Currency? _selectedCurrency;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the selected currency to the first one in the list if available
+    final currencies = ref.read(currencyListProvider);
+    if (currencies.isNotEmpty) {
+      _selectedCurrency = currencies.firstWhere(
+        (currency) => currency.code == "YER",
+        orElse: () => currencies[0],
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final currencies = ref.watch(currencyListProvider);
+    final theme = ref.watch(themeDataProvider);
+    final responsive = ref.watch(responsiveProvider);
 
     return SizedBox(
-      height: 50,
+      height: responsive.h(40),
       child: ListView.separated(
-        shrinkWrap: true,
+        
         scrollDirection: Axis.horizontal,
-        itemCount: currencies.length + 1,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        // itemCount: currencies.length + 1,
+        itemCount: currencies.length,
+
+        separatorBuilder: (_, __) =>  SizedBox(width: responsive.w(8)),
         itemBuilder: (context, index) {
-          if (index == currencies.length) {
-            return OutlinedButton.icon(
-              onPressed: () => _showAddCurrencyDialog(context, ref),
-              icon: const Icon(Icons.add),
-              label: const Text('إضافة عملة'),
-            );
-          }
+       
 
           final currency = currencies[index];
-          return ElevatedButton(
-            onPressed: () => onCurrencySelected(currency),
-            child: Text(currency.name),
+          final isSelected = _selectedCurrency == currency;
+
+        
+        return InkWell(
+          
+            onTap: () {
+              setState(() {
+                _selectedCurrency = currency;
+              });
+              widget.onCurrencySelected(currency);
+            },
+            child: AnimatedContainer(
+              
+              curve: Curves.easeIn,
+              alignment: Alignment.center,
+              duration: const Duration(milliseconds: 300),
+              padding: responsive.paddingSym(h: 8, v: 4),
+              decoration: BoxDecoration(
+                color:isSelected ? theme.colorScheme.primary: null,
+                shape: BoxShape.rectangle,
+                
+                borderRadius: BorderRadius.circular(7),
+                // border: isSelected ? Border.all(color: theme.colorScheme.secondary, width: 2) : null,
+              ),
+              foregroundDecoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(7),
+              ),
+              child: Text(
+                currency.name,
+                style: TextStyle(
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  color: isSelected ? theme.colorScheme.onPrimary : theme.colorScheme.primary,
+                ),
+              ),
+            ),
           );
         },
       ),
     );
   }
-
-  void _showAddCurrencyDialog(BuildContext context, WidgetRef ref) {
-    final nameController = TextEditingController();
-    final codeController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('إضافة عملة جديدة'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: 'اسم العملة'),
-            ),
-            TextField(
-              controller: codeController,
-              decoration: const InputDecoration(labelText: 'رمز العملة'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              final currency = Currency(
-                name: nameController.text,
-                code: codeController.text.toUpperCase(),
-              );
-              ref.read(currencyListProvider.notifier).addCurrency(currency);
-              Navigator.pop(context);
-            },
-            child: const Text('إضافة'),
-          ),
-        ],
-      ),
-    );
-  }
+  
 }
+  
+

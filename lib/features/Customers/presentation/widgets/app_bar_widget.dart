@@ -100,7 +100,7 @@ class AppBarWidget extends ConsumerWidget {
                   text: "Click Me",
                   textColor: Colors.white,
                   backgroundColor: Colors.blue,
-                  onTap: () => {},
+                  onPressed: () => {},
                 ),
               ),
             ),

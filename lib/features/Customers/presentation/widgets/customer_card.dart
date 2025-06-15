@@ -34,7 +34,7 @@ class CustomerCard extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
-              contentPadding: responsive.paddingOnly(bottom: 10),
+              contentPadding: responsive.paddingOnly(bottom: 8),
               leading: CircleAvatar(
                 backgroundColor: theme.colorScheme.primary,
                 child: Text(
@@ -70,14 +70,18 @@ class CustomerCard extends ConsumerWidget {
             ),
             const Divider(),
 
-            ResponsiveSpace(
-              height: 48,
-              width: 288,
+            SizedBox(
+              
+            ),
+            Padding(
+              padding: responsive.paddingSym(h: 8, v: 8),
 
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   IconButton(
+                    iconSize: responsive.w(24),
                     tooltip: 'Add',
                     icon: Icon(Icons.add, color: theme.colorScheme.primary),
                     onPressed:

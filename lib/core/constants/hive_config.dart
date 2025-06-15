@@ -1,4 +1,5 @@
 import 'package:bookkeeping_flutter_app/features/Customers/domain/entities/customer.dart';
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HiveConfig {
@@ -6,7 +7,14 @@ class HiveConfig {
     await Hive.initFlutter();
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(CustomerAdapter());
+      
     }
-    await Hive.openBox<Customer>('customers');
+    
+    try {
+      await Hive.openBox<Customer>('customers');
+    } catch (e) {
+      debugPrint('Hive init error: $e');
+    }
+   
   }
 }

@@ -9,13 +9,13 @@ class ThemeSwitcher extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     
-    final colorScheme = Theme.of(context).colorScheme;
-       final settings = ref.watch(settingsProvider);
+    
+    final settings = ref.watch(settingsProvider);
     final isDark = settings['isDarkMode'] ?? false;
 
 
     return Switch(
-      activeColor: colorScheme.primary,
+     
       value: isDark,
       onChanged: (value) async {
         

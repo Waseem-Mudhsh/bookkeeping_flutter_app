@@ -82,6 +82,7 @@
 import 'package:bookkeeping_flutter_app/core/app/app_wrapper.dart';
 import 'package:bookkeeping_flutter_app/core/constants/hive_config.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
 
 void main() async {
   await _initializeApp();
@@ -90,6 +91,12 @@ void main() async {
 
 Future<void> _initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // how to stop device orientation
+  // SystemChrome.setPreferredOrientations(
+  //   [
+  //     DeviceOrientation.portraitUp,
+  //     DeviceOrientation.portraitDown,
+  //   ]);
   await HiveConfig.initialize();
   // await DeviceConfig.initialize();
 }
