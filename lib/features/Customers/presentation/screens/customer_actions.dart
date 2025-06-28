@@ -21,8 +21,9 @@ class CustomerActions {
 
   Future<void> _showCustomerSheet(Widget sheet) async {
     await showModalBottomSheet(
+     
       context: context,
-      isScrollControlled: true,
+      isScrollControlled: false,
       builder: (context) => sheet,
     );
   }

@@ -30,7 +30,7 @@ class CustomButton extends ConsumerWidget {
       onPressed: onPressed,
     
       style: ElevatedButton.styleFrom(
-        padding: responsive.paddingSym(h: 8, v: 16),
+        padding: responsive.paddingSym(h: 16, v: 16),
         
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),
@@ -44,6 +44,9 @@ class CustomButton extends ConsumerWidget {
       child: CustomAutoSizeText(
             text: 
               text,
+              colorText: textColor ?? theme.colorScheme.onPrimary,
+              
+
            
             ),
     );

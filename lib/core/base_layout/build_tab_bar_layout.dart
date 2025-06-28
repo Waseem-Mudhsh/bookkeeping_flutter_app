@@ -145,7 +145,7 @@ import '../providers/theme_data_provider.dart';
 class BuildTabBarLayout extends ConsumerStatefulWidget {
   final ScrollPhysics? physics;
   
-  final List<Widget>? sliversHeader;
+  
   final List<Widget> tabViews;
   final List<Tab> tabs;
   final int initialTabIndex;
@@ -157,7 +157,7 @@ class BuildTabBarLayout extends ConsumerStatefulWidget {
 
   const BuildTabBarLayout( 
       {super.key, 
-      this.sliversHeader,
+      
         this.actions,
          this.physics,
       required this.tabViews,
@@ -238,10 +238,12 @@ class _TabbedLayoutState extends ConsumerState<BuildTabBarLayout>
 
   @override
   Widget build(BuildContext context) {
+    
     final theme= ref.watch(themeDataProvider);
     final responsive = ref.watch(responsiveProvider);
     return NestedScrollView(
-      physics: widget.physics ?? const ClampingScrollPhysics(),
+      
+      physics: const ClampingScrollPhysics(),
       floatHeaderSlivers: true,
       headerSliverBuilder: (context, innerBoxIsScrolled) {
         return [
@@ -252,13 +254,11 @@ class _TabbedLayoutState extends ConsumerState<BuildTabBarLayout>
               hasLeading: widget.hasLeading,
               title: CustomAutoSizeText(
                 text: widget.title ?? '',
-                style: theme.textTheme.bodyLarge,
+                style: theme.textTheme.bodyMedium,
                 // colorText: theme.colorScheme.primary,
                 fontWeight: FontWeight.bold,
                 fontSize: 14,),
               actions: widget.actions,
-              
-             
               bottom: PreferredSize(
                 preferredSize:  Size.zero, 
                 child:Padding(
@@ -274,32 +274,31 @@ class _TabbedLayoutState extends ConsumerState<BuildTabBarLayout>
                        ),
                     child: CustomTabBar(
                       tabController: _tabController,
-                          tabs: widget.tabs,
-                          
-                              
+                          tabs: widget.tabs, 
                           ),
                   ),
                 )
-                ),
-                      
+                ), 
                        ),
            ),
-          
-          if (widget.sliversHeader != null) ...widget.sliversHeader!,
-          
+
         ];
       },
-      body: PageView(
-        
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        onPageChanged: _onPageChanged,
-        children: widget.tabViews.map((tabView) => _buildTabContent(_tabController.index,widget.toolbarHeight, tabView)).toList(),
+      body: Builder(
+        builder: (context) {
+          return PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            onPageChanged: _onPageChanged,
+            children: widget.tabViews.map((tabView) => _buildTabContent(_tabController.index,widget.toolbarHeight, tabView)).toList(),
+          );
+        }
       ),
     );
   }
   Widget _buildTabContent(int tabIndex, double? topPadding, Widget tabView) {
     return SingleChildScrollView(
+    
       padding: EdgeInsets.only(top: topPadding ?? 0),
 
       controller: _scrollControllers[tabIndex],

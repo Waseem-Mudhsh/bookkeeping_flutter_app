@@ -75,7 +75,7 @@ class AppTheme {
       interactionEffects: true,
       tintedDisabledControls: true,
       useM2StyleDividerInM3: true,
-      defaultRadius: 7.0,
+      defaultRadius: 4.0,
       inputDecoratorIsFilled: true,
       inputDecoratorBorderType: FlexInputBorderType.outline,
       alignedDropdown: true,

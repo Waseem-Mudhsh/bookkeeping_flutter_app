@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../../features/Home/presentation/screens/home_page.dart';
+
 
 
 class BookkeepingApp extends ConsumerStatefulWidget {
@@ -53,45 +53,6 @@ class _BookkeepingAppState extends ConsumerState<BookkeepingApp> {
       theme: theme,
       themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
 
-      // home:  HomeScreen(
-      //   transactions: [
-      //     Transaction(
-      //       id: '1',
-      //       title: 'Grocery Shopping',
-      //       amount: -85.30,
-      //       date: DateTime.now().subtract(Duration(days: 1)),
-      //       category: 'Food',
-      //     ),
-      //     Transaction(
-      //       id: '2',
-      //       title: 'Salary Deposit',
-      //       amount: 2500.00,
-      //       date: DateTime.now().subtract(Duration(days: 3)),
-      //       category: 'Income',
-      //     ),
-      //     Transaction(
-      //       id: '3',
-      //       title: 'Electric Bill',
-      //       amount: -120.50,
-      //       date: DateTime.now().subtract(Duration(days: 5)),
-      //       category: 'Utilities',
-      //     ),
-      //     Transaction(
-      //       id: '3',
-      //       title: 'Electric Bill',
-      //       amount: -120.50,
-      //       date: DateTime.now().subtract(Duration(days: 5)),
-      //       category: 'Utilities',
-      //     ),Transaction(
-      //       id: '3',
-      //       title: 'Electric Bill',
-      //       amount: -120.50,
-      //       date: DateTime.now().subtract(Duration(days: 5)),
-      //       category: 'Utilities',
-      //     ),
-      //   ],
-      //   balance: 3245.20,
-      // ),
       home : Builder(
   builder: (context) {
     FlutterError.onError = (details) {

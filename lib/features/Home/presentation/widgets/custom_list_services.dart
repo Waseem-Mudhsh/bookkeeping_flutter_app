@@ -11,29 +11,46 @@ class CustomListServices extends ConsumerWidget {
   const CustomListServices({super.key});
   List<Map<String, dynamic>> get services => [
     {
-      'name': 'Finance',
+      'name': 'الحسابات',
       'icon': Icons.account_balance_wallet,
+      'route': RouteNames.finance,
     },
     {
-      'name': 'Expenses',
+      'name': 'القياسات',
       'icon': Icons.attach_money,
+      'route': RouteNames.customers,
+
     },
     {
       'name': 'Income',
       'icon': Icons.money,
+      'route': RouteNames.finance,
     },
     {
       'name': 'Budget',
       'icon': Icons.pie_chart,
+      'route': RouteNames.finance,
     },
     {
       'name': 'Reports',
       'icon': Icons.bar_chart,
+      'route': RouteNames.finance,
     },
     {
       'name': 'Settings',
       'icon': Icons.settings,
+      'route': RouteNames.finance,
+    },
+    {
+      'name': 'Settings',
+      'icon': Icons.settings,
+      'route': RouteNames.finance,
+    },{
+      'name': 'Settings',
+      'icon': Icons.settings,
+      'route': RouteNames.finance,
     }
+    
 
       ];
 
@@ -44,6 +61,7 @@ class CustomListServices extends ConsumerWidget {
     return Padding(
       padding: responsive.paddingSym(h: 16),
       child: GridView.builder(
+        shrinkWrap: true, // Allows the grid to take only the space it needs
         physics: NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3, // Number of columns
@@ -58,7 +76,7 @@ class CustomListServices extends ConsumerWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => RouteNames.finance.screen,
+                  builder: (context) => services[index]['route'].screen,
                 ),
               );
             },

@@ -24,10 +24,10 @@ class Topside extends State<TopSide> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   IconButton(
-                      icon: Icon(Icons.arrow_back_outlined, color: Colors.white,size: 35.0),
+                      icon: Icon(Icons.arrow_back_outlined,size: 35.0),
                       onPressed: () {}),
                   IconButton(
-                      icon: Icon(Icons.settings, color: Colors.white,size: 30.0),
+                      icon: Icon(Icons.settings,size: 30.0),
                       onPressed: () {}),
                 ],
               ),
@@ -35,7 +35,7 @@ class Topside extends State<TopSide> {
           Padding(
             padding: const EdgeInsets.only(right: 150, top: 20, bottom: 20, left: 10),
             child: Text("Sizin için hazırladığımız rotaları keşfedin.",
-            style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold )),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold )),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(

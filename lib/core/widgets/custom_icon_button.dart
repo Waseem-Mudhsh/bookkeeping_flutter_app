@@ -5,14 +5,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/responsive_notifier.dart';
 import '../providers/theme_data_provider.dart';
 
-class CustomIconbutton extends ConsumerWidget {
+class CustomIconButton extends ConsumerWidget {
   final VoidCallback onPressed;
   final Icon icon;
 
   final Color? iconColor;
   final double? iconSize;
+  final Color? backgroundColor;
 
-  const CustomIconbutton({
+  const CustomIconButton({
     super.key,
 
     required this.onPressed,
@@ -20,6 +21,7 @@ class CustomIconbutton extends ConsumerWidget {
 
     this.iconColor,
     this.iconSize,
+    this.backgroundColor,
   });
 
   @override
@@ -28,12 +30,23 @@ class CustomIconbutton extends ConsumerWidget {
     final responsive = ref.watch(responsiveProvider);
 
     return IconButton(
+      padding: responsive.paddingAll(8),
       onPressed: onPressed,
       icon: Icon(
         icon.icon,
-        size: iconSize ?? responsive.w(24),
-        color: iconColor ?? theme.colorScheme.primary,
+        size:   responsive.w(iconSize ??24),
+        color: iconColor ?? theme.colorScheme.onPrimaryFixed,
+        semanticLabel: icon.semanticLabel,
       ),
+      tooltip: icon.semanticLabel,
+      
+      style: backgroundColor != null ? IconButton.styleFrom(
+        backgroundColor: backgroundColor!.withAlpha( 60),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(responsive.w(55)),
+        ),
+
+      ): null,
     );
   }
 }

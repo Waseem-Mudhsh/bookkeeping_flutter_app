@@ -37,9 +37,11 @@ class CustomTabBar extends ConsumerWidget implements PreferredSizeWidget {
                       color: theme.colorScheme.primary,
                       ),
           labelStyle: theme.textTheme.bodySmall!.copyWith(
+            fontFamily: 'cairo',
             fontWeight: FontWeight.bold
           ),
           unselectedLabelStyle: theme.textTheme.bodySmall!.copyWith(
+            fontFamily: 'cairo',
             fontWeight: FontWeight.w500
           ),
       );

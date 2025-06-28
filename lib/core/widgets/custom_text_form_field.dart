@@ -9,10 +9,22 @@ class CustomTextField extends ConsumerWidget {
   final TextEditingController controller;
   final String label;
   final String? hint;
+  final TextStyle? style;
+  final TextStyle? labelStyle;
+  final TextStyle? hintStyle;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
   final Function()? onTap;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
+  final Function(String)? onChanged;
+  final bool readOnly;
+  final bool enabled;
+  final bool autofocus;
+  final bool obscureText;
+  final Color? fillColor;
+  final TextAlign textAlign;
+  final int? maxLines;
   
 
   const CustomTextField({
@@ -20,10 +32,22 @@ class CustomTextField extends ConsumerWidget {
     required this.controller,
     required this.label,
     this.hint,
+    this.style,
+    this.labelStyle,  
+    this.hintStyle,
     this.keyboardType,
     this.validator,
     this.onTap,
     this.suffixIcon,
+    this.prefixIcon,
+    this.onChanged,
+    this.readOnly = false,
+    this.enabled = true, 
+    this.autofocus = false,
+    this.obscureText = false,
+    this.fillColor ,
+    this.textAlign = TextAlign.start,
+    this.maxLines = 1,
     
   });
 
@@ -37,41 +61,54 @@ class CustomTextField extends ConsumerWidget {
     final theme = ref.watch(themeDataProvider);
     final responsive = ref.watch(responsiveProvider);
     return TextFormField(
+      textAlign: textAlign,
+      obscuringCharacter: '*',
+      
+      
       keyboardType: keyboardType ?? TextInputType.text,
-      style: theme.textTheme.bodyMedium,
+      style: style?? theme.textTheme.bodyMedium,
+      
       controller: controller,
+      readOnly: readOnly,
+      enabled: enabled,
+      autofocus: autofocus,
+      obscureText: obscureText,
+
       
       
       decoration: InputDecoration(
+        fillColor: fillColor ?? theme.colorScheme.surface,
         constraints: BoxConstraints(
           minHeight: responsive.h(50),
           maxHeight: responsive.h(100),
         ),
         
         labelText: label,
-        labelStyle: theme.textTheme.bodyMedium,
+        labelStyle:labelStyle ?? theme.textTheme.bodySmall,
         hintText: hint,
-        hintStyle: theme.textTheme.bodySmall,
-        suffixIcon: suffixIcon,
-        border:  OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          borderSide: BorderSide(
-            color: theme.colorScheme.primary, 
-            width: responsive.w(1)),
+        hintStyle: hintStyle ?? theme.textTheme.bodySmall!.copyWith(
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.6), 
+          
         ),
-
-
-
-
-
+        suffixIcon: suffixIcon,
+        prefixIcon: prefixIcon,
+        border:  OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+          borderSide: BorderSide(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6), 
+            width: responsive.w(0.5)),
+        ),
+        
+       
         errorMaxLines: 2,
-      
+        
 
       ),
-      
+      maxLines: maxLines,
        autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: validator,
       onTap: onTap,
+      onChanged: onChanged,
 
     );
   }

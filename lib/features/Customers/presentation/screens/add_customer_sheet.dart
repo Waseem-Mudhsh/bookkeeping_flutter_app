@@ -1,15 +1,22 @@
+import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/base_layout/base_layout_screen.dart';
+import '../../../../core/base_layout/build_non_tabbar_layout.dart';
 import '../../../../core/providers/responsive_notifier.dart';
 import '../../../../core/providers/theme_data_provider.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/custom_drop_down.dart';
+import '../../../../core/widgets/custom_icon_button.dart';
 import '../../../../core/widgets/custom_text_form_field.dart';
 import '../../../../core/widgets/responsive_space.dart';
+import '../../../Currencies/domain/entities/currency.dart';
+import '../../../Currencies/presentation/providers/currency_provider.dart';
 import '../../domain/entities/customer.dart';
 import '../providers/customer_provider.dart';
-import '../widgets/timer_progress_card.dart';
+
 
 class AddCustomerSheet extends ConsumerStatefulWidget {
   final Customer? existingCustomer;
@@ -26,6 +33,8 @@ final _formKey = GlobalKey<FormState>();
   late TextEditingController _balanceController;
   late TextEditingController _phoneController;
   late TextEditingController _dateController;
+   late List<Currency> currencies = [];
+  late  Currency currencySelected;
   DateTime? _taskStartDate;
   int? _taskTotalDays;
   bool _isSaving = false;
@@ -35,11 +44,16 @@ final _formKey = GlobalKey<FormState>();
     'ريال سعودي',
     'درهم',
   ];
+
   
 
   @override
   void initState() {
     super.initState();
+    currencies = ref.read(currencyListProvider);
+    if (currencies.isNotEmpty) {
+    currencySelected = currencies.first;
+  }
      _nameController = TextEditingController(
       text: widget.existingCustomer?.name ?? '',
     );
@@ -54,7 +68,7 @@ final _formKey = GlobalKey<FormState>();
           ? DateFormat('dd-MM-yyyy').format(widget.existingCustomer!.taskStartDate!)
           : '',
     );
-    _currencyValue = widget.existingCustomer?.currency ?? _currencies[0];
+    _currencyValue = widget.existingCustomer?.currency ?? currencies[0].toString();
    
     _taskStartDate = widget.existingCustomer?.taskStartDate;
     _taskTotalDays = widget.existingCustomer?.taskTotalDays;
@@ -163,8 +177,8 @@ final _formKey = GlobalKey<FormState>();
     return null;
   }
 
-  String? _validateCurrency(String? value) {
-    if (value == null || value.isEmpty) {
+  String? _validateCurrency(Currency? value) {
+    if (value == null ) {
       return 'يرجى اختيار العملة';
     }
     return null;
@@ -173,8 +187,8 @@ final _formKey = GlobalKey<FormState>();
     if (value == null || value.isEmpty) {
       return 'يرجى إدخال رقم الهاتف';
     }
-    if (value.length < 10) {
-      return 'رقم الهاتف يجب أن يكون 10 أرقام على الأقل';
+    if (value.length < 9) {
+      return 'رقم الهاتف يجب أن يكون 9 أرقام على الأقل';
     }
     return null;
   }
@@ -185,155 +199,209 @@ final _formKey = GlobalKey<FormState>();
     final responsive = ref.watch(responsiveProvider);
     final theme = ref.watch(themeDataProvider);
 
-    return Dialog(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      insetPadding: responsive.paddingAll(16),
-      child: Form(
-        key: _formKey,
-        // autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AppBar(
-                title: Text(
-                  widget.existingCustomer == null ? 'إضافة عميل' : 'تعديل عميل',
-                ),
-                centerTitle: true,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    const ResponsiveSpace(height: 16),
-                    CustomTextField(
-                      controller: _nameController,
-                      label: 'اسم العميل',
-                      hint: 'ادخل اسم العميل',
-                      validator: _validateName,
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () => _nameController.clear(),
-                      ),
-                    ),
-                    const ResponsiveSpace(height: 16),
-                    CustomTextField(
-                      controller: _balanceController,
-                      label: 'الرصيد',
-                      hint: 'أدخل الرصيد',
-                      keyboardType: TextInputType.number,
-                      validator: _validateAmount,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          Icons.calculate_outlined,
+    return BaseLayoutScreen(
+     
+      body: BuildNonTabbarLayout(
+        title: widget.existingCustomer == null ? 'إضافة عميل' : 'تعديل عميل',
+        actions: [
+          CustomIconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back_outlined),
+          ),
+        ],
+        slivers:[
+          SliverToBoxAdapter(
+            child: Form(
+            key: _formKey,
+            
+            child: Padding(
+              padding: responsive.paddingSym(h: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const ResponsiveSpace(height: 16),
+                   CustomAutoSizeText(
+                                text: 'البيانات الأساسية',
+                                style: theme.textTheme.bodyMedium,
+                                fontSize: 14,
+                                colorText: theme.colorScheme.primary,
+                              ),
+                              const ResponsiveSpace(height: 8),
+                  ResponsiveSpace(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(
                           color: theme.colorScheme.primary,
+                          width: responsive.w(0.5),
                         ),
-                        onPressed: () {
-                          // Handle calculation logic here
-                        },
+                        
                       ),
+                      child: Padding(
+                          padding: responsive.paddingAll(16),
+                          child: Column(
+                            children: [
+                             
+                              CustomTextField(
+                                
+                                controller: _nameController,
+                                label: 'اسم العميل',
+                                hint: 'ادخل اسم العميل',
+                                validator: _validateName,
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () => _nameController.clear(),
+                                ),
+                              ),
+                              const ResponsiveSpace(height: 16),
+                              CustomTextField(
+                                controller: _phoneController,
+                                label: 'هاتف',
+                                hint: 'أدخل رقم الهاتف',
+                                keyboardType: TextInputType.phone,
+                                validator: _validatePhone,
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () => _phoneController.clear(),
+                                ),
+                              ),
+                              
+                              
+                            ],
+                          ),
+                        )
                     ),
-                    const ResponsiveSpace(height: 16),
-                    CustomTextField(
-                      controller: _phoneController,
-                      label: 'هاتف',
-                      hint: 'أدخل رقم الهاتف',
-                      keyboardType: TextInputType.phone,
-                      validator: _validatePhone,
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () => _phoneController.clear(),
+                  ),
+                  const ResponsiveSpace(height: 16),
+                  CustomTextField(
+                    controller: _balanceController,
+                    label: 'الرصيد',
+                    hint: 'أدخل الرصيد',
+                    keyboardType: TextInputType.number,
+                    validator: _validateAmount,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        Icons.calculate_outlined,
+                        color: theme.colorScheme.primary,
                       ),
+                      onPressed: () {
+                        // Handle calculation logic here
+                      },
                     ),
-                    const ResponsiveSpace(height: 16),
-                    DropdownButtonFormField<String>(
-                      value: _currencyValue,
-                      hint: const Text('اختر العملة'),
-                      items: _currencies
-                          .map(
-                            (currency) => DropdownMenuItem(
-                              value: currency,
-                              child: Text(currency),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (value) {
+                  ),
+                  
+                  
+                  const ResponsiveSpace(height: 16),
+                  DropdownButtonFormField<Currency>(
+                    
+                    decoration:  InputDecoration(
+                       fillColor:theme.colorScheme.surface,
+                       constraints: BoxConstraints(
+                        minHeight: responsive.h(50),
+                        maxHeight: responsive.h(100),
+                      ),
+                      labelText: 'العملة',
+                      hintText: 'اختر العملة',
+                     border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(6)),
+                        borderSide: BorderSide(
+                          color: theme.colorScheme.primary,
+                          width: responsive.w(1),
+                        ),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      
+                      
+                      ),
+                    // value: currencySelected,
+                    // hint: const Text('اختر العملة'),
+                    items: currencies
+                        .map(
+                          (currency) => DropdownMenuItem(
+                            value: currency,
+                            child: Text(currency.name.toString()),
+                          ),
+                        ).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                       
+                        currencySelected = value!;
+                      });
+                    },
+                    validator: _validateCurrency,
+                  ),
+                  // Task Management Section
+                  // if (_taskStartDate != null && _taskTotalDays != null)
+                  //   TimerProgressCard(
+                  //     startDate: _taskStartDate!,
+                  //     totalDays: _taskTotalDays!,
+                  //   ),
+                  // CustomDropdown(),
+                  ListTile(
+                    title: const Text('تاريخ بداية المهمة'),
+                    subtitle: Text(
+                      _taskStartDate != null
+                          ? DateFormat.yMd().format(_taskStartDate!)
+                          : 'غير محدد',
+                    ),
+                    trailing: const Icon(Icons.calendar_today),
+                    onTap: () => _selectDate(context),
+                  ),
+                  DropdownButtonFormField<int>(
+                    value: _taskTotalDays,
+                    hint: const Text('اختر مدة المهمة'),
+                    items:
+                        List.generate(30, (i) => i + 1)
+                            .map(
+                              (days) => DropdownMenuItem(
+                                value: days,
+                                child: Text('$days يوم'),
+                              ),
+                            )
+                            .toList(),
+                    onChanged:
+                        (value) => setState(() => _taskTotalDays = value),
+                  ),
+                  if (widget.existingCustomer != null)
+                    TextButton(
+                      onPressed: () {
                         setState(() {
-                          _currencyValue = value;
+                          _taskStartDate = null;
+                          _taskTotalDays = null;
                         });
                       },
-                      validator: _validateCurrency,
-                    ),
-                    // Task Management Section
-                    if (_taskStartDate != null && _taskTotalDays != null)
-                      TimerProgressCard(
-                        startDate: _taskStartDate!,
-                        totalDays: _taskTotalDays!,
+                      child: const Text(
+                        'حذف المهمة',
+                        style: TextStyle(color: Colors.red),
                       ),
-                    ListTile(
-                      title: const Text('تاريخ بداية المهمة'),
-                      subtitle: Text(
-                        _taskStartDate != null
-                            ? DateFormat.yMd().format(_taskStartDate!)
-                            : 'غير محدد',
+                    ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      CustomButton(
+                        text: "إلغاء",
+                        textColor: theme.colorScheme.surfaceDim,
+                        backgroundColor: theme.colorScheme.surfaceBright,
+                        onPressed: () => Navigator.pop(context),
                       ),
-                      trailing: const Icon(Icons.calendar_today),
-                      onTap: () => _selectDate(context),
-                    ),
-                    DropdownButtonFormField<int>(
-                      value: _taskTotalDays,
-                      hint: const Text('اختر مدة المهمة'),
-                      items:
-                          List.generate(30, (i) => i + 1)
-                              .map(
-                                (days) => DropdownMenuItem(
-                                  value: days,
-                                  child: Text('$days يوم'),
-                                ),
-                              )
-                              .toList(),
-                      onChanged:
-                          (value) => setState(() => _taskTotalDays = value),
-                    ),
-                    if (widget.existingCustomer != null)
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            _taskStartDate = null;
-                            _taskTotalDays = null;
-                          });
-                        },
-                        child: const Text(
-                          'حذف المهمة',
-                          style: TextStyle(color: Colors.red),
-                        ),
+                      const Spacer(),
+                      CustomButton(
+                        text: "حفظ",
+                        textColor: theme.colorScheme.onPrimary,
+                        backgroundColor: theme.colorScheme.primary,
+                        // isLoading: _isSaving, // أضف هذه السطر
+                        onPressed: _saveCustomer,
                       ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        CustomButton(
-                          text: "إلغاء",
-                          textColor: theme.colorScheme.onSurface,
-                          backgroundColor: theme.colorScheme.surface,
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                        const Spacer(),
-                        CustomButton(
-                          text: "حفظ",
-                          textColor: theme.colorScheme.onPrimary,
-                          backgroundColor: theme.colorScheme.primary,
-                          // isLoading: _isSaving, // أضف هذه السطر
-                          onPressed: _saveCustomer,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+                    ),
+          )
+        ] ,
       ),
     );
   }

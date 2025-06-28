@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/providers/responsive_notifier.dart';
 import '../../../../core/providers/theme_data_provider.dart';
-import '../../../../core/widgets/custom_show_balince.dart';
+import '../../../../core/widgets/custom_show_box_balince.dart';
 import '../../../../core/widgets/responsive_space.dart';
 import '../../domain/entities/currency.dart';
 import '../providers/currency_provider.dart';
@@ -57,7 +57,7 @@ class _CurrencyListTileState extends ConsumerState<CurrencyListTile> {
                 ),
                 Expanded(child: const ResponsiveSpace(width: 16)),
                 Container(
-                  padding: responsive.paddingSym(h: 8, v: 4),
+                  padding: responsive.paddingSym(h: 16, v: 4),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
                     border: Border.all(width: 1, color: Colors.grey.shade300),
@@ -148,14 +148,14 @@ class _CurrencyListTileState extends ConsumerState<CurrencyListTile> {
       height: 45,
       child: IntrinsicHeight(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // CustomDropdown(),
             Expanded(
-              child: CustomShowbalince(
-                titleBalince: ' عليك :',
-                valueBalince: '0',
+              child: CustomShowBoxBalince(
+                // titleBalince: ' عليك :',
+                valueBalince: '100000000000000',
                 iscreditor: true,
                 isleft: false,
               ),
@@ -163,9 +163,9 @@ class _CurrencyListTileState extends ConsumerState<CurrencyListTile> {
             VerticalDivider(),
             // ResponsiveSpace(width: responsive.w(8)),
             Expanded(
-              child: CustomShowbalince(
-                titleBalince: ' لك :',
-                valueBalince: '1000000000',
+              child: CustomShowBoxBalince(
+               
+                valueBalince: '100000000000000',
                 iscreditor: false,
                 isleft: true,
               ),

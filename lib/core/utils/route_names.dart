@@ -2,6 +2,7 @@ import 'package:bookkeeping_flutter_app/features/Customers/presentation/screens/
 import 'package:bookkeeping_flutter_app/features/Home/presentation/screens/home_main_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../features/Customers/presentation/screens/add_customer_sheet.dart';
 import '../../features/Home/presentation/screens/finance_screen.dart';
 
 enum RouteNames {
@@ -22,6 +23,7 @@ enum RouteNames {
        return Scaffold(body: Center(child: Text('No screen found')));
     }
   }
+  
 }
 // Usage
 // Navigator.push(
@@ -35,20 +37,14 @@ enum CustomerSubRoutes {
   create,
   edit;
 
-  String get path {
+
+  Widget get screen {
     switch (this) {
-      case CustomerSubRoutes.list:
-        return '/customers';
-      case CustomerSubRoutes.details:
-        return '/customers/:id';
       case CustomerSubRoutes.create:
-        return '/customers/create';
-      case CustomerSubRoutes.edit:
-        return '/customers/:id/edit';
-      }
+        return AddCustomerSheet();
+      default:
+        return Scaffold(body: Center(child: Text('No customer screen found'))); // or some other default widget
+    }
   }
 }
 
-// Usage:
-// Navigator.pushNamed(context, RouteNames.customers.path); // navigates to customers list
-// Navigator.pushNamed(context, CustomerSubRoutes.details.path); // navigates to customers details
