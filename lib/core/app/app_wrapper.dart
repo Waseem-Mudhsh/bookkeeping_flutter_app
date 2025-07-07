@@ -9,12 +9,12 @@ class AppWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
-      // child: DevicePreview(
-      //   enabled: true,
+      child: DevicePreview(
+        enabled: true,
        
-      //   builder: (context) => const BookkeepingApp(),
-      // ),
-      child: const BookkeepingApp(),
+        builder: (context) => const BookkeepingApp(),
+      ),
+      
     );
   }
 }

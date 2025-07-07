@@ -76,6 +76,7 @@ class _CurrencyListTileState extends ConsumerState<CurrencyListTile> {
                           style: theme.textTheme.bodySmall,
                           fontWeight: FontWeight.w700,
                           text: currencySelected.name,
+                          fontSize: 14,
 
                           colorText: theme.colorScheme.onPrimary,
                         ),
@@ -145,11 +146,12 @@ class _CurrencyListTileState extends ConsumerState<CurrencyListTile> {
 
   Widget buildBalinceDue() {
     return ResponsiveSpace(
-      height: 45,
+      
       child: IntrinsicHeight(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             // CustomDropdown(),
             Expanded(

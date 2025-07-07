@@ -143,7 +143,7 @@ class CustomAutoSizeText extends ConsumerWidget {
     this.overflow = TextOverflow.ellipsis,
     this.fontWeight,
     this.colorText,
-    this.fontFamily = 'cairo',
+    this.fontFamily,
     this.letterSpacing,
     this.wordSpacing,
     this.decoration,

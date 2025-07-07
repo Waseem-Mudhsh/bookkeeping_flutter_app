@@ -11,7 +11,7 @@ class AppTypography {
       bodyMedium: TextStyle(fontSize: responsive.sp(14), fontWeight: FontWeight.w600),
       bodySmall: TextStyle(fontSize: responsive.sp(12)),
     ).apply(
-      fontFamily: 'cairo',
+      // fontFamily: 'cairo',
       // bodyColor: isDarkMode ? AppColors.darkPrimary : AppColors.lightPrimary,
       // displayColor: isDarkMode ? AppColors.darkPrimary : AppColors.lightPrimary,
     );

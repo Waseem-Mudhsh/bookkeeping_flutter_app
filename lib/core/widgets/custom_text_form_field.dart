@@ -65,6 +65,7 @@ class CustomTextField extends ConsumerWidget {
       obscuringCharacter: '*',
       
       
+      
       keyboardType: keyboardType ?? TextInputType.text,
       style: style?? theme.textTheme.bodyMedium,
       
@@ -77,27 +78,58 @@ class CustomTextField extends ConsumerWidget {
       
       
       decoration: InputDecoration(
+        
         fillColor: fillColor ?? theme.colorScheme.surface,
         constraints: BoxConstraints(
           minHeight: responsive.h(50),
           maxHeight: responsive.h(100),
         ),
-        
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+          borderSide: BorderSide(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.5), 
+            width: responsive.w(0.5),
+          )),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+          borderSide: BorderSide(
+            color: theme.colorScheme.primary, 
+            width: responsive.w(0.5),
+          ),
+        ),
+       
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+          borderSide: BorderSide(
+            color: theme.colorScheme.error, 
+            width: responsive.w(0.5),
+          ),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+          borderSide: BorderSide(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.5), 
+            width: responsive.w(0.5),
+          ),
+        ),
+
         labelText: label,
-        labelStyle:labelStyle ?? theme.textTheme.bodySmall,
+        labelStyle:labelStyle ?? theme.textTheme.bodySmall!.copyWith(
+          color: theme.colorScheme.onSurface, 
+          fontSize: 12,
+          fontWeight: FontWeight.w500
+        ),
         hintText: hint,
         hintStyle: hintStyle ?? theme.textTheme.bodySmall!.copyWith(
           color: theme.colorScheme.onSurface.withValues(alpha: 0.6), 
-          
+          fontSize: 10
         ),
         suffixIcon: suffixIcon,
+        
+        
         prefixIcon: prefixIcon,
-        border:  OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-          borderSide: BorderSide(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.6), 
-            width: responsive.w(0.5)),
-        ),
+        
+        
         
        
         errorMaxLines: 2,
@@ -109,6 +141,7 @@ class CustomTextField extends ConsumerWidget {
       validator: validator,
       onTap: onTap,
       onChanged: onChanged,
+      
 
     );
   }

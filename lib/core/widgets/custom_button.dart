@@ -8,7 +8,7 @@ import '../providers/theme_data_provider.dart';
 class CustomButton extends ConsumerWidget {
   final String text;
   final Color? textColor;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final TextStyle? textStyle;
   
   final VoidCallback? onPressed;
@@ -31,6 +31,8 @@ class CustomButton extends ConsumerWidget {
     
       style: ElevatedButton.styleFrom(
         padding: responsive.paddingSym(h: 16, v: 16),
+        backgroundColor: backgroundColor ??theme.colorScheme.surfaceBright,
+        // foregroundColor: textColor ?? theme.colorScheme.onPrimary,
         
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),
