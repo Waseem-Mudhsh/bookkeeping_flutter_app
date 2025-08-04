@@ -29,7 +29,7 @@ class TextFieldLikeDropdown<T> extends ConsumerWidget {
     this.decoration,
     this.isEnabled = true,
     this.icon,
-    this.fillColor,
+    this.fillColor, required Icon prefixIcon,
   });
 
   @override

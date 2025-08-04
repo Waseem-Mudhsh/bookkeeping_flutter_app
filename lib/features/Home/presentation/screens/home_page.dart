@@ -71,7 +71,7 @@ class SearchField extends StatelessWidget {
         decoration: InputDecoration(
           filled: true,
           hintStyle: const TextStyle(color: Color(0xFF757575)),
-          fillColor: const Color(0xFF979797).withOpacity(0.1),
+          fillColor: const Color(0xFF979797).withValues(alpha: 0.1),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           border: const OutlineInputBorder(
@@ -476,7 +476,7 @@ class ProductCard extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF979797).withOpacity(0.1),
+                  color: const Color(0xFF979797).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Image.network(product.images[0]),
@@ -508,8 +508,8 @@ class ProductCard extends StatelessWidget {
                     width: 24,
                     decoration: BoxDecoration(
                       color: product.isFavourite
-                          ? const Color(0xFFFF7643).withOpacity(0.15)
-                          : const Color(0xFF979797).withOpacity(0.1),
+                          ? const Color(0xFFFF7643).withValues(alpha: 0.1)
+                          : const Color(0xFF979797).withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: SvgPicture.string(

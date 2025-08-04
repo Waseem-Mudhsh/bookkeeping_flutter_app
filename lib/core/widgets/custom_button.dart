@@ -10,46 +10,59 @@ class CustomButton extends ConsumerWidget {
   final Color? textColor;
   final Color? backgroundColor;
   final TextStyle? textStyle;
-  
   final VoidCallback? onPressed;
+  final bool isLoading; // 1. إضافة خاصية isLoading
 
   const CustomButton({
     super.key,
     required this.text,
-    required this.textColor,
-    required this.backgroundColor,
+    this.textColor, // جعلها اختيارية
+    this.backgroundColor, // جعلها اختيارية
     this.textStyle,
     this.onPressed,
+    this.isLoading = false, // 2. تعيين قيمة افتراضية لـ isLoading
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.watch(themeDataProvider);
     final responsive = ref.watch(responsiveProvider);
+
     return ElevatedButton(
-      onPressed: onPressed,
-    
+      // 3. تعطيل الزر إذا كان isLoading صحيحًا
+      onPressed: isLoading ? null : onPressed,
       style: ElevatedButton.styleFrom(
         padding: responsive.paddingSym(h: 16, v: 16),
-        backgroundColor: backgroundColor ??theme.colorScheme.surfaceBright,
-        // foregroundColor: textColor ?? theme.colorScheme.onPrimary,
-        
+        // استخدام اللون الافتراضي إذا لم يتم تحديده
+        backgroundColor: backgroundColor ?? theme.colorScheme.primary, // جعل اللون الرئيسي هو الافتراضي
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4.0),
+          borderRadius: BorderRadius.circular(4), // استخدام ResponsiveValues لـ BorderRadius
         ),
-        textStyle: textStyle ?? theme.textTheme.bodyMedium?.copyWith(
-          color: textColor?? theme.colorScheme.onPrimary,
-          fontWeight: FontWeight.w400,
-        ),
-        
+        textStyle: textStyle ??
+            theme.textTheme.bodyMedium?.copyWith(
+              color: textColor ?? theme.colorScheme.onPrimary,
+              fontWeight: FontWeight.w400,
+            ),
+        // 4. تحديد لون foregroundColor للـ ElevatedButton نفسه
+        // هذا سيؤثر على لون النص أو الأيقونة الداخلية
+        foregroundColor: textColor ?? theme.colorScheme.onPrimary,
+        // يمكنك أيضًا إضافة لون للـ overlay (التأثير عند الضغط)
+        overlayColor: Colors.transparent,
       ),
-      child: CustomAutoSizeText(
-            text: 
-              text,
+      // 5. عرض مؤشر التحميل أو النص بناءً على isLoading
+      child: isLoading
+          ? SizedBox(
+              width: responsive.w(24), // تحديد حجم لمؤشر التحميل
+              height: responsive.w(24),
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5, // سمك خط المؤشر
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    textColor ?? theme.colorScheme.onPrimary), // لون المؤشر
+              ),
+            )
+          : CustomAutoSizeText(
+              text: text,
               colorText: textColor ?? theme.colorScheme.onPrimary,
-              
-
-           
             ),
     );
   }

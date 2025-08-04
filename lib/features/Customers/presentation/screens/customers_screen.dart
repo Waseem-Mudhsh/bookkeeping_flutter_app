@@ -11,11 +11,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/providers/responsive_notifier.dart';
 
+import '../../../../core/providers/theme_data_provider.dart';
 import '../../../../core/widgets/custom_drawer.dart';
 
 import '../providers/customer_provider.dart';
 import '../widgets/customer_card.dart';
-import '../widgets/customer_empty_state.dart';
+import '../../../../core/widgets/custom_empty_state.dart';
 
 class CustomersScreen extends ConsumerWidget {
   const CustomersScreen({super.key});
@@ -23,7 +24,6 @@ class CustomersScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final customersAsync = ref.watch(customerViewModelProvider);
-    final actions = CustomerActions(ref: ref, context: context);
     final responsive = ref.watch(responsiveProvider);
     
     
@@ -53,7 +53,7 @@ class CustomersScreen extends ConsumerWidget {
            {
             Navigator.pop(context);
             },
-             icon: const Icon(Icons.arrow_back_outlined)),
+             icon: const Icon(Icons.arrow_circle_left_outlined)),
           
           ],
          
@@ -92,6 +92,7 @@ class CustomersScreen extends ConsumerWidget {
   Widget builderCustomerLists (BuildContext context, WidgetRef ref, AsyncValue<List<dynamic>> customersAsync) {
     var actions = CustomerActions(ref: ref, context: context);
     final responsive = ref.watch(responsiveProvider);
+    final theme = ref.watch(themeDataProvider);
     return  SingleChildScrollView(
       child: Padding(
         padding: responsive.paddingAll(16),
@@ -100,14 +101,18 @@ class CustomersScreen extends ConsumerWidget {
                   spacing: responsive.h(8),
                   children: [
                     if (customers.isEmpty)
-                      const Center(
-                        child: CustomerEmptyState(),
+                       Center(
+                        child: CustomEmptyState(
+                           message: 'لا يوجد عملاء',
+                          subMessage: 'يمكنك إضافة عملاء جدد من خلال زر الإضافة في الزاوية السفلى اليمنى',
+                          theme: theme,
+                        ),
                       ),
                     ...customers.map(
                       (customer) => CustomerCard(
                         customer: customer,
                         
-                       
+                       onEdit: () => actions.showEditCustomerSheet(customer),
                         onDelete: () => actions.deleteCustomer(customer.id),
                       ),
               
@@ -122,53 +127,6 @@ class CustomersScreen extends ConsumerWidget {
   
 }
 
-// class BuilderBottomNavigationBar extends ConsumerWidget {
-//   const BuilderBottomNavigationBar({super.key});
-
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final theme = ref.watch(themeDataProvider);
-//     final responsive = ref.watch(responsiveProvider);
-    
-//     return Container(
-//       height: responsive.h(80), // Fixed height
-//       decoration: BoxDecoration(
-//         color: theme.colorScheme.onSecondary,
-//         boxShadow: [
-//           BoxShadow(
-//             color: Colors.black12,
-//             blurRadius: 4,
-//             spreadRadius: 1,
-//           ),
-//         ],
-//       ),
-//       padding: responsive.paddingSym(h: 16, v: 8),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//         children: [
-//           Expanded(
-//             child: CustomShowbalince(
-//               titleBalince: ' عليك :',
-//               valueBalince: '100000000000',
-//               iscreditor: true,
-//               isleft: false,
-//             ),
-//           ),
-//           ResponsiveSpace(width: responsive.w(8)),
-//           Expanded(
-//             child: CustomShowbalince(
-
-//               titleBalince: ' مدين :',
-//               valueBalince: '100055500000',
-//               iscreditor: false,
-//               isleft: true,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 
 
 

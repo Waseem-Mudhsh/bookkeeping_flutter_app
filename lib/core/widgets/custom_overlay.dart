@@ -1,3 +1,6 @@
+import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_button.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter/material.dart';
 
 class CustomOverlay {
@@ -158,14 +161,22 @@ void showTemporaryMessage(BuildContext context, String message) {
 //     ),
 //   );
 // }
+// عرض نافذة تاكيد مع محتوى مخصص
+// هذا المثال يستخدم OverlayEntry لعرض نافذة تاكيد مع محتوى مخصص
 void showConfirmationDialog({
   required BuildContext context,
   required String title,
   required Widget content,
   required VoidCallback onConfirm,
+  String? confirmButtonText,
+  String? cancelButtonText,
+  Color? backgroundColor,
+  Color? textColor,
+  Color? confirmButtonColor,
+  
+  
 }) {
   final overlayState = Overlay.of(context, rootOverlay: true);
-  final navigator = Navigator.of(context, rootNavigator: true);
   OverlayEntry? overlayEntry;
 
    overlayEntry = OverlayEntry(
@@ -179,47 +190,55 @@ void showConfirmationDialog({
         ),
         Center(
           child: Material(
-            color: Colors.transparent,
-            child: IntrinsicWidth(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.8,
+            color:  Colors.transparent,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.9,
+              ),
+              child: Container(
+                padding:EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                decoration: BoxDecoration(
+                  color:backgroundColor ?? Colors.white,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(title, 
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 16),
-                      // استخدم Builder هنا لضمان وجود context صحيح للDropdown
-                      Builder(
-                        builder: (innerContext) => content,
-                      ),
-                      SizedBox(height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          TextButton(
-                            onPressed: () => overlayEntry?.remove(),
-                            child: Text('إلغاء'),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomAutoSizeText(
+                        text: title, 
+                        colorText: textColor ?? Colors.black45,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,),
+                    ResponsiveSpace(height: 16),
+                    // استخدم Builder هنا لضمان وجود context صحيح للDropdown
+                    Builder(
+                      builder: (innerContext) => content,
+                    ),
+                    ResponsiveSpace(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        TextButton(
+                          onPressed: () => overlayEntry?.remove(),
+                          child: CustomAutoSizeText(
+                            text: cancelButtonText ?? 'إلغاء',
+                            colorText: Colors.grey,
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              overlayEntry?.remove();
-                              onConfirm();
-                            },
-                            child: Text('تأكيد'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                        CustomButton(
+                          onPressed: () {
+                            overlayEntry?.remove();
+                            onConfirm();
+                          },
+                          backgroundColor: confirmButtonColor ?? Colors.blue,
+                            text: confirmButtonText ?? 'تأكيد',
+                            textColor: Colors.white,
+                          
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),

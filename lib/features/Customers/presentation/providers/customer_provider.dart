@@ -43,7 +43,7 @@ final deleteCustomerProvider = Provider<DeleteCustomer>((ref) {
   return DeleteCustomer(ref.read(customerRepositoryProvider));
 });
 
-final customerViewModelProvider = StateNotifierProvider<CustomerViewModel, AsyncValue<List<Customer>>>((ref) {
+final customerViewModelProvider = StateNotifierProvider.autoDispose<CustomerViewModel, AsyncValue<List<Customer>>>((ref) {
   return CustomerViewModel(
     getCustomers: ref.read(getCustomersProvider),
     addCustomer: ref.read(addCustomerProvider),

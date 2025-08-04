@@ -22,9 +22,9 @@ class CustomListServices extends ConsumerWidget {
 
     },
     {
-      'name': 'Income',
+      'name': 'Accounts',
       'icon': Icons.money,
-      'route': RouteNames.finance,
+      'route': RouteNames.accounts,
     },
     {
       'name': 'Budget',

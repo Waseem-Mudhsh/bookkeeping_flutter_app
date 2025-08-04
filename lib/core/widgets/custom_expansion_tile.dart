@@ -38,10 +38,13 @@ class _CustomExpansionTileState extends ConsumerState<CustomExpansionTile> {
     final responsive = ref.watch(responsiveProvider);
     final theme = ref.watch(themeDataProvider);
     return ExpansionTile(
+      
+      expandedCrossAxisAlignment: CrossAxisAlignment.start,
       initiallyExpanded: _isExpanded,
       childrenPadding: responsive.paddingSym(h: 16, v: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4),
+        
       ),
       collapsedShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4),

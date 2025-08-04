@@ -6,6 +6,10 @@ import '../providers/responsive_notifier.dart';
 import '../providers/theme_data_provider.dart';
 import '../widgets/custom_auto_size_text.dart';
 
+/// A layout widget for screens with a sliver app bar and a single scrollable area.
+/// 
+/// [slivers] must only contain sliver widgets (e.g., SliverList, SliverGrid, SliverToBoxAdapter).
+/// Passing non-sliver widgets will cause a runtime error.
 class BuildNonTabbarLayout extends ConsumerWidget {
   final String? title;
   final List<Widget>? actions;
@@ -22,56 +26,30 @@ class BuildNonTabbarLayout extends ConsumerWidget {
     this.bottom,
     this.hasLeading = false,
     required this.slivers,
-  });
+  }); 
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeDataProvider);
-    final responsive = ref.watch(responsiveProvider);
+@override
+Widget build(BuildContext context, WidgetRef ref) {
+  final theme = ref.watch(themeDataProvider);
+  final responsive = ref.watch(responsiveProvider);
 
-    // Access the responsive
-    return NestedScrollView(
-      clipBehavior: Clip.antiAlias,
-      floatHeaderSlivers: true,
-      physics: const ClampingScrollPhysics(),
-
-      headerSliverBuilder: (context, innerBoxIsScrolled) {
-        return [
-          SliverOverlapAbsorber(
-            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-            sliver: CustomSliverAppBar(
-              toolbarHeight: toolbarHeight ?? responsive.h(50),
-              hasLeading: hasLeading,
-              title: CustomAutoSizeText(
-                text: title ?? '',
-                style: theme.textTheme.bodyMedium,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-              actions: actions,
-              bottom: bottom,
-              
-            
-          ),
-     ) ];
-    
-      },
-      body: Builder(
-        builder: (context) {
-          return CustomScrollView(
-            physics: const ClampingScrollPhysics(),
-            // controller: PrimaryScrollController.of(context),
-            slivers: [
-              // لمنع تداخل المحتوى مع AppBar
-              SliverOverlapInjector(
-                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              ),
-              ...slivers,
-            ],
-          );
-        }
+  return CustomScrollView(
+    physics: const ClampingScrollPhysics(),
+    slivers: [
+      CustomSliverAppBar(
+        toolbarHeight: toolbarHeight ?? responsive.h(50),
+        hasLeading: hasLeading,
+        title: CustomAutoSizeText(
+          text: title ?? '',
+          style: theme.textTheme.bodyMedium,
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+        ),
+        actions: actions,
+        bottom: bottom,
       ),
-      
-    );
-  }
+      ...slivers,
+    ],
+  );
+}
 }

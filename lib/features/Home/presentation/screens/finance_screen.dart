@@ -1,40 +1,62 @@
 import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
-import 'package:bookkeeping_flutter_app/features/Currencies/presentation/widgets/currency_list_tile.dart';
+import 'package:bookkeeping_flutter_app/core/utils/responsive_values.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_tab_view_container.dart';
+import 'package:bookkeeping_flutter_app/features/Accounts/presentation/providers/account_provider.dart';
+import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/accounts_screen.dart';
+import 'package:bookkeeping_flutter_app/features/Notifications/presentation/screens/notifications_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../../core/base_layout/build_tab_bar_layout.dart';
 import '../../../../core/providers/responsive_notifier.dart';
 import '../../../../core/providers/theme_data_provider.dart';
+import '../../../../core/utils/route_names.dart';
 import '../../../../core/widgets/custom_auto_size_text.dart';
 import '../../../../core/widgets/custom_drawer.dart';
-import '../../../../core/widgets/custom_horizontal_list_view.dart';
 import '../../../../core/widgets/custom_icon_button.dart';
 import '../../../Accounts/domain/entities/main_account.dart';
-import '../../../Accounts/domain/entities/sub_account.dart';
-import '../../../Currencies/presentation/widgets/custom_show_balince.dart';
+import '../../../Notifications/domain/entities/notification_model.dart';
+import '../../../Transactions/presentation/Providers/transaction_provider.dart';
+
 // Add this import for mainAccountsProvider
+final List<NotificationModel> mockNotifications = [
+  NotificationModel(
+    id: 'al1',
+    message: 'الرصيد في محفظة الكاش منخفض!',
+    type: NotificationType.warning,
+    onPressed: () => debugPrint('Top up cash'),
+  ),
+  NotificationModel(
+    id: 'al2',
+    message: 'فاتورة الكهرباء مستحقة غدًا.',
+    type: NotificationType.info,
+    onPressed: () => debugPrint('Pay electricity bill'),
+  ),
+];
 
 class FinanceScreen extends ConsumerWidget {
   const FinanceScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<String> tags = ['موردين', 'العملاء', 'مصروفات', 'الضرايب', 'الرواتب'];
+    
+    List<NotificationModel> mockAlerts = mockNotifications;
 
     final responsive = ref.watch(responsiveProvider);
+    final theme = ref.watch(themeDataProvider);
+    final asyncAccounts = ref.watch(accountViewModelProvider);
+    final asyncTransactions = ref.watch(transactionViewModelProvider);
 
     return BaseLayoutScreen(
       drawer: CustomDrawer(),
       body: BuildTabBarLayout(
-        toolbarHeight: responsive.h(120),
-
+        toolbarHeight: responsive.h(116),
+    
         initialTabIndex: 0,
         tabs: mainAccounts.map((account) => Tab(text: account.name)).toList(),
         title: 'الحسابات',
         hasLeading: true,
         actions: [
+          _buildNotificationButton(context, responsive, theme, mockAlerts),
           CustomIconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -42,115 +64,97 @@ class FinanceScreen extends ConsumerWidget {
             icon: const Icon(Icons.arrow_circle_left_outlined),
           ),
         ],
-
+    
         tabViews:
             mainAccounts.map((mainAccount) {
-              return SizedBox(
-                height: responsive.deviceSize.height,
-
-                child: Padding(
-                  padding: responsive.paddingSym(h: 16, v: 8),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      
-                      
-                      CustomShowBalince(),
-                       
-                      const ResponsiveSpace(height: 16),
-
-                      Expanded(
-                        child: CustomHorizontalListView(
-                          nameButtons:
-                              subAccounts
-                                  .map((sub) => sub.type)
-                                  .toSet()
-                                  .toList(),
-                          contentWidgets: [
-                            _buildListSubAccounts(
-                              ref,
-                              subAccounts
-                                  .where((sub) => sub.type == tags[0])
-                                  .toList(),
-                            ),
-                            _buildListSubAccounts(
-                              ref,
-                              subAccounts
-                                  .where((sub) => sub.type == tags[1])
-                                  .toList(),
-                            ),
-                            _buildListSubAccounts(
-                              ref,
-                              subAccounts
-                                  .where((sub) => sub.type == tags[4])
-                                  .toList(),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
+              return CustomTabViewContainer(
+                responsive: responsive,
+                child: AccountsScreen(
+                  
+                  theme: theme,
+                  responsive: responsive,
+                  asyncTransactions: asyncTransactions, // قائمة معاملات فارغة,
+                ));
             }).toList(),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AccountSubRoutes.create.screen));},
+        label: const Text('اضافة حساب جديد'),
+        icon: const Icon(
+          Icons.add,
+        ),
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: theme.colorScheme.onPrimary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        )
+        ),
+        ) ;
+         
+        
+  }
+
+  Widget _buildNotificationButton(
+    BuildContext context,
+    ResponsiveValues responsive,
+    ThemeData theme,
+    List<NotificationModel> mockAlerts,
+  ) {
+    return Stack(
+      // Use Stack to overlay the badge
+      children: [
+        IconButton(
+          icon: Icon(
+            Icons.notifications_none,
+            color: theme.colorScheme.secondary,
+            size: responsive.w(24),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) =>
+                        NotificationsScreen(mockNotifications: mockAlerts),
+              ),
+            );
+
+            debugPrint('Notifications button pressed');
+          },
+          tooltip: 'الإشعارات',
+        ),
+        // يمكنك إضافة الـ badge هنا إذا كان هناك إشعارات غير مقروءة
+        // مثال بسيط (يتطلب وجود عدد الإشعارات):
+        if (mockAlerts.isNotEmpty) // Replace with actual unread alerts count
+          Positioned(
+            right: 0,
+            top: 0,
+            child: Container(
+              padding: responsive.paddingAll(responsive.w(4)),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+              constraints: BoxConstraints(
+                maxWidth: responsive.w(32),
+                maxHeight: responsive.h(32),
+              ),
+              child: CustomAutoSizeText(
+                text:
+                    mockAlerts.length
+                        .toString(), // Replace with unread alerts count
+                fontSize: 10,
+                colorText: Colors.white,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+      ],
     );
   }
 
-  Widget _buildListSubAccounts(
-    WidgetRef ref,
-    List<SubAccountModel> subAccounts,
-  ) {
-    final theme = ref.watch(themeDataProvider);
-    final responsive = ref.watch(responsiveProvider);
-    return subAccounts.isEmpty
-        ? Align(
-          alignment: Alignment.topCenter,
-          child: Padding(
-            padding: responsive.paddingOnly(top: 16),
-            child: CustomAutoSizeText(
-              text: 'لا توجد حسابات فرعية',
-              style: theme.textTheme.bodyLarge,
-              presetFontSizes: [16, 14, 12],
-              textAlign: TextAlign.center,
-            ),
-          ),
-        )
-        : ListView.builder(
-          itemCount: subAccounts.length,
-          itemBuilder: (context, index) {
-            final sub = subAccounts[index];
-            return Card(
-              child: ListTile(
-                title: CustomAutoSizeText(
-                  text: sub.name,
-                  style: theme.textTheme.bodyLarge,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-                subtitle: CustomAutoSizeText(
-                  text: 'النوع: ${sub.type}',
-                  style: theme.textTheme.bodySmall,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 10,
-                ),
-                trailing: CustomAutoSizeText(
-                  text: '${sub.totalBalance.toStringAsFixed(2)} ر.س',
-                  style: theme.textTheme.bodyMedium,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-                onTap: () {
-                  // عرض تفاصيل أو سجل الحركات
-                },
-              ),
-            );
-          },
-        );
-
-  }
- 
 
   
 }

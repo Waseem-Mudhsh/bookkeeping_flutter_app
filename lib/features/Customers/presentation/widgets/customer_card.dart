@@ -6,16 +6,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/providers/responsive_notifier.dart';
 import '../../../../core/providers/theme_data_provider.dart';
+import '../../../../core/utils/route_names.dart';
 import '../../../../core/widgets/custom_auto_size_text.dart';
 import '../../domain/entities/customer.dart';
-import '../providers/customer_provider.dart';
-import '../screens/add_customer_sheet.dart';
 
 class CustomerCard extends ConsumerWidget {
   final Customer customer;
   final DateTime? startDate;
   final int? totalDays;
   final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
   const CustomerCard({
     super.key,
@@ -23,7 +23,7 @@ class CustomerCard extends ConsumerWidget {
     this.startDate,
     this.totalDays,
     required this.onDelete,
-
+    required this.onEdit,
   });
 
   @override
@@ -39,13 +39,14 @@ class CustomerCard extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              contentPadding: responsive.paddingOnly(bottom: 8),
+              contentPadding: EdgeInsets.zero,
               leading: CircleAvatar(
                 backgroundColor: theme.colorScheme.primary,
                 child: CustomAutoSizeText(
-                 text: customer.name[0].toUpperCase(),
+                  text: customer.name[0].toUpperCase(),
                   fontSize: 14,
                   colorText: theme.colorScheme.onPrimary,
                 ),
@@ -53,63 +54,54 @@ class CustomerCard extends ConsumerWidget {
               title: CustomAutoSizeText(
                 text: customer.name,
                 style: theme.textTheme.bodyMedium,
-                
               ),
               subtitle: CustomAutoSizeText(
                 text: "له: ${customer.balance} \$",
                 style: theme.textTheme.bodyMedium,
               ),
-              trailing: IconButton(
-                onPressed: () {
-                  ref.read(customerViewModelProvider.notifier).deleteCustomer(customer.id);
-                },
-                icon: Icon(Icons.edit),
-                color: theme.colorScheme.primary,
-              ),
             ),
-            ResponsiveSpace(height: 4),
+            ResponsiveSpace(height: 1),
             if (startDate != null && totalDays != null)
-            TimerProgressCard(
-              startDate:startDate ?? DateTime.now(), // When task started
-              totalDays: 12, // Must complete within 5 days
-            ),
+              TimerProgressCard(
+                startDate: startDate ?? DateTime.now(), // When task started
+                totalDays: 12, // Must complete within 5 days
+              ),
             const Divider(),
 
-            SizedBox(
-              
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CustomIconButton(
+                  tooltip: 'إضافة عميل',
+
                   iconSize: 24,
-                  backgroundColor: theme.colorScheme.primary.withAlpha(60),
-                  icon: Icon(Icons.add, color: theme.colorScheme.onPrimaryFixed),
+                  iconColor: theme.colorScheme.onPrimaryFixed,
+                  backgroundColor: theme.colorScheme.primaryFixed,
+                  icon: Icon(Icons.add),
                   onPressed:
-                      () => showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) => const AddCustomerSheet(),
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CustomerSubRoutes.create.screen,
+                        ),
                       ),
                 ),
                 IconButton(
-                  tooltip: 'Edit',
+                  tooltip: 'تعديل',
                   icon: Icon(Icons.edit, color: theme.colorScheme.primary),
-                  onPressed: () {
-                    // Handle edit action here
-                  },
+                  onPressed: onEdit,
                 ),
-            
+
                 IconButton(
-                  tooltip: 'Timer',
+                  tooltip: 'منبه',
                   icon: Icon(Icons.timer, color: theme.colorScheme.primary),
                   onPressed: () {
                     // Handle edit action here
                   },
                 ),
                 IconButton(
-                  tooltip: 'Delete',
+                  tooltip: 'حذف',
                   icon: const Icon(Icons.delete, color: Colors.red),
                   onPressed: onDelete,
                 ),

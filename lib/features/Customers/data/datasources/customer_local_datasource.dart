@@ -12,7 +12,7 @@ class CustomerLocalDataSource {
   }
 
   Future<void> addCustomer(Customer customer) async {
-    await _customerBox.put(customer.id, customer);
+    await _customerBox.add( customer);
   }
 
   Future<void> updateCustomer(Customer customer) async {

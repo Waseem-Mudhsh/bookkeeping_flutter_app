@@ -12,6 +12,7 @@ class CustomIconButton extends ConsumerWidget {
   final Color? iconColor;
   final double? iconSize;
   final Color? backgroundColor;
+  final String? tooltip;
 
   const CustomIconButton({
     super.key,
@@ -22,6 +23,7 @@ class CustomIconButton extends ConsumerWidget {
     this.iconColor,
     this.iconSize,
     this.backgroundColor,
+    this.tooltip,
   });
 
   @override
@@ -30,6 +32,7 @@ class CustomIconButton extends ConsumerWidget {
     final responsive = ref.watch(responsiveProvider);
 
     return IconButton(
+      tooltip: tooltip,
       padding: responsive.paddingAll(8),
       onPressed: onPressed,
       icon: Icon(
@@ -38,7 +41,7 @@ class CustomIconButton extends ConsumerWidget {
         color: iconColor ?? theme.colorScheme.onPrimaryFixed,
         semanticLabel: icon.semanticLabel,
       ),
-      tooltip: icon.semanticLabel,
+      
       
       style: backgroundColor != null ? IconButton.styleFrom(
         backgroundColor: backgroundColor!.withAlpha( 60),

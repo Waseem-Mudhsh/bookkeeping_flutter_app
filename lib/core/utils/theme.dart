@@ -66,7 +66,7 @@ class AppTheme {
     } else {
       return FlexThemeData.light(
         fontFamily: 'Cairo',
-        scaffoldBackground: const Color(0xffFAFAFA),
+        scaffoldBackground: const Color(0xffFCFCFC),
         surfaceMode: FlexSurfaceMode.highScaffoldLevelSurface, // Surface mode
         scheme: FlexScheme.blueM3,
         useMaterial3: true,

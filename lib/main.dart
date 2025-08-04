@@ -82,11 +82,12 @@
 import 'package:bookkeeping_flutter_app/core/app/app_wrapper.dart';
 import 'package:bookkeeping_flutter_app/core/constants/hive_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:flutter/services.dart';
 
 void main() async {
   await _initializeApp();
-  runApp(const AppWrapper());
+  runApp(ProviderScope(child: const AppWrapper()));
 }
 
 Future<void> _initializeApp() async {

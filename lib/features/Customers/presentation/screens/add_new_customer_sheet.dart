@@ -8,28 +8,29 @@ import '../../../../core/base_layout/base_layout_screen.dart';
 import '../../../../core/base_layout/build_non_tabbar_layout.dart';
 import '../../../../core/providers/responsive_notifier.dart';
 import '../../../../core/providers/theme_data_provider.dart';
+import '../../../../core/utils/responsive_values.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_dropdown_widget.dart';
-import '../../../../core/widgets/custom_icon_button.dart';
 import '../../../../core/widgets/custom_overlay.dart';
 import '../../../../core/widgets/custom_text_form_field.dart';
 import '../../../../core/widgets/responsive_space.dart';
-import '../../../Accounts/domain/entities/sub_account.dart';
+import '../../../Accounts/domain/entities/account.dart';
 import '../../../Currencies/domain/entities/currency.dart';
 import '../../../Currencies/presentation/providers/currency_provider.dart';
 import '../../domain/entities/customer.dart';
 import '../providers/customer_provider.dart';
 
-class AddCustomerSheet extends ConsumerStatefulWidget {
+class AddNewCustomerSheet extends ConsumerStatefulWidget {
   final Customer? existingCustomer;
 
-  const AddCustomerSheet({super.key, this.existingCustomer});
+  const AddNewCustomerSheet({super.key, this.existingCustomer});
 
   @override
-  ConsumerState<AddCustomerSheet> createState() => _AddCustomerSheetState();
+  ConsumerState<AddNewCustomerSheet> createState() =>
+      _AddNewCustomerSheetState();
 }
 
-class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
+class _AddNewCustomerSheetState extends ConsumerState<AddNewCustomerSheet> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _balanceController;
@@ -40,10 +41,19 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
   DateTime? _taskStartDate;
   int? _taskTotalDays;
   bool _isSaving = false;
-  late List<SubAccountModel> listSubAccounts = []; //SubAccountModel
+  late List<Account> listMockAccounts = []; //SubAccountModel
   String? subAccountSelected;
   String? currentOption;
+  String? debtorOption;
   bool? _isNotificationEnabled = false;
+  int selectedIndex = 0;
+  final List<String> buttons = [
+    'العملاء',
+    'الموردين',
+    'الرواتب',
+    'الضرائب',
+    'المصروفات',
+  ];
 
   @override
   void initState() {
@@ -53,9 +63,9 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
     if (currencies.isNotEmpty) {
       currencySelected = currencies.first;
     }
-    listSubAccounts = subAccounts;
-    if (listSubAccounts.isNotEmpty) {
-      subAccountSelected = listSubAccounts.first.type;
+    listMockAccounts = mockAccounts;
+    if (listMockAccounts.isNotEmpty) {
+      subAccountSelected = listMockAccounts.first.category;
     }
     _nameController = TextEditingController(
       text: widget.existingCustomer?.name ?? '',
@@ -147,6 +157,26 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
       }
     } finally {
       if (mounted) {
+        showConfirmationDialog(
+          context: context,
+          title: 'إضافة عملية جديدة',
+          // هنا يمكنك تخصيص المحتوى كما تريد
+          // يمكنك استخدام CustomAutoSizeText أو أي Widget آخر
+          // لعرض محتوى مخصص في نافذة التأكيد
+          // على سبيل المثال:
+          // content: CustomAutoSizeText(
+          //   text: 'هل تريد إضافة عملية جديدة لهذا العميل؟',
+          //   style: TextStyle(fontSize: 14),
+          // ),
+          content: CustomAutoSizeText(
+            text: 'هل تريد إضافة عملية جديدة لهذا العميل؟',
+            fontSize: 12,
+            maxLines: 2,
+            fontWeight: FontWeight.w500,
+          ),
+
+          onConfirm: () {},
+        );
         setState(() => _isSaving = false);
       }
     }
@@ -205,13 +235,9 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
 
     return BaseLayoutScreen(
       body: BuildNonTabbarLayout(
-        title: widget.existingCustomer == null ? 'إضافة عميل' : 'تعديل عميل',
-        actions: [
-          CustomIconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_outlined),
-          ),
-        ],
+        title:
+            widget.existingCustomer == null ? 'إضافة حساب جديد' : 'تعديل حساب',
+
         slivers: [
           SliverToBoxAdapter(
             child: Form(
@@ -221,38 +247,39 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
                 padding: responsive.paddingSym(h: 16, v: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _buildBasicInfo(),
+                    _buildBasicInfo(theme, responsive),
                     const ResponsiveSpace(height: 16),
-                    _buildFirstProcess(),
+                    _buildFirstProcess(theme, responsive),
                     const ResponsiveSpace(height: 16),
-                    _buildAdditionalInfo(),
+                    _buildAdditionalInfo(theme, responsive),
 
-                    const SizedBox(height: 20),
+                    const ResponsiveSpace(height: 48),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CustomButton(
-                          text: "إلغاء",
-                          textColor: theme.colorScheme.primary,
-                          backgroundColor: theme.colorScheme.surfaceBright,
-                          onPressed: () => Navigator.pop(context),
+                        Expanded(
+                          child: CustomButton(
+                            text: "إلغاء",
+                            textColor: theme.colorScheme.primary,
+                            backgroundColor: theme.colorScheme.surfaceBright,
+                            onPressed: () => Navigator.pop(context),
+                          ),
                         ),
-                        const Spacer(),
-                        CustomButton(
-                          text: "حفظ",
-                          textColor: theme.colorScheme.onPrimary,
-                          backgroundColor: theme.colorScheme.primary,
-                          // isLoading: _isSaving, // أضف هذه السطر
-                          onPressed: () {
-                            showConfirmationDialog(
-                              context: context,
-                              title: 'تاكيد الحفظ',
-                              content: _buildcategoryDialogContent(),
-                              onConfirm: () => _saveCustomer(),
-                            );
-                          },
+                        const ResponsiveSpace(width: 16),
+                        Expanded(
+                          child: CustomButton(
+                            text: "حفظ",
+                            textColor: theme.colorScheme.onPrimary,
+                            backgroundColor: theme.colorScheme.primary,
+                            isLoading: _isSaving, // أضف هذه السطر
+                            onPressed: () {
+                              _saveCustomer();
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -267,9 +294,7 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
     );
   }
 
-  Widget _buildBasicInfo() {
-    final theme = ref.watch(themeDataProvider);
-    final responsive = ref.watch(responsiveProvider);
+  Widget _buildBasicInfo(ThemeData theme, ResponsiveValues responsive) {
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
@@ -287,9 +312,9 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
             CustomAutoSizeText(
               text: 'البيانات الأساسية',
               style: theme.textTheme.bodyMedium,
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
-              colorText: theme.colorScheme.onSurface,
+              colorText: theme.colorScheme.primary,
             ),
             const ResponsiveSpace(height: 12),
             CustomTextField(
@@ -298,9 +323,14 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
               hint: 'ادخل إسم الحساب',
               validator: _validateName,
               suffixIcon: IconButton(
-                icon:  Icon(Icons.account_balance_outlined,
-                color: theme.colorScheme.primary,),
-                onPressed: () {},
+                icon: Icon(
+                  Icons.account_balance,
+                  color: theme.colorScheme.primary,
+                ),
+                onPressed: () {
+                  debugPrint('Open accounts');
+                },
+                tooltip: 'اختيار من الحسابات',
               ),
             ),
             const ResponsiveSpace(height: 12),
@@ -311,9 +341,14 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
               keyboardType: TextInputType.phone,
               validator: _validatePhone,
               suffixIcon: IconButton(
-                icon:  Icon(Icons.contacts_rounded,
-                color: theme.colorScheme.primary,),
-                onPressed: () {},
+                icon: Icon(
+                  Icons.contact_phone, // أيقونة تدل على جهات الاتصال
+                  color: theme.colorScheme.primary,
+                ),
+                onPressed: () {
+                  debugPrint('Open contacts');
+                },
+                tooltip: 'اختيار من جهات الاتصال',
               ),
             ),
           ],
@@ -322,9 +357,7 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
     );
   }
 
-  Widget _buildFirstProcess() {
-    final theme = ref.watch(themeDataProvider);
-    final responsive = ref.watch(responsiveProvider);
+  Widget _buildFirstProcess(ThemeData theme, ResponsiveValues responsive) {
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
@@ -340,22 +373,37 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomAutoSizeText(
-              text: 'إضافة عملية',
+              text: 'إضافة العملية الأولى',
               style: theme.textTheme.bodyMedium,
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
-              colorText: theme.colorScheme.onSurface,
+              colorText: theme.colorScheme.primary,
             ),
             const ResponsiveSpace(height: 12),
-            CustomTextField(
-              controller: _balanceController,
-              label: 'المبلغ ',
-              hint: 'ادخل المبلغ',
-              validator: _validateAmount,
-              suffixIcon: IconButton(
-                icon:  Icon(Icons.calculate_outlined,
-                color: theme.colorScheme.primary,),
-                onPressed: () {},
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                children: [
+                  Expanded(
+                    child: CustomTextField(
+                      controller: _balanceController,
+                      label: 'المبلغ ',
+                      hint: 'ادخل المبلغ',
+                      validator: _validateAmount,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          Icons.calculate,
+                          color: theme.colorScheme.primary,
+                        ),
+                        onPressed: () {},
+                      ),
+                    ),
+                  ),
+                  const ResponsiveSpace(width: 8),
+                  Expanded(child: _buildCurrencyDropdown()),
+                ],
               ),
             ),
             const ResponsiveSpace(height: 12),
@@ -366,37 +414,34 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
               keyboardType: TextInputType.text,
               validator: _validateName,
               suffixIcon: IconButton(
-                icon:  Icon(Icons.camera_alt_outlined,
-                color: theme.colorScheme.primary,),
+                icon: Icon(
+                  Icons.camera_alt,
+                  color: theme.colorScheme.primary,
+                ),
                 onPressed: () {},
               ),
             ),
             const ResponsiveSpace(height: 12),
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: responsive.h(50),
-                maxHeight: responsive.h(100),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(child: _buildCurrencyDropdown()),
-                  const ResponsiveSpace(width: 8),
-                  Expanded(
-                    child: CustomTextField(
-                      controller: _dateController,
-                      label: 'تاريخ العملية',
-                      hint: 'DD/MM/YYYY',
-                      suffixIcon: Icon(Icons.calendar_today,
-                      color: theme.colorScheme.primary,),
-                      readOnly: true,
-                      onTap: () => _selectDate(context),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+
+              children: [
+                Expanded(
+                  child: CustomTextField(
+                    controller: _dateController,
+                    label: 'تاريخ العملية',
+                    hint: 'DD/MM/YYYY',
+                    suffixIcon: Icon(
+                      Icons.calendar_today,
+                      color: theme.colorScheme.primary,
                     ),
+                    readOnly: true,
+                    onTap: () => _selectDate(context),
                   ),
-                ],
-              ),
+                ),
+                const ResponsiveSpace(width: 2),
+                Expanded(child: _buildCkickBox(theme, responsive)),
+              ],
             ),
           ],
         ),
@@ -404,9 +449,7 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
     );
   }
 
-  Widget _buildAdditionalInfo() {
-    final theme = ref.watch(themeDataProvider);
-    final responsive = ref.watch(responsiveProvider);
+  Widget _buildAdditionalInfo(ThemeData theme, ResponsiveValues responsive) {
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
@@ -421,7 +464,46 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
         subtitle: 'اختياري',
         isExpanded: false,
         children: [
-          const ResponsiveSpace(height: 8),
+          const ResponsiveSpace(height: 16),
+          CustomAutoSizeText(
+            text: ' اختر نوع التصنيف',
+            style: theme.textTheme.bodyMedium,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            textAlign: TextAlign.right,
+            colorText: theme.colorScheme.secondary,
+          ),
+          const ResponsiveSpace(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              ...List.generate(buttons.length, (index) {
+                final isSelected = index == selectedIndex;
+                return ChoiceChip(
+                  showCheckmark: false,
+                  label: Text(buttons[index]),
+                  selected: isSelected,
+                  onSelected: (_) {
+                    setState(() {
+                      selectedIndex = index;
+                    });
+                  },
+                  selectedColor: theme.colorScheme.secondary,
+                  backgroundColor: theme.colorScheme.surface,
+                  labelStyle: theme.textTheme.bodyMedium!.copyWith(
+                    color:
+                        isSelected
+                            ? theme.colorScheme.onSecondary
+                            : theme.colorScheme.onSurface,
+                    fontWeight:
+                        isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
+                );
+              }),
+            ],
+          ),
+          const ResponsiveSpace(height: 12),
           CustomTextField(
             controller: _balanceController,
             label: 'العنوان',
@@ -430,8 +512,8 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
 
             suffixIcon: IconButton(
               icon: Icon(
-                Icons.calculate_outlined,
-                color: theme.colorScheme.secondary,
+                Icons.location_on,
+                color: theme.colorScheme.primary,
               ),
               onPressed: () {
                 // Handle calculation logic here
@@ -447,8 +529,8 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
 
             suffixIcon: IconButton(
               icon: Icon(
-                Icons.calculate_outlined,
-                color: theme.colorScheme.secondary,
+                Icons.notes,
+                color: theme.colorScheme.primary,
               ),
               onPressed: () {
                 // Handle calculation logic here
@@ -489,7 +571,7 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    
+
                     children: [
                       Expanded(
                         child: ListTile(
@@ -525,7 +607,6 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
                             colorText: theme.colorScheme.onSurface,
                           ),
                           leading: Radio(
-                            
                             value: 'رسالة نصية',
                             fillColor: WidgetStateProperty.all(
                               theme.colorScheme.secondary,
@@ -564,32 +645,75 @@ class _AddCustomerSheetState extends ConsumerState<AddCustomerSheet> {
       // value: currencySelected,
       onChanged: (value) => setState(() => currencySelected = value!),
       hintText: 'اختر العملة', // Behaves like TextField hint
-      labelText: 'العملة', // Floats up like TextField label
+      labelText: 'العملة',
+       prefixIcon: Icon(Icons.currency_exchange_outlined), // Floats up like TextField label
     );
   }
 
-  Widget _buildTagsDropdown() {
-    final List<String> subAccounts =
-        listSubAccounts.map((sub) => sub.type).toSet().toList();
-    return TextFieldLikeDropdown<String>(
-      items:
-          subAccounts
-              .map((sub) => DropdownMenuItem(value: sub, child: Text(sub)))
-              .toList(),
-      value: subAccountSelected,
-      onChanged: (value) => setState(() => subAccountSelected = value!),
-      hintText: 'اختر التصنيف', // Behaves like TextField hint
-      labelText: 'التصنيف', // Floats up like TextField label
-    );
-    
-  }
-  Widget _buildcategoryDialogContent() {
-   
-    final responsive = ref.watch(responsiveProvider);
-    return Container(
-      alignment: Alignment.center,
-      padding: responsive.paddingAll(16),
-      child: _buildTagsDropdown(),
+  Widget _buildCkickBox(ThemeData theme, ResponsiveValues responsive) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: InkWell(
+            onTap: () => setState(() => debtorOption = ' له'),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Radio<String>(
+                  value: ' له',
+                  groupValue: debtorOption,
+                  fillColor: WidgetStateProperty.all(Colors.green.shade600),
+                  activeColor: Colors.green.shade600,
+                  onChanged: (value) {
+                    setState(() {
+                      debtorOption = value;
+                    });
+                  },
+                ),
+                const SizedBox(width: 4),
+                CustomAutoSizeText(
+                  text: ' له',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  style: theme.textTheme.bodySmall,
+                  colorText: theme.colorScheme.primary,
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          child: InkWell(
+            onTap: () => setState(() => debtorOption = ' عليه'),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Radio<String>(
+                  value: ' عليه',
+                  groupValue: debtorOption,
+                  fillColor: WidgetStateProperty.all(theme.colorScheme.error),
+                  activeColor: theme.colorScheme.error,
+                  onChanged: (value) {
+                    setState(() {
+                      debtorOption = value;
+                    });
+                  },
+                ),
+                const SizedBox(width: 4),
+                CustomAutoSizeText(
+                  text: ' عليه',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  style: theme.textTheme.bodySmall,
+                  colorText: theme.colorScheme.onSurface,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
