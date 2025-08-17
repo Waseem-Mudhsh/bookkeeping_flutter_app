@@ -27,7 +27,7 @@ class BaseLayoutScreen extends ConsumerWidget {
     this.resizeToAvoidBottomInset = true,
     
     this.routeName,
-    required this.body,
+    required this.body, 
   }) ;
  
   @override

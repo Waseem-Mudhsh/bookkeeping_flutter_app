@@ -36,12 +36,17 @@ final deleteTransactionProvider = Provider<DeleteTransaction>((ref){
   return DeleteTransaction(ref.read(transactionRepositoryProvider));
 });
 
-final transactionViewModelProvider = StateNotifierProvider<TransactionViewModel, AsyncValue<List<Transaction>>>((ref) {
+
+
+
+// Unified Provider: StateNotifierProvider.family
+final transactionViewModelProvider = StateNotifierProvider.family<TransactionViewModel, AsyncValue<List<Transaction>>, String>((ref, accountId) {
   return TransactionViewModel(
     getTransactions: ref.read(getTransactionsProvider),
     getTransactionsByAccountId: ref.read(getTransactionsByAccountIdProvider),
     addTransaction: ref.read(addTransactionProvider),
     updateTransaction: ref.read(updateTransactionProvider),
-    deleteTransaction: ref.read(deleteTransactionProvider), 
+    deleteTransaction: ref.read(deleteTransactionProvider),
+    accountId: accountId,
   );
 });

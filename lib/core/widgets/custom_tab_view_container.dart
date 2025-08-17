@@ -22,7 +22,12 @@ class CustomTabViewContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     // You can adjust minHeight/maxHeight as needed for your design.
     return Padding(
-      padding: padding ?? responsive.paddingAll(16),
+      padding: padding ?? responsive.paddingOnly(
+        left: responsive.w(16),
+        right: responsive.w(16),
+        bottom: responsive.h(16),
+        top: responsive.h(8),
+      ),
       child: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
         child: child,

@@ -40,8 +40,8 @@ class AccountViewModel  extends StateNotifier<AsyncValue<List<Account>>>{
     await _updateAccount.execute(account);
     await loadAccounts();
   }
-  Future<void> deleteAccount(int idAccount) async {
-    await _deleteAccount.execute(idAccount);
+  Future<void> deleteAccount(String accountId) async {
+    await _deleteAccount.execute(accountId);
     await loadAccounts();
   }
 }

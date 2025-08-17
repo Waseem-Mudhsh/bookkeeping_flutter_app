@@ -64,8 +64,8 @@ class _CurrencyDropdownSheetState extends ConsumerState<CurrencyDropdownSheet> {
 
               backgroundColor: Colors.grey.shade200,
             ),
-            title: Text(c.name, style: theme.textTheme.bodyLarge),
-            subtitle: Text(c.code, style: theme.textTheme.bodyMedium),
+            title: Text(c.name, style: theme.textTheme.bodyMedium),
+            subtitle: Text(c.code, style: theme.textTheme.bodySmall),
             trailing: Text(
               c.balanceDue!.toStringAsFixed(2),
               style: theme.textTheme.bodyMedium,

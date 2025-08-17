@@ -1,5 +1,6 @@
 import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
 import 'package:bookkeeping_flutter_app/core/base_layout/build_tab_bar_layout.dart';
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/utils/route_names.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_icon_button.dart';
 import 'package:bookkeeping_flutter_app/features/Customers/presentation/screens/top_side.dart';
@@ -91,8 +92,8 @@ class CustomersScreen extends ConsumerWidget {
   }
   Widget builderCustomerLists (BuildContext context, WidgetRef ref, AsyncValue<List<dynamic>> customersAsync) {
     var actions = CustomerActions(ref: ref, context: context);
-    final responsive = ref.watch(responsiveProvider);
-    final theme = ref.watch(themeDataProvider);
+    final responsive = ref.responsive;
+    
     return  SingleChildScrollView(
       child: Padding(
         padding: responsive.paddingAll(16),
@@ -105,7 +106,7 @@ class CustomersScreen extends ConsumerWidget {
                         child: CustomEmptyState(
                            message: 'لا يوجد عملاء',
                           subMessage: 'يمكنك إضافة عملاء جدد من خلال زر الإضافة في الزاوية السفلى اليمنى',
-                          theme: theme,
+                          
                         ),
                       ),
                     ...customers.map(

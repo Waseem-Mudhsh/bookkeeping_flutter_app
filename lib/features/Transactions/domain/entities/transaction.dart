@@ -25,7 +25,7 @@ class Transaction {
   final TransactionType type;
   
   @HiveField(6)
-  final String? category;
+  final String? currency;
   
   @HiveField(7)
   final String? referenceNumber;
@@ -40,7 +40,7 @@ class Transaction {
     required this.date,
     required this.description,
     required this.type,
-    this.category,
+    this.currency,
     this.referenceNumber,
     this.image,
   });
@@ -52,7 +52,7 @@ class Transaction {
     DateTime? date,
     String? description,
     TransactionType? type,
-    String? category,
+    String? currency,
     String? referenceNumber,
     String? image,
   }) {
@@ -63,7 +63,7 @@ class Transaction {
       date: date ?? this.date,
       description: description ?? this.description,
       type: type ?? this.type,
-      category: category ?? this.category,
+      currency: currency ?? this.currency,
       referenceNumber: referenceNumber ?? this.referenceNumber,
       image: image ?? this.image,
     );

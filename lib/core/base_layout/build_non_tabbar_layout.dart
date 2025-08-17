@@ -34,6 +34,7 @@ Widget build(BuildContext context, WidgetRef ref) {
   final responsive = ref.watch(responsiveProvider);
 
   return CustomScrollView(
+   
     physics: const ClampingScrollPhysics(),
     slivers: [
       CustomSliverAppBar(
@@ -48,7 +49,13 @@ Widget build(BuildContext context, WidgetRef ref) {
         actions: actions,
         bottom: bottom,
       ),
-      ...slivers,
+      
+      ...slivers.map((sliver) => SliverPadding(
+          padding: responsive.paddingSym(h: 16),
+          sliver: sliver,
+        )),
+      
+     
     ],
   );
 }

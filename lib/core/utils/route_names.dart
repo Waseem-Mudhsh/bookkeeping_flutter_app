@@ -3,9 +3,12 @@ import 'package:bookkeeping_flutter_app/features/Customers/presentation/screens/
 import 'package:bookkeeping_flutter_app/features/Home/presentation/screens/home_main_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../features/Accounts/presentation/screens/account_details_screen.dart';
 import '../../features/Customers/presentation/screens/add_new_customer_sheet.dart';
 import '../../features/Home/presentation/screens/finance_screen.dart';
 import '../../features/Notifications/presentation/screens/notifications_screen.dart';
+import '../../features/Transactions/domain/entities/transaction.dart';
+import '../../features/Transactions/presentation/widgets/add_transaction_form.dart';
 
 enum RouteNames {
   home,
@@ -13,7 +16,9 @@ enum RouteNames {
   finance,
   settings,
   accounts,
-  notifications;
+  notifications,
+  accountDetails;
+  
 
   Widget get screen {
     switch (this) {
@@ -25,9 +30,10 @@ enum RouteNames {
         return FinanceScreen();
       case RouteNames.settings:
         return Scaffold(body: Center(child: Text('Settings Screen')));
-     
       case RouteNames.notifications:
         return NotificationsScreen(mockNotifications: []);
+      case RouteNames.accountDetails:
+        return AccountDetailsScreen();
       default:
        return Scaffold(body: Center(child: Text('No screen found')));
     }
@@ -69,6 +75,17 @@ enum AccountSubRoutes {
       default:
         return Scaffold(body: Center(child: Text('No account screen found'))); // or some other default widget
     }
+  }
+}
+enum TransactionSubRoutes {
+  create,
+  edit;
+
+  Widget screenAdd(String accountId) {
+  return AddTransactionForm(accountId: accountId);
+  }
+  Widget screenEdit(String accountId, Transaction transaction) {
+    return AddTransactionForm(accountId: accountId, existingTransaction: transaction);
   }
 }
 

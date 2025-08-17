@@ -16,7 +16,7 @@ class AccountLocalDataSource {
   Future<void> updateAccount(Account account) async {
     await _accountBox.put(account.id, account);
   }
-  Future<void> deleteAccount(int accountId) async {
+  Future<void> deleteAccount(String accountId) async {
     await _accountBox.delete(accountId);
   }
 }

@@ -1,21 +1,18 @@
 import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/utils/responsive_values.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_tab_view_container.dart';
-import 'package:bookkeeping_flutter_app/features/Accounts/presentation/providers/account_provider.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/accounts_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Notifications/presentation/screens/notifications_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/base_layout/build_tab_bar_layout.dart';
-import '../../../../core/providers/responsive_notifier.dart';
-import '../../../../core/providers/theme_data_provider.dart';
 import '../../../../core/utils/route_names.dart';
 import '../../../../core/widgets/custom_auto_size_text.dart';
 import '../../../../core/widgets/custom_drawer.dart';
 import '../../../../core/widgets/custom_icon_button.dart';
 import '../../../Accounts/domain/entities/main_account.dart';
 import '../../../Notifications/domain/entities/notification_model.dart';
-import '../../../Transactions/presentation/Providers/transaction_provider.dart';
 
 // Add this import for mainAccountsProvider
 final List<NotificationModel> mockNotifications = [
@@ -41,28 +38,32 @@ class FinanceScreen extends ConsumerWidget {
     
     List<NotificationModel> mockAlerts = mockNotifications;
 
-    final responsive = ref.watch(responsiveProvider);
-    final theme = ref.watch(themeDataProvider);
-    final asyncAccounts = ref.watch(accountViewModelProvider);
-    final asyncTransactions = ref.watch(transactionViewModelProvider);
+    final responsive = ref.responsive;
+    final theme = ref.theme;
+    
+  
+    
 
     return BaseLayoutScreen(
-      drawer: CustomDrawer(),
+      // drawer: CustomDrawer(),
       body: BuildTabBarLayout(
         toolbarHeight: responsive.h(116),
     
         initialTabIndex: 0,
         tabs: mainAccounts.map((account) => Tab(text: account.name)).toList(),
         title: 'الحسابات',
-        hasLeading: true,
+        hasLeading: false,
         actions: [
           _buildNotificationButton(context, responsive, theme, mockAlerts),
-          CustomIconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_circle_left_outlined),
-          ),
+          // CustomIconButton(
+          //   onPressed: () {
+          //     Navigator.pop(context);
+          //   },
+          //   icon:  Icon(Icons.arrow_circle_left_outlined,
+          //   ),
+          //   iconColor: theme.colorScheme.secondary,
+          //   iconSize: responsive.w(24),
+          // ),
         ],
     
         tabViews:
@@ -71,9 +72,9 @@ class FinanceScreen extends ConsumerWidget {
                 responsive: responsive,
                 child: AccountsScreen(
                   
-                  theme: theme,
+                  // theme: theme,
                   responsive: responsive,
-                  asyncTransactions: asyncTransactions, // قائمة معاملات فارغة,
+                 
                 ));
             }).toList(),
       ),
@@ -81,7 +82,11 @@ class FinanceScreen extends ConsumerWidget {
         onPressed: () {
           Navigator.push(context,
                 MaterialPageRoute(builder: (context) => AccountSubRoutes.create.screen));},
-        label: const Text('اضافة حساب جديد'),
+        label: CustomAutoSizeText(
+          text: 'اضافة حساب جديد',
+          colorText: theme.colorScheme.onPrimary,
+          fontSize: 12,
+          style: theme.textTheme.bodyMedium,),
         icon: const Icon(
           Icons.add,
         ),

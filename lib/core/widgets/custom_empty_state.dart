@@ -1,3 +1,4 @@
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter/material.dart';
@@ -8,19 +9,19 @@ class CustomEmptyState extends ConsumerWidget {
   final String message;
   final String? subMessage;
   final IconData? icon;
-  final ThemeData theme;
+  
   const CustomEmptyState({
     super.key,
    required this.message,
     this.subMessage,
     this.icon,
-   required this.theme,
+   
   });
   
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    
+    final theme= ref.theme;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -1,4 +1,5 @@
 import 'package:bookkeeping_flutter_app/core/utils/responsive_values.dart';
+import 'package:bookkeeping_flutter_app/features/Accounts/domain/entities/account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
@@ -10,7 +11,9 @@ import '../../domain/entities/currency.dart'; // تأكد من وجود هذا �
 import '../providers/currency_provider.dart'; // تأكد من وجود هذا الـ provider
 
 class CustomShowBalince extends ConsumerStatefulWidget {
-  const CustomShowBalince({super.key});
+  final Account account;
+
+  const CustomShowBalince({super.key, required this.account});
 
   @override
   ConsumerState<CustomShowBalince> createState() => _CustomShowBalinceState();
@@ -189,6 +192,7 @@ class _CustomShowBalinceState extends ConsumerState<CustomShowBalince> {
                     Padding(
                       padding: responsive.paddingAll(16),
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
                             'اختر العملة',
@@ -198,25 +202,28 @@ class _CustomShowBalinceState extends ConsumerState<CustomShowBalince> {
                             ),
                           ),
                           const ResponsiveSpace(height: 8),
-                          CustomTextField(
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: theme.colorScheme.onSurface,
+                          ResponsiveSpace(
+                            height: 50,
+                            child: CustomTextField(
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                              hint: 'ابحث عن عملة...',
+                              onChanged: (value) {
+                                modalSetState(() {
+                                  filteredCurrencies = currencies
+                                      .where(
+                                        (c) =>
+                                            c.name.toLowerCase().contains(value.toLowerCase()) ||
+                                            c.code.toLowerCase().contains(value.toLowerCase()),
+                                      )
+                                      .toList();
+                                });
+                              },
+                              controller: _searchController,
+                              label: 'ابحث عن عملة...',
                             ),
-                            hint: 'ابحث عن عملة...',
-                            onChanged: (value) {
-                              modalSetState(() {
-                                filteredCurrencies = currencies
-                                    .where(
-                                      (c) =>
-                                          c.name.toLowerCase().contains(value.toLowerCase()) ||
-                                          c.code.toLowerCase().contains(value.toLowerCase()),
-                                    )
-                                    .toList();
-                              });
-                            },
-                            controller: _searchController,
-                            label: 'ابحث عن عملة...',
                           ),
                         ],
                       ),
@@ -230,7 +237,7 @@ class _CustomShowBalinceState extends ConsumerState<CustomShowBalince> {
                         padding: EdgeInsets.zero,
                         itemCount: filteredCurrencies.length, // استخدام القائمة المفلترة
                         separatorBuilder: (_,_) => Divider(
-                          height: 1,
+                          height: 0.5,
                           color: theme.dividerColor.withValues(alpha: 0.5),
                           indent: 16,
                           endIndent: 16,
@@ -351,7 +358,7 @@ class _CustomShowBalinceState extends ConsumerState<CustomShowBalince> {
                   children: [
                     Flexible(
                       child: CustomAutoSizeText(
-                        text: currencySelected.balanceDue?.toStringAsFixed(2) ?? '0.00',
+                        text: widget.account.totalAccountBalance.toStringAsFixed(2) ,
                         fontWeight: FontWeight.bold,
                         colorText: theme.colorScheme.onPrimary,
                         fontSize: responsive.w(16),

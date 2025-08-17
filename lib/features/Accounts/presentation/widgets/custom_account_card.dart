@@ -1,26 +1,30 @@
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/utils/responsive_values.dart';
 import '../../domain/entities/account.dart';
 
-class CustomAccountCard extends StatelessWidget {
+class CustomAccountCard extends ConsumerWidget {
   final Account account;
   final Function(Account) onTap;
   final ResponsiveValues responsive;
-  final ThemeData theme;
+  
 
   const CustomAccountCard({
     super.key,
     required this.account,
     required this.onTap,
     required this.responsive,
-    required this.theme,
+   
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.theme;
     return Card(
+      color: theme.colorScheme.surface,
       elevation: 2,
       margin: responsive.paddingOnly(bottom: responsive.h(12)),
       shape: RoundedRectangleBorder(
@@ -34,18 +38,17 @@ class CustomAccountCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Account Icon
-              _buildAccountIcon(),
+             
               
-              const ResponsiveSpace(width: 16),
+              const ResponsiveSpace(width: 8),
               
               // Account Details
               Expanded(
-                child: _buildAccountDetails(),
+                child: _buildAccountDetails(theme),
               ),
               
               // Balance Information
-              _buildBalanceInfo(),
+              _buildBalanceInfo(theme),
             ],
           ),
         ),
@@ -53,25 +56,9 @@ class CustomAccountCard extends StatelessWidget {
     );
   }
 
-  Widget _buildAccountIcon() {
-    return InkWell(
-      
-      child: Container(
-        padding: responsive.paddingAll(8),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.primary.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(responsive.w(8)),
-        ),
-        child: Icon(
-          Icons.add,
-          color: theme.colorScheme.primary,
-          size: responsive.w(32),
-        ),
-      ),
-    );
-  }
+ 
 
-  Widget _buildAccountDetails() {
+  Widget _buildAccountDetails( ThemeData theme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -82,7 +69,7 @@ class CustomAccountCard extends StatelessWidget {
           fontWeight: FontWeight.bold,
           colorText: theme.colorScheme.onSurface,
           style: theme.textTheme.bodyMedium,
-          maxLines: 1,
+          maxLines: 2,
           overflow: TextOverflow.ellipsis,
           fontSize: 12,
         ),
@@ -96,7 +83,7 @@ class CustomAccountCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBalanceInfo() {
+  Widget _buildBalanceInfo( ThemeData theme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,

@@ -10,7 +10,7 @@ import '../../../../core/providers/responsive_notifier.dart';
 import '../../../../core/providers/theme_data_provider.dart';
 import '../../../../core/utils/responsive_values.dart';
 import '../../../../core/widgets/custom_button.dart';
-import '../../../../core/widgets/custom_dropdown_widget.dart';
+import '../../../../core/widgets/custom_text_field_dropdown.dart';
 import '../../../../core/widgets/custom_overlay.dart';
 import '../../../../core/widgets/custom_text_form_field.dart';
 import '../../../../core/widgets/responsive_space.dart';
@@ -632,7 +632,7 @@ class _AddNewCustomerSheetState extends ConsumerState<AddNewCustomerSheet> {
   }
 
   Widget _buildCurrencyDropdown() {
-    return TextFieldLikeDropdown<Currency>(
+    return CustomTextFieldDropdown<Currency>(
       items:
           currencies
               .map(

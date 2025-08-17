@@ -21,7 +21,7 @@ class AccountRepositoryImpl implements AccountRepository{
     await accountLocalDatasource.updateAccount(account);
   }
   @override
-  Future<void> deleteAccount(int idAccount) async {
+  Future<void> deleteAccount(String idAccount) async {
     await accountLocalDatasource.deleteAccount(idAccount);
   }
 }

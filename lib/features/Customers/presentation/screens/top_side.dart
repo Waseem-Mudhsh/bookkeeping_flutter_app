@@ -15,6 +15,7 @@ class Topside extends State<TopSide> {
     return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
             width: width * 1,

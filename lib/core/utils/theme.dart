@@ -33,6 +33,7 @@ import 'package:bookkeeping_flutter_app/core/utils/app_typography.dart';
 import 'package:flutter/material.dart';
 import 'responsive_values.dart';
 
+
 class AppTheme {
   static ThemeData getTheme(ResponsiveValues responsive, bool isDarkMode) {
     if (isDarkMode) {

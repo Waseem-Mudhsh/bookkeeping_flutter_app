@@ -1,3 +1,4 @@
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,8 +36,8 @@ class _CustomExpansionTileState extends ConsumerState<CustomExpansionTile> {
 
   @override
   Widget build(BuildContext context) {
-    final responsive = ref.watch(responsiveProvider);
-    final theme = ref.watch(themeDataProvider);
+    final responsive = ref.responsive;
+    final theme = ref.theme;
     return ExpansionTile(
       
       expandedCrossAxisAlignment: CrossAxisAlignment.start,

@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/responsive_notifier.dart';
 import '../providers/theme_data_provider.dart';
 
-class TextFieldLikeDropdown<T> extends ConsumerWidget {
+class CustomTextFieldDropdown<T> extends ConsumerWidget {
   final List<DropdownMenuItem<T>>? items;
   final T? value;
   final ValueChanged<T?>? onChanged;
@@ -17,7 +17,7 @@ class TextFieldLikeDropdown<T> extends ConsumerWidget {
   final Widget? icon;
   final Color? fillColor;
 
-  const TextFieldLikeDropdown({
+  const CustomTextFieldDropdown({
     super.key,
     required this.items,
     this.value,
@@ -45,60 +45,66 @@ class TextFieldLikeDropdown<T> extends ConsumerWidget {
       validator: validator,
       isExpanded: isExpanded,
       decoration: InputDecoration(
-        
-        contentPadding: responsive.paddingSym(h: 12, v: 16),
+        floatingLabelStyle: theme.textTheme.bodyMedium!.copyWith(
+              color: theme.colorScheme.primary,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
+       
         fillColor: fillColor ?? theme.colorScheme.surface,
         constraints: BoxConstraints(
           minHeight: responsive.h(50),
           maxHeight: responsive.h(100),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-          borderSide: BorderSide(
-            color: theme.colorScheme.onSurface.withAlpha(40), 
-            width: responsive.w(0.5),
-          ),
-        ),
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    width: responsive.w(0.5),
+                  ),
+                ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-          borderSide: BorderSide(
-            color: theme.colorScheme.primary, 
-            width: responsive.w(0.5),
-          ),
-        ),
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(
+                    color: theme.colorScheme.primary,
+                    width: responsive.w(0.5),
+                  ),
+                ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-          borderSide: BorderSide(
-            color: theme.colorScheme.error, 
-            width: responsive.w(0.5),
-          ),
-        ),
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(
+                    color: theme.colorScheme.error,
+                    width: responsive.w(0.5),
+                  ),
+                ),
         disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-          borderSide: BorderSide(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.5), 
-            width: responsive.w(0.5),
-          ),
-        ),
-        labelStyle: theme.textTheme.bodySmall!.copyWith(
-          color: theme.colorScheme.onSurface, 
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
-        ),
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    width: responsive.w(0.5),
+                  ),
+                ),
+        labelStyle:  theme.textTheme.bodySmall!.copyWith(
+              color: theme.colorScheme.onSurface,
+              fontSize: 12,
+              fontWeight: FontWeight.w300,
+            ),
         hintStyle: theme.textTheme.bodySmall!.copyWith(
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.5), 
-          fontSize: 10,
-        ),
-        labelText: isValueEmpty ? null : labelText,
-        hintText: isValueEmpty ? hintText : null,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              fontSize: 12,
+            ),
+        labelText: labelText,
+        hintText: hintText ,
         floatingLabelBehavior: FloatingLabelBehavior.always,
       ).copyWith(),
       icon: icon ?? const Icon(Icons.keyboard_arrow_down_rounded),
       dropdownColor: theme.colorScheme.surface,
       borderRadius: BorderRadius.circular(4),
-      elevation: 8,
+      
       menuMaxHeight: MediaQuery.of(context).size.height * 0.4,
-      style: theme.textTheme.bodyMedium,
+      style: theme.textTheme.bodyMedium!.copyWith(
+        fontSize: 12
+      ),
     );
   }
 }

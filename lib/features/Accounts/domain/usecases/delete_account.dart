@@ -4,7 +4,7 @@ class DeleteAccount {
   final AccountRepository accountRepository;
 
   DeleteAccount(this.accountRepository);
-  Future<void> execute(int id) async {
+  Future<void> execute(String id) async {
     await accountRepository.deleteAccount(id);
   }
   

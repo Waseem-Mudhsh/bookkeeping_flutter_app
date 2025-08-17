@@ -29,4 +29,9 @@ class CurrencyLocalDataSource implements CurrencyRepository {
       _currencies[index] = currency;
     }
   }
+  @override
+  void deleteCurrency(Currency currency){
+    _currencies.removeWhere((element) => element.code == currency.code);
+    
+  }
 }

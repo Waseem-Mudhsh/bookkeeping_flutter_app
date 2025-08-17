@@ -1,8 +1,9 @@
 import 'package:bookkeeping_flutter_app/core/widgets/custom_horizontal_list_view.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/domain/entities/account.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/providers/account_provider.dart';
+import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/account_details_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/custom_account_card.dart';
-import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/custom_transaction_item.dart';
+import 'package:bookkeeping_flutter_app/features/Transactions/presentation/widgets/custom_transaction_item.dart';
 import 'package:bookkeeping_flutter_app/features/Customers/presentation/widgets/customer_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,14 +21,12 @@ import '../../../Currencies/presentation/widgets/custom_show_balince.dart';
 import '../../../Customers/presentation/providers/customer_provider.dart';
 import '../../../Customers/presentation/screens/customer_actions.dart';
 import '../../../Transactions/domain/entities/transaction.dart';
+import '../../../Transactions/presentation/Providers/transaction_provider.dart';
 
 // import 'package:bookkeeping_flutter_app/features/home/data/providers/currency_provider.dart'; // Assume this provider exists
 
 // Domain Entities (Simplified for demonstration)
 // You should have these in your 'domain/entities' folder
-
-
-
 
 // class Transaction {
 //   final String id;
@@ -51,7 +50,6 @@ import '../../../Transactions/domain/entities/transaction.dart';
 
 // enum TransactionType { income, expense, transfer }
 
-
 // class AppAlert {
 //   final String id;
 //   final String message;
@@ -70,10 +68,6 @@ import '../../../Transactions/domain/entities/transaction.dart';
 
 enum AlertType { warning, info, critical }
 
-
-
-
-
 // final List<Transaction> mockTransactions = [
 //   Transaction(id: 't1', description: 'راتب شهر يونيو', amount: 300000.00, date: DateTime.now().subtract(const Duration(days: 1)), type: TransactionType.income, accountName: 'حساب التوفير الرئيسي', categoryIcon: Icons.attach_money),
 //   Transaction(id: 't2', description: 'إيجار الشقة', amount: 500.00, date: DateTime.now().subtract(const Duration(days: 2)), type: TransactionType.expense, accountName: 'بطاقة ائتمان فيزا', categoryIcon: Icons.house),
@@ -90,72 +84,63 @@ enum AlertType { warning, info, critical }
 
 // Main Screen Widget
 class AccountsScreen extends ConsumerWidget {
-  final ThemeData theme;
+  // final ThemeData theme;
   final ResponsiveValues responsive;
-  
-  final AsyncValue<List<Transaction>> asyncTransactions;
 
+  
 
   const AccountsScreen({
     super.key,
-    required this.theme,
+    // required this.theme,
     required this.responsive,
-    
-    required this.asyncTransactions,
-  });
 
-  
+    
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    
-    
-     final List<String> categorices = [
-    'العملاء',
-    'الموردين',
-    'الرواتب',
-    'الضرائب',
-    'المصروفات',
-  ];
+    final asyncTransactions = ref.watch(transactionViewModelProvider(''));
+    final List<String> categorices = [
+      'العملاء',
+      'الموردين',
+      'الرواتب',
+      'الضرائب',
+      'المصروفات',
+    ];
 
-    return  Column(
-     mainAxisSize: MainAxisSize.min,
+    final theme = ref.watch(themeDataProvider);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // --- 1. Total Balance Card ---
-        CustomShowBalince(),
-        ResponsiveSpace(height: responsive.h(8)),
-        
+      
+
         CustomHorizontalListView(
           responsive: responsive,
           theme: theme,
           nameButtons: categorices,
-           contentWidgets: [
-             _AccountsListSection(
-              theme: theme,
-              responsive: responsive,
-              onAccountTap: (account) {
-                // TODO: Navigate to Account Details
-                debugPrint('Account tapped: ${account.name}');
-              },
-              onAddAccount: () {
-                debugPrint('Add account from list pressed');
-              },
-            ),
-            _AccountsListSection(
-             
-              theme: theme,
-              responsive: responsive,
-              onAccountTap: (account) {
-                // TODO: Navigate to Account Details
-                debugPrint('Account tapped: ${account.name}');
-              },
-              onAddAccount: () {
-                debugPrint('Add account from list pressed');
-              },
-            ),
-            _AccountsListSection(
+          contentWidgets: [
             
+            _AccountsListSection(
+              theme: theme,
+              responsive: responsive,
+              onAccountTap: (account) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => AccountDetailsScreen(account: account),
+                  ),
+                );
+                // TODO: Navigate to Account Details
+                debugPrint('Account tapped: ${account.name}');
+              },
+              onAddAccount: () {
+                debugPrint('Add account from list pressed');
+              },
+            ),
+            _AccountsListSection(
               theme: theme,
               responsive: responsive,
               onAccountTap: (account) {
@@ -167,7 +152,6 @@ class AccountsScreen extends ConsumerWidget {
               },
             ),
             _AccountsListSection(
-            
               theme: theme,
               responsive: responsive,
               onAccountTap: (account) {
@@ -179,7 +163,6 @@ class AccountsScreen extends ConsumerWidget {
               },
             ),
             _AccountsListSection(
-            
               theme: theme,
               responsive: responsive,
               onAccountTap: (account) {
@@ -190,51 +173,41 @@ class AccountsScreen extends ConsumerWidget {
                 debugPrint('Add account from list pressed');
               },
             ),
-           ]
-           ),
-        
-       
-       
-        ResponsiveSpace(height: responsive.h(16)),
-        
-        // --- 4. Recent Transactions Overview ---
-        _RecentTransactionsSection(
-          asyncTransactions: asyncTransactions , // Pass actual transactions
-          theme: theme,
-          responsive: responsive,
-          onViewAll: () {
-            // TODO: Navigate to All Transactions Screen
-            debugPrint('View All Transactions pressed');
-          },
-          onTransactionTap: (transaction) {
-            // TODO: Navigate to Transaction Details
-            debugPrint('Transaction tapped: ${transaction.description}');
-          },
+            _AccountsListSection(
+              theme: theme,
+              responsive: responsive,
+              onAccountTap: (account) {
+                // TODO: Navigate to Account Details
+                debugPrint('Account tapped: ${account.name}');
+              },
+              onAddAccount: () {
+                debugPrint('Add account from list pressed');
+              },
+            ),
+          ],
         ),
-        ResponsiveSpace(height: responsive.h(24)),
+
+      
       ],
     );
-      
-    
   }
-  
 
   // Helper method to build the Total Balance Card
 }
+
 /// --- Separate Widgets for Sections ---
 
 // 2. Alerts and Notifications Section
 
 // 3. Accounts List Section
 class _AccountsListSection extends ConsumerWidget {
-  
   final ThemeData theme;
   final ResponsiveValues responsive;
   final ValueChanged<Account> onAccountTap;
-  final VoidCallback onAddAccount; // For an "add account" button if needed inside the section
+  final VoidCallback
+  onAddAccount; // For an "add account" button if needed inside the section
 
   const _AccountsListSection({
-    
     required this.theme,
     required this.responsive,
     required this.onAccountTap,
@@ -243,20 +216,21 @@ class _AccountsListSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-        final asyncAccounts = ref.watch(accountViewModelProvider);
-     return asyncAccounts.when(
-        
-              loading: () => _buildLoading(),
-        error: (error, _) => _buildError(error),
-        data: (accounts) =>
-          accounts.isEmpty ? _buildEmptyState() : _buildAccountsList(accounts),
-        );
-
+    final asyncAccounts = ref.watch(accountViewModelProvider);
+    return asyncAccounts.when(
+      loading: () => _buildLoading(),
+      error: (error, _) => _buildError(error),
+      data:
+          (accounts) =>
+              accounts.isEmpty
+                  ? _buildEmptyState()
+                  : _buildAccountsList(accounts),
+    );
   }
-  Widget _buildLoading()  {
-       
-        return const Center(child: CircularProgressIndicator());
-      }
+
+  Widget _buildLoading() {
+    return const Center(child: CircularProgressIndicator());
+  }
 
   Widget _buildError(Object error) => Center(child: Text('Error: $error'));
 
@@ -264,11 +238,15 @@ class _AccountsListSection extends ConsumerWidget {
     return Consumer(
       builder: (context, ref, _) {
         final theme = ref.watch(themeDataProvider);
-        return Center(
-          child: CustomEmptyState(
-            message: 'لا يوجد حسابات',
-            subMessage: 'يمكنك إضافة حسابات جديدة من خلال زر الإضافة',
-            theme: theme,
+        
+        return Padding(
+          padding: responsive.paddingOnly(top:16),
+          child: Center(
+            child: CustomEmptyState(
+              message: 'لا يوجد حسابات',
+              subMessage: 'يمكنك إضافة حسابات جديدة من خلال زر الإضافة',
+              
+            ),
           ),
         );
       },
@@ -276,54 +254,45 @@ class _AccountsListSection extends ConsumerWidget {
   }
 
   Widget _buildAccountsList(List<dynamic> accounts) {
-
-    return Consumer(
-      builder: (context, ref, child) {
-       
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: responsive.h(4),
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.min,
-          spacing: responsive.h(4),
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CustomAutoSizeText(
-                  text: 'عدد الحسابات: ${accounts.length}',
-                  style: theme.textTheme.bodyMedium,
-                    fontWeight: FontWeight.w500,
-                    colorText: theme.colorScheme.secondary,
-                  fontSize: 12,
-
-                  
-                ),
-                Spacer(),
-                CustomIconButton(
-                  icon: const Icon(Icons.sort_outlined),
-                  iconSize: responsive.w(24),
-                  iconColor: theme.colorScheme.secondary,
-                  onPressed: onAddAccount,
-                )
-             
-              ],
+            CustomAutoSizeText(
+              text: 'عدد الحسابات: ${accounts.length}',
+              style: theme.textTheme.bodyMedium,
+              fontWeight: FontWeight.w500,
+              colorText: theme.colorScheme.secondary,
+              fontSize: 12,
             ),
-            
-            ...accounts.map(
-              (account) => CustomAccountCard(
-                account: account,
-                onTap: onAccountTap,
-                responsive: responsive,
-                theme: theme,
-              ),
+            Spacer(),
+            CustomIconButton(
+              icon: const Icon(Icons.sort_outlined),
+              iconSize: responsive.w(24),
+              iconColor: theme.colorScheme.secondary,
+              onPressed: onAddAccount,
             ),
           ],
-        );
-      } ,
+        ),
+    
+        ...accounts.map(
+          (account) => CustomAccountCard(
+            account: account,
+            onTap: onAccountTap,
+            responsive: responsive,
+            // theme: theme,
+          ),
+        ),
+      ],
     );
   }
-
+ 
 }
 
 // 4. Recent Transactions Overview Section
@@ -405,34 +374,30 @@ class _RecentTransactionsSection extends StatelessWidget {
 
     return asyncTransactions.when(
       data: (transactions) {
-       
         return Column(
-          spacing:responsive.h(4),
-        children: [
-         
-          
-          if (transactions.isEmpty)
-            Center(
-                  child: CustomEmptyState(
-                     message: 'لا توجد عمليات حديثة.',
-                    subMessage: 'يمكنك إضافة عمليات جدد من خلال زر الإضافة ',
-                    theme: theme,
-                  ),
+          spacing: responsive.h(4),
+          children: [
+            if (transactions.isEmpty)
+              Center(
+                child: CustomEmptyState(
+                  message: 'لا توجد عمليات حديثة.',
+                  subMessage: 'يمكنك إضافة عمليات جدد من خلال زر الإضافة ',
+                  
                 ),
-            ...transactions.map((transaction) => CustomTransactionItem(
-              transaction:transaction,
-              responsive: responsive,
-              onTap: onTransactionTap,
-              theme: theme,
-              )),
-          
-            
-        ],
-      );},
+              ),
+            ...transactions.map(
+              (transaction) => CustomTransactionItem(
+                transaction: transaction,
+                responsive: responsive,
+                
+                theme: theme,
+              ),
+            ),
+          ],
+        );
+      },
       loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stackTrace) => Center(child: Text(error.toString())));
+      error: (error, stackTrace) => Center(child: Text(error.toString())),
+    );
   }
-
- 
-
 }

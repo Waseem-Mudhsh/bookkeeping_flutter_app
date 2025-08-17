@@ -1,8 +1,7 @@
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CustomDropdownSheet<T> extends ConsumerWidget{
+class CustomDropdownSheet<T> extends StatelessWidget{
  final List<T> items;
   final T selectedItem;
   final Widget Function(T item) selectedItemBuilder;
@@ -38,25 +37,8 @@ class CustomDropdownSheet<T> extends ConsumerWidget{
   
 
   @override
-  // Widget build(BuildContext context, WidgetRef ref) {
-  //   final responsive = ref.watch(responsiveProvider);
-  //  return OutlinedButton(
-  //     onPressed: () => _showDropdownSheet(context),
-  //     style: OutlinedButton.styleFrom(padding: responsive.paddingSym(h: 16, v: 16)),
-  //     child: Row(
-  //       mainAxisSize: MainAxisSize.min,
-  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         selectedItemBuilder(selectedItem), // custom selected item UI
-  //        ResponsiveSpace(width: 4), 
-  //         const Icon(Icons.arrow_drop_down),
-  //       ],
-  //     ),
-  //   );
-  // }
-  Widget build(BuildContext context, WidgetRef ref) {
+
+  Widget build(BuildContext context) {
   
     return InkWell(
       onTap: () => _showDropdownSheet(context),

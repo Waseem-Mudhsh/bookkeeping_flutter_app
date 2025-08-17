@@ -13,6 +13,7 @@ class TransactionViewModel extends StateNotifier<AsyncValue<List<Transaction>>> 
   final AddTransaction _addTransaction;
   final UpdateTransaction _updateTransaction;
   final DeleteTransaction _deleteTransaction;
+  final String? accountId;
 
   TransactionViewModel({
     required GetTransactions getTransactions,
@@ -20,6 +21,7 @@ class TransactionViewModel extends StateNotifier<AsyncValue<List<Transaction>>> 
     required AddTransaction addTransaction,
     required UpdateTransaction updateTransaction,
     required DeleteTransaction deleteTransaction,
+    this.accountId,
   }) :  _getTransactions = getTransactions,
         _getTransactionsByAccountId = getTransactionsByAccountId,
         _addTransaction = addTransaction,
@@ -32,7 +34,11 @@ class TransactionViewModel extends StateNotifier<AsyncValue<List<Transaction>>> 
   Future<void> _loadTransactions() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      return await _getTransactions.execute();
+      if (accountId != null && accountId!.isNotEmpty )  {
+        return await _getTransactionsByAccountId.execute(accountId!);
+      } else {
+        return await _getTransactions.execute();
+      }
     });
   }
 

@@ -1,10 +1,10 @@
 
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/responsive_notifier.dart';
-import '../providers/theme_data_provider.dart';
+
 
 class CustomShowBoxBalince extends ConsumerWidget {
   
@@ -23,8 +23,8 @@ class CustomShowBoxBalince extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeDataProvider);
-    final responsive = ref.watch(responsiveProvider);
+    final theme = ref.theme;
+    final responsive = ref.responsive;
 
     return Padding(
       padding: responsive.paddingOnly( right: 8),

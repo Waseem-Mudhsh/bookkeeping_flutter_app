@@ -58,43 +58,40 @@ class CustomListServices extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final responsive = ref.watch(responsiveProvider);
     final theme = ref.watch(themeDataProvider);
-    return Padding(
-      padding: responsive.paddingSym(h: 16),
-      child: GridView.builder(
-        shrinkWrap: true, // Allows the grid to take only the space it needs
-        physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, // Number of columns
-          crossAxisSpacing: responsive.w(10), // Spacing between columns
-          mainAxisSpacing: responsive.w(10), // Spacing between rows
-          childAspectRatio: 1.0, // Aspect ratio of each item
-        ),
-        itemCount: services.length, // Number of items
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => services[index]['route'].screen,
-                ),
-              );
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: theme.colorScheme.onSurface.withValues( alpha: 0.5,),
-                  width: 0.5,
-                ),
-              ),
-               
-              child: _buildServiceItem(services[index]['name'],services[index]['icon'], ref),
-            ),
-          );
-        },
+    return GridView.builder(
+      shrinkWrap: true, // Allows the grid to take only the space it needs
+      physics: NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3, // Number of columns
+        crossAxisSpacing: responsive.w(10), // Spacing between columns
+        mainAxisSpacing: responsive.w(10), // Spacing between rows
+        childAspectRatio: 1.0, // Aspect ratio of each item
       ),
+      itemCount: services.length, // Number of items
+      itemBuilder: (context, index) {
+        return InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => services[index]['route'].screen,
+              ),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(
+                color: theme.colorScheme.onSurface.withValues( alpha: 0.5,),
+                width: 0.5,
+              ),
+            ),
+             
+            child: _buildServiceItem(services[index]['name'],services[index]['icon'], ref),
+          ),
+        );
+      },
     );
   }
 }
