@@ -63,7 +63,7 @@ class _AddTransactionFormState extends ConsumerState<AddTransactionForm> {
         );
 
         _amountController = TextEditingController(
-            text: widget.existingTransaction?.amount.toStringAsFixed(2) ?? '',
+            text: widget.existingTransaction?.amount.toStringAsFixed(2) ?? '0.0',
         );
         _detailsController = TextEditingController(
             text: widget.existingTransaction?.description ?? '',
@@ -73,7 +73,7 @@ class _AddTransactionFormState extends ConsumerState<AddTransactionForm> {
                     ? DateFormat('dd-MM-yyyy').format(widget.existingTransaction!.date)
                     : DateFormat('dd-MM-yyyy').format(DateTime.now()),
         );
-        transactionTypeSelected = widget.existingTransaction?.type ?? TransactionType.debit;
+        transactionTypeSelected = widget.existingTransaction?.type ?? TransactionType.credit;
     }
 
     @override
@@ -97,7 +97,7 @@ class _AddTransactionFormState extends ConsumerState<AddTransactionForm> {
                 amount: double.parse(_amountController.text),
                 date: dateFormat.parse(_dateController.text),
                 description: _detailsController.text,
-                type: transactionTypeSelected ?? TransactionType.debit,
+                type: transactionTypeSelected!,
                 currency: currencySelected.code,
                 referenceNumber: widget.existingTransaction?.referenceNumber ?? '',
             );
@@ -179,7 +179,13 @@ class _AddTransactionFormState extends ConsumerState<AddTransactionForm> {
         return BaseLayoutScreen(
             
             body: BuildNonTabbarLayout(
-               title: widget.existingTransaction == null ? 'إضافة عملية جديدة' : 'تعديل العملية',
+               titleWidget: CustomAutoSizeText(
+          text: widget.existingTransaction == null ? 'إضافة عملية جديدة' : 'تعديل العملية',
+          style: theme.textTheme.bodyMedium,
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+          colorText: theme.colorScheme.primary,
+        ),
                 slivers:[ SliverToBoxAdapter(
                   child: Form(
                       key: _formKey,
@@ -332,12 +338,12 @@ class _AddTransactionFormState extends ConsumerState<AddTransactionForm> {
             children: [
                 Expanded(
                     child: InkWell(
-                        onTap: () => setState(() => transactionTypeSelected = TransactionType.debit),
+                        onTap: () => setState(() => transactionTypeSelected = TransactionType.credit),
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                                 Radio<TransactionType>(
-                                    value: TransactionType.debit,
+                                    value: TransactionType.credit,
                                     groupValue: transactionTypeSelected,
                                     fillColor: WidgetStateProperty.all(Colors.green.shade600),
                                     activeColor: Colors.green.shade600,
@@ -361,12 +367,12 @@ class _AddTransactionFormState extends ConsumerState<AddTransactionForm> {
                 ),
                 Expanded(
                     child: InkWell(
-                        onTap: () => setState(() => transactionTypeSelected = TransactionType.credit),
+                        onTap: () => setState(() => transactionTypeSelected = TransactionType.debit),
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                                 Radio<TransactionType>(
-                                    value: TransactionType.credit,
+                                    value: TransactionType.debit,
                                     groupValue: transactionTypeSelected,
                                     fillColor: WidgetStateProperty.all(theme.colorScheme.error),
                                     activeColor: theme.colorScheme.error,

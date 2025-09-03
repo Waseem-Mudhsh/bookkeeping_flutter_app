@@ -1,3 +1,4 @@
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/utils/responsive_values.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/domain/entities/account.dart';
 import 'package:flutter/material.dart';
@@ -58,9 +59,11 @@ class _CustomShowBalinceState extends ConsumerState<CustomShowBalince> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(responsive.w(16)),
               gradient: LinearGradient( // خلفية بتدرج لوني
-                colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.7)],
+                colors: [theme.colorScheme.secondary, theme.colorScheme.secondary.withValues(alpha: 0.8)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
+                
+             
               ),
             ),
             child: Padding(
@@ -95,7 +98,7 @@ class _CustomShowBalinceState extends ConsumerState<CustomShowBalince> {
 
   Widget _buildHeaderSection(ThemeData theme, ResponsiveValues responsive) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly, // توزيع متساوٍ
+      mainAxisAlignment: MainAxisAlignment.spaceBetween, // توزيع متساوٍ
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // محدد العملة
@@ -125,38 +128,36 @@ class _CustomShowBalinceState extends ConsumerState<CustomShowBalince> {
       borderRadius: BorderRadius.circular(responsive.w(12)), // حواف مستديرة
       onTap: () => _showEnhancedCurrencySelectionSheet(theme),
       child: Padding(
-        padding: responsive.paddingSym(h: 12, v: 8),
+        padding: responsive.paddingSym(h: 8, v: 8),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             // علم/أيقونة العملة
-            currencySelected.flagUrl != null
-                ? ClipOval(
-                    child: Image.asset(
-                      currencySelected.flagUrl!,
-                      fit: BoxFit.cover,
-                      width: responsive.w(24), // حجم أكبر للعلم/الأيقونة
-                      height: responsive.h(24),
-                    ),
-                  )
-                : Container(
-                    width: responsive.w(24),
+            // currencySelected.flagUrl != null
+            //     ? ClipOval(
+            //         child: Image.asset(
+            //           currencySelected.flagUrl!,
+            //           fit: BoxFit.cover,
+            //           width: responsive.w(24), // حجم أكبر للعلم/الأيقونة
+            //           height: responsive.h(24),
+            //           scale: 1.0,
+            //         ),
+            //       ) :
+                 ResponsiveSpace(
+                    // width: responsive.w(24),
                     height: responsive.h(24),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: theme.colorScheme.onPrimary.withValues(alpha: 0.2),
-                    ),
+                    
                     child: Center(
                       child: CustomAutoSizeText(
-                        text: currencySelected.code.substring(0, 2),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.onPrimary,
-                        ),
+                        text: currencySelected.name,
+                        style: theme.textTheme.bodyMedium,
+                        fontSize: 10,
+                        colorText: theme.colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-            ResponsiveSpace(width: responsive.w(8)), // مسافة بين العلم والسهم
+            ResponsiveSpace(width: responsive.w(4)), // مسافة بين العلم والسهم
             Icon(
               Icons.arrow_drop_down,
               color: theme.colorScheme.onPrimary,
@@ -169,7 +170,7 @@ class _CustomShowBalinceState extends ConsumerState<CustomShowBalince> {
   }
 
   void _showEnhancedCurrencySelectionSheet(ThemeData theme) {
-    final responsive = ref.read(responsiveProvider);
+    final responsive = ref.responsive;
     showModalBottomSheet(
       context: context,
       backgroundColor: theme.colorScheme.surface,
@@ -400,7 +401,7 @@ class _CustomShowBalinceState extends ConsumerState<CustomShowBalince> {
           ResponsiveSpace(width: responsive.w(6)),
           VerticalDivider(
             thickness: 1.5, // سمك أكبر للفاصل
-            color: theme.colorScheme.onPrimary.withValues(alpha: 0.3), // لون الفاصل
+            color: theme.colorScheme.onSecondary.withValues(alpha: 0.3), // لون الفاصل
           ),
           
           ResponsiveSpace(width: responsive.w(6)),
@@ -425,7 +426,7 @@ class _CustomShowBalinceState extends ConsumerState<CustomShowBalince> {
     required ResponsiveValues responsive,
     required bool isDebtor,
   }) {
-    Color balanceColor = isDebtor ? Colors.redAccent.shade100 : Colors.greenAccent.shade100; // ألوان مميزة
+    Color balanceColor = isDebtor ? Colors.redAccent.shade200 : Colors.greenAccent.shade200; // ألوان مميزة
     IconData icon = isDebtor ? Icons.arrow_downward : Icons.arrow_upward; // أيقونات توضيحية
 
     return Column(
@@ -446,7 +447,7 @@ class _CustomShowBalinceState extends ConsumerState<CustomShowBalince> {
               style: theme.textTheme.bodyMedium,
                 colorText: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontSize: 12  ,
               
             ),
           ],

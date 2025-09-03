@@ -36,9 +36,10 @@ class CustomTextFieldDropdown<T> extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.watch(themeDataProvider);
     final responsive = ref.watch(responsiveProvider);
-    final isValueEmpty = value == null;
+    
 
     return DropdownButtonFormField<T>(
+      
       value: value,
       items: items,
       onChanged: isEnabled ? onChanged : null,

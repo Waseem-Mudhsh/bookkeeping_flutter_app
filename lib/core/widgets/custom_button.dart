@@ -3,8 +3,6 @@ import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/responsive_notifier.dart';
-import '../providers/theme_data_provider.dart';
 
 class CustomButton extends ConsumerWidget {
   final String text;
@@ -13,6 +11,8 @@ class CustomButton extends ConsumerWidget {
   final TextStyle? textStyle;
   final VoidCallback? onPressed;
   final bool isLoading; // 1. إضافة خاصية isLoading
+  final double? width;
+  final double? height;
 
   const CustomButton({
     super.key,
@@ -22,6 +22,8 @@ class CustomButton extends ConsumerWidget {
     this.textStyle,
     this.onPressed,
     this.isLoading = false, // 2. تعيين قيمة افتراضية لـ isLoading
+    this.width,
+    this.height,
   });
 
   @override
@@ -30,9 +32,14 @@ class CustomButton extends ConsumerWidget {
     final responsive = ref.responsive;
 
     return ElevatedButton(
+
       // 3. تعطيل الزر إذا كان isLoading صحيحًا
       onPressed: isLoading ? null : onPressed,
       style: ElevatedButton.styleFrom(
+        minimumSize: Size(
+          responsive.w(width ?? double.infinity),
+          responsive.h(height ?? 48),
+        ),
         padding: responsive.paddingSym(h: 16, v: 16),
         // استخدام اللون الافتراضي إذا لم يتم تحديده
         backgroundColor: backgroundColor ?? theme.colorScheme.primary, // جعل اللون الرئيسي هو الافتراضي

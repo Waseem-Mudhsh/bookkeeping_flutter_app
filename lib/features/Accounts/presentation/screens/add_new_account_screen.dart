@@ -160,31 +160,33 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
                 // يجب أن يكون غير null بفضل الـ validator
         note: _notesController.text.isNotEmpty ? _notesController.text : null,
         image: '', // يمكن لاحقًا إضافة منطق لاختيار أيقونة مخصصة
-        debtor: 0,
-        creditor: 0,
+        debtor: debtorOption == TransactionType.debit
+            ? double.parse(_balanceController.text)
+            : 0,
+        creditor: debtorOption == TransactionType.credit
+            ? double.parse(_balanceController.text)
+            : 0,
         createdAt: DateTime.now(),
         mainAccountId: accountTypeSelected!.id,
         phoneNumber: _phoneController.text,
       );
 
       debugPrint('Saving account: ${account.name}');
-      final transaction = Transaction(
-        id: IdGenerator.generateCompactId(prefix: 'txn_'),
-        accountId: account.id,
-        amount: double.parse(_balanceController.text),
-        date: dateFormat.parse(_dateController.text),
-        description: _detailsController.text,
-        type: debtorOption == TransactionType.debit?
-              TransactionType.debit : TransactionType.credit,
-        currency: currencySelected.name,
-        referenceNumber: '',
-        
-
-        
-      );
-
+      Transaction? transaction;
       if (widget.existingAccount == null) {
-        
+        transaction = Transaction(
+          id: IdGenerator.generateCompactId(prefix: 'txn_'),
+          accountId: account.id,
+          amount: double.parse(_balanceController.text),
+          date: dateFormat.parse(_dateController.text),
+          description: _detailsController.text,
+          type: debtorOption == TransactionType.debit
+              ? TransactionType.debit
+              : TransactionType.credit,
+          currency: currencySelected.name,
+          referenceNumber: '',
+        );
+
         await ref.read(accountViewModelProvider.notifier).addAccount(account);
         await ref.read(transactionViewModelProvider(account.id).notifier).addTransaction(transaction);
         debugPrint('Adding new account: ${account.name}');
@@ -304,8 +306,14 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
     return BaseLayoutScreen(
       // عنوان الشاشة يتغير بناءً على عملية الإضافة أو التعديل
       body: BuildNonTabbarLayout(
-        title:
-            widget.existingAccount == null ? 'إضافة حساب جديد' : 'تعديل حساب',
+        titleWidget: CustomAutoSizeText(
+          text: widget.existingAccount == null ? 'إضافة حساب جديد' : 'تعديل حساب',
+          style: theme.textTheme.bodyMedium,
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+          colorText: theme.colorScheme.primary,
+        ),
+           
         slivers: [
           SliverToBoxAdapter(
             child: Form(
@@ -320,8 +328,10 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
                     ResponsiveSpace(height: responsive.h(16)),
     
                     // قسم الرصيد الافتتاحي
-                    _buildInitialBalance(theme, responsive),
-                    ResponsiveSpace(height: responsive.h(16)),
+                    if (widget.existingAccount == null) ...[
+                      _buildInitialBalance(theme, responsive),
+                      ResponsiveSpace(height: responsive.h(16)),
+                    ],
     
                     // قسم المعلومات الإضافية (الملاحظات)
                     _buildAdditionalInfo(theme, responsive),

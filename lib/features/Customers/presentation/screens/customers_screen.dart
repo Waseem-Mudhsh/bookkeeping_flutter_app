@@ -13,6 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers/responsive_notifier.dart';
 
 import '../../../../core/providers/theme_data_provider.dart';
+import '../../../../core/widgets/custom_auto_size_text.dart';
 import '../../../../core/widgets/custom_drawer.dart';
 
 import '../providers/customer_provider.dart';
@@ -46,7 +47,13 @@ class CustomersScreen extends ConsumerWidget {
             
           ],
         
-          title: 'قائمة العملاء',
+          titleWidget: CustomAutoSizeText(
+            text: 'قائمة العملاء',
+            style: ref.theme.textTheme.bodyMedium,
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            colorText: ref.theme.colorScheme.primary,
+          ),
           toolbarHeight: responsive.h(120),
           hasLeading: true,
           actions: [

@@ -11,7 +11,7 @@ class AccountLocalDataSource {
     return _accountBox.values.toList();
   }
   Future<void> addAccount(Account account) async {
-    await _accountBox.add(account);
+    await _accountBox.put(account.id, account);
   }
   Future<void> updateAccount(Account account) async {
     await _accountBox.put(account.id, account);

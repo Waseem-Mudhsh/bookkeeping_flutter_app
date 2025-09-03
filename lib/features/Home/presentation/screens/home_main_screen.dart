@@ -1,11 +1,13 @@
 import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
 import 'package:bookkeeping_flutter_app/core/base_layout/build_non_tabbar_layout.dart';
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_drawer.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_icon_button.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/widgets/custom_auto_size_text.dart';
 import '../widgets/custom_list_services.dart';
 
 class HomeMainScreen extends ConsumerWidget {
@@ -13,13 +15,19 @@ class HomeMainScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-   
+   final theme = ref.theme;
     
     return BaseLayoutScreen(
       
       drawer: CustomDrawer(),
       body: BuildNonTabbarLayout(
-        title: 'الرئيسية',
+        titleWidget:CustomAutoSizeText(
+          text: 'الخدمات',
+          style: theme.textTheme.bodyMedium,
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+          colorText: theme.colorScheme.primary,
+        ),
         actions: [
           CustomIconButton(onPressed: () {}, icon: const Icon(Icons.search)),
         ],

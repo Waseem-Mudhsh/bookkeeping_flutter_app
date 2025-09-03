@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/providers/responsive_notifier.dart';
 import '../../../../core/providers/theme_data_provider.dart';
+import '../../../../core/widgets/custom_auto_size_text.dart';
 
 class NotificationsScreen extends ConsumerWidget {
   final List<NotificationModel> mockNotifications;
@@ -21,19 +22,22 @@ class NotificationsScreen extends ConsumerWidget {
     return BaseLayoutScreen(
       
       body: BuildNonTabbarLayout(
-        title: 'الإشعارات',
+       titleWidget: CustomAutoSizeText(
+          text:'الاشعارات',
+          style: theme.textTheme.bodyMedium,
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+          colorText: theme.colorScheme.primary,
+        ),
        
         slivers: [
           SliverToBoxAdapter(child: ResponsiveSpace(height: 16,),),
           
           SliverToBoxAdapter(
-            child: Padding(
-              padding: responsive.paddingAll(responsive.w(16)),
-              child: NotificationSection(
-                mockNotifications: mockNotifications,
-                 theme: theme,
-                  responsive: responsive),
-            ),
+            child: NotificationSection(
+              mockNotifications: mockNotifications,
+               theme: theme,
+                responsive: responsive),
           )
 
         ])

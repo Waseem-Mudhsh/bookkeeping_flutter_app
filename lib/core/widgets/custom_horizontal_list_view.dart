@@ -128,42 +128,42 @@ class _CustomHorizontalListViewState
             
             controller: _scrollController,
             scrollDirection: Axis.horizontal,
-            itemCount: buttons.length + 1, // +1 لزر الإضافة
+            itemCount: buttons.length, // +1 لزر الإضافة
             itemBuilder: (context, index) {
-              if (index == buttons.length) {
-                // زر الإضافة
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: ChoiceChip(
-                    label:  Icon(Icons.add, size: 20, color: widget.theme.colorScheme.secondary,),
-                    selected: false,
-                    onSelected: (_) => _showAddDialog(),
-                    selectedColor: widget.theme.colorScheme.secondary,
-                    backgroundColor: widget.theme.colorScheme.surface,
-                    labelStyle: widget.theme.textTheme.bodyMedium!.copyWith(
-                      color: widget.theme.colorScheme.secondary,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                      side: BorderSide(
-                        color: widget.theme.colorScheme.secondary
-                            .withValues(alpha: 0.5),
-                        width: 0.5,
-                      ),
-                    ),
-                  ),
-                );
-              }
+              // if (index == buttons.length) {
+              //   // زر الإضافة
+              //   return Padding(
+              //     padding: const EdgeInsets.symmetric(horizontal: 2.0),
+              //     child: ChoiceChip(
+              //       label:  Icon(Icons.add, size: 20, color: widget.theme.colorScheme.secondary,),
+              //       selected: false,
+              //       onSelected: (_) => _showAddDialog(),
+              //       selectedColor: widget.theme.colorScheme.secondary,
+              //       backgroundColor: widget.theme.colorScheme.surface,
+              //       labelStyle: widget.theme.textTheme.bodyMedium!.copyWith(
+              //         color: widget.theme.colorScheme.secondary,
+              //       ),
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(4),
+              //         side: BorderSide(
+              //           color: widget.theme.colorScheme.secondary
+              //               .withValues(alpha: 0.5),
+              //           width: 0.5,
+              //         ),
+              //       ),
+              //     ),
+              //   );
+              // }
               
               final isSelected = index == selectedIndex;
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                padding: widget.responsive.paddingOnly(left: 6),
                 child: ChoiceChip(
                   showCheckmark: false,
                   label: CustomAutoSizeText(text:buttons[index],
                   style: widget.theme.textTheme.bodyMedium,
                   fontSize: 12,
-                  colorText: isSelected? widget.theme.colorScheme.onSecondary
+                  colorText: isSelected? widget.theme.colorScheme.onTertiary
                         : widget.theme.colorScheme.onSurface,
                   fontWeight:
                         isSelected ? FontWeight.bold : FontWeight.normal,
@@ -174,15 +174,15 @@ class _CustomHorizontalListViewState
                       selectedIndex = index;
                     });
                   },
-                  selectedColor: widget.theme.colorScheme.secondary,
+                  selectedColor: widget.theme.colorScheme.tertiary,
                   backgroundColor: widget.theme.colorScheme.surface,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4),
                     side: BorderSide(
                       color: isSelected
-                          ? widget.theme.colorScheme.secondary
-                          : widget.theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                      width: 0.5,
+                          ? widget.theme.colorScheme.tertiary
+                          : widget.theme.colorScheme.onSurface.withValues(alpha: 0.2),
+                      width: isSelected ? 1 : 0.5,
                     ),
                   ),
                 ),
@@ -190,6 +190,7 @@ class _CustomHorizontalListViewState
             },
           ),
         ),
+        const ResponsiveSpace(height: 8),
     
       
     

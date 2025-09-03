@@ -6,7 +6,7 @@ import '../../../../core/providers/theme_data_provider.dart';
 import '../../../../core/widgets/custom_overlay.dart';
 import '../../domain/entities/customer.dart';
 import '../providers/customer_provider.dart';
-import 'add_new_customer_sheet.dart';
+import 'add_new_customer_form.dart';
 
 class CustomerActions {
   final WidgetRef ref;
@@ -15,11 +15,11 @@ class CustomerActions {
   CustomerActions({required this.ref, required this.context});
 
   Future<void> showAddCustomerSheet() async {
-    await _showCustomerSheet(const AddNewCustomerSheet());
+    await _showCustomerSheet(const AddNewCustomerForm());
   }
 
   Future<void> showEditCustomerSheet(Customer customer) async {
-    await _showCustomerSheet(AddNewCustomerSheet(existingCustomer: customer));
+    await _showCustomerSheet(AddNewCustomerForm(existingCustomer: customer));
   }
 
   Future<void> _showCustomerSheet(Widget sheet) async {

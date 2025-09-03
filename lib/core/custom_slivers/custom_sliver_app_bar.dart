@@ -41,6 +41,7 @@ class CustomSliverAppBar extends ConsumerWidget {
     final theme = ref.watch(themeDataProvider);
     final responsive = ref.watch(responsiveProvider);
     return SliverAppBar(
+      titleSpacing:0.0 ,
       title:title ,
       centerTitle: centerTitle,
       expandedHeight: expandedHeight ?? 0,

@@ -1,3 +1,4 @@
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_tab_bar.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ class BuildTabBarLayout extends ConsumerStatefulWidget {
   final List<Tab> tabs;
   final int initialTabIndex;
   final bool hasLeading;
-  final String? title;
+  final Widget? titleWidget;
   final List<Widget>? actions;
   final double? toolbarHeight;
 
@@ -26,7 +27,7 @@ class BuildTabBarLayout extends ConsumerStatefulWidget {
     required this.initialTabIndex,
     required this.hasLeading,
     required this.toolbarHeight,
-    required this.title,
+    required this.titleWidget,
   });
 
   @override
@@ -91,8 +92,8 @@ class _TabbedLayoutState extends ConsumerState<BuildTabBarLayout>
 
   @override
   Widget build(BuildContext context) {
-    final theme = ref.watch(themeDataProvider);
-    final responsive = ref.watch(responsiveProvider);
+    final theme = ref.theme;
+    final responsive = ref.responsive;
     return NestedScrollView(
       physics: widget.physics ?? const ClampingScrollPhysics(),
       floatHeaderSlivers: true,
@@ -103,12 +104,7 @@ class _TabbedLayoutState extends ConsumerState<BuildTabBarLayout>
             sliver: CustomSliverAppBar(
               toolbarHeight: widget.toolbarHeight ?? responsive.h(116),
               hasLeading: widget.hasLeading,
-              title: CustomAutoSizeText(
-                text: widget.title ?? '',
-                style: theme.textTheme.bodyMedium,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
+              title: widget.titleWidget,
               actions: widget.actions,
               bottom: PreferredSize(
                 preferredSize: Size.zero,

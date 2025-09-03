@@ -1,54 +1,75 @@
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/utils/responsive_values.dart';
+import '../../../../core/utils/route_names.dart';
+import '../../../../core/widgets/custom_overlay.dart';
 import '../../domain/entities/account.dart';
+import '../providers/account_provider.dart';
 
 class CustomAccountCard extends ConsumerWidget {
-  final Account account;
+  final Account? account;
   final Function(Account) onTap;
-  final ResponsiveValues responsive;
+  
   
 
   const CustomAccountCard({
     super.key,
     required this.account,
     required this.onTap,
-    required this.responsive,
-   
+    
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.theme;
+    final responsive =ref.responsive;
     return Card(
       color: theme.colorScheme.surface,
       elevation: 2,
-      margin: responsive.paddingOnly(bottom: responsive.h(12)),
+      margin: responsive.paddingOnly(bottom: responsive.h(4)),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(responsive.w(10))),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(responsive.w(10)),
-        onTap: () => onTap(account),
-        child: Padding(
-          padding: responsive.paddingAll(12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
+      // child: InkWell(
+      //   borderRadius: BorderRadius.circular(responsive.w(10)),
+      //   onTap: () => onTap(account),
+      //   child: Padding(
+      //     padding: responsive.paddingAll(12),
+      //     child: Row(
+      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //       crossAxisAlignment: CrossAxisAlignment.center,
+      //       children: [
              
               
-              const ResponsiveSpace(width: 8),
+      //         const ResponsiveSpace(width: 8),
               
-              // Account Details
-              Expanded(
-                child: _buildAccountDetails(theme),
-              ),
+      //         // Account Details
+      //         Expanded(
+      //           child: _buildAccountDetails(theme),
+      //         ),
               
-              // Balance Information
-              _buildBalanceInfo(theme),
+      //         // Balance Information
+      //         _buildBalanceInfo(theme),
+      //       ],
+      //     ),
+      //   ),
+      // ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(responsive.w(10)),
+        onTap: () => onTap(account!),
+        child: Padding(
+          padding: responsive.paddingAll(12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildAccountInfo(context,theme, ref),
+              ResponsiveSpace(height: 12),
+              
+              _buildBalanceInfo2(theme),
             ],
           ),
         ),
@@ -58,53 +79,233 @@ class CustomAccountCard extends ConsumerWidget {
 
  
 
-  Widget _buildAccountDetails( ThemeData theme) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
+  // Widget _buildAccountDetails( ThemeData theme) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     mainAxisSize: MainAxisSize.min,
+  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //     children: [
+  //       CustomAutoSizeText(
+  //         text: account.name,
+  //         fontWeight: FontWeight.bold,
+  //         colorText: theme.colorScheme.onSurface,
+  //         style: theme.textTheme.bodyMedium,
+  //         maxLines: 2,
+  //         overflow: TextOverflow.ellipsis,
+  //         fontSize: 12,
+  //       ),
+  //       ResponsiveSpace(height: 4),
+  //       CustomAutoSizeText(
+  //         text: account.category.toString().split('.').last, // Convert enum to string
+  //         colorText:theme.colorScheme.onSurface.withValues(alpha: 0.6) ,
+  //         fontSize: 12,
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  // Widget _buildBalanceInfo( ThemeData theme) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.end,
+  //     mainAxisSize: MainAxisSize.min,
+  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //     children: [
+  //       Row(
+  //         mainAxisSize: MainAxisSize.min,
+          
+  //         children: [
+  //           CustomAutoSizeText(text:  account.debtor != 0 ? 'له: ' : 'عليه: ',
+  //             fontWeight: FontWeight.bold,
+  //             colorText: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+  //             style: theme.textTheme.bodyMedium,
+  //             fontSize: 12,
+  //           ),
+  //           ResponsiveSpace(width: 4),
+  //           CustomAutoSizeText(
+  //             text: account.totalAccountBalance.toStringAsFixed(2)+account.currencyCode!,
+  //             fontWeight: FontWeight.bold,
+  //             colorText: account.debtor != 0 
+  //                 ? Colors.green.shade600 
+  //                 : Colors.red.shade600,
+  //             style: theme.textTheme.bodyMedium
+  //           ),
+  //         ],
+  //       ),
+  //       ResponsiveSpace(height: 4),
+  //       if (account.currencyCode != null)
+  //         CustomAutoSizeText(
+  //           text: ' ${account.createdAt.year}/${account.createdAt.month}/${account.createdAt.day}',
+  //           colorText: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+  //           fontSize: 12,
+  //         ),
+  //     ],
+  //   );
+  // }
+  Widget _buildAccountInfo( BuildContext context, ThemeData theme , WidgetRef ref) {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      
       children: [
-        CustomAutoSizeText(
-          text: account.name,
-          fontWeight: FontWeight.bold,
-          colorText: theme.colorScheme.onSurface,
-          style: theme.textTheme.bodyMedium,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          fontSize: 12,
+        Expanded(
+          child: Row(
+            
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Flexible(
+                child: CustomAutoSizeText(
+                  text: account!.name,
+                  fontWeight: FontWeight.bold,
+                  colorText: theme.colorScheme.onSurface,
+                  style: theme.textTheme.bodyMedium,
+                 
+                  overflow: TextOverflow.ellipsis,
+                  fontSize: 12,
+                ),
+              ),
+              ResponsiveSpace(width: 8),
+              CustomIconButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AccountSubRoutes.edit.screenEdit(account!)));
+                },
+                 icon:  Icon(Icons.edit_outlined),
+                 iconSize: 20,
+                 iconColor: theme.colorScheme.onSurface.withValues(alpha: 0.5),)
+            ],
+          ),
         ),
-        ResponsiveSpace(height: 4),
-        CustomAutoSizeText(
-          text: account.category.toString().split('.').last, // Convert enum to string
-          colorText:theme.colorScheme.onSurface.withValues(alpha: 0.6) ,
-          fontSize: 12,
-        ),
+        ResponsiveSpace(width: 4),
+         CustomIconButton(
+          
+              onPressed: () {
+                showConfirmationDialog(
+                  context: context,
+                  title: 'تأكيد الحذف',
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomAutoSizeText(
+                        text: 'هل أنت متأكد أنك تريد حذف هذا الحساب؟',
+                        style: theme.textTheme.bodyMedium,
+                        fontSize: 12,
+                      ),
+                      ResponsiveSpace(height: 8),
+                      CustomAutoSizeText(
+                        text: 'سيتم حذف جميع المعاملات المرتبطة بهذا الحساب.',
+                        style: theme.textTheme.bodyMedium,
+                        fontSize: 12,
+                        colorText: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      ),
+                    ],
+                  ),
+                  onConfirm: () {
+                    // Handle account deletion logic here
+                    // For example, call a function to delete the account
+
+                    // After deletion, you might want to pop the dialog or navigate back
+                    ref.read(accountViewModelProvider.notifier).deleteAccount(account!.id);
+                     
+                     ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: CustomAutoSizeText(
+                      fontFamily: 'Cairo',
+                      text: 'تم حذف الحساب بنجاح!',
+                      colorText: Colors.white,
+                      fontSize: 12,
+                    ),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+
+                    
+                    
+                  },
+                );
+              },
+               icon:  Icon(Icons.delete_outline,  ),
+               iconSize: 20,
+               iconColor:theme.colorScheme.error,),
+        
       ],
     );
   }
-
-  Widget _buildBalanceInfo( ThemeData theme) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        CustomAutoSizeText(
-          text: account.totalAccountBalance.toStringAsFixed(2),
-          fontWeight: FontWeight.bold,
-          colorText: account.totalAccountBalance >= 0 
-              ? Colors.green.shade600 
-              : Colors.red.shade600,
-          style: theme.textTheme.bodyMedium
-        ),
-        ResponsiveSpace(height: 4),
-        if (account.currencyCode != null)
-          CustomAutoSizeText(
-            text: account.currencyCode!,
-            colorText: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-            fontSize: 12,
+  Widget _buildBalanceInfo2(ThemeData theme) {
+    return IntrinsicHeight(
+      child: Row(
+        // mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly ,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(child: _buildCurrencyInfo(theme,'يمني',account!.totalAccountBalance.toStringAsFixed(2),true)),
+          ResponsiveSpace(width: 4),
+          VerticalDivider(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
+            thickness: 1,
+            width: 16,
           ),
-      ],
+          ResponsiveSpace(width: 4),
+          Expanded(child: _buildCurrencyInfo(theme,' دولار',account!.totalAccountBalance.toStringAsFixed(2), false)),
+          ResponsiveSpace(width: 4),
+          VerticalDivider(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
+            thickness: 1,
+            width: 16,
+          ),
+          Expanded(child: _buildCurrencyInfo(theme,' سعودي',account!.totalAccountBalance.toStringAsFixed(2), false)),
+          
+        ],
+      ),
     );
+  }
+  Widget _buildCurrencyInfo(ThemeData theme,String currencyName,String balance,bool isDebtor ) {
+     Color balanceColor = isDebtor ? Colors.red.shade600 : Colors.green.shade600; // ألوان مميزة
+     IconData icon = isDebtor ? Icons.arrow_downward : Icons.arrow_upward; // أيقونات توضيحية
+    return Column(  
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(4),
+                child: Icon(
+                  icon,
+                  color: balanceColor,
+                  size: 16,
+                ),
+              )
+            ),
+            ResponsiveSpace(width: 4),
+            CustomAutoSizeText(
+              text: currencyName,
+              fontWeight: FontWeight.bold,
+              colorText: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              style: theme.textTheme.bodyMedium,
+              fontSize: 12,
+            ),]),
+            ResponsiveSpace(height: 4),
+            CustomAutoSizeText(
+              text: balance,
+              fontWeight: FontWeight.bold,
+              colorText: account!.debtor != 0
+              ? Colors.green.shade600
+              : Colors.red.shade600,
+              style: theme.textTheme.bodyMedium,
+              fontSize: 12,
+              maxLines: 1,
+            ),
+          ],
+        );
+       
   }
 }

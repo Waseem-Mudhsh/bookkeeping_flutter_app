@@ -1,105 +1,34 @@
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_horizontal_list_view.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/domain/entities/account.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/providers/account_provider.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/account_details_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/custom_account_card.dart';
 import 'package:bookkeeping_flutter_app/features/Transactions/presentation/widgets/custom_transaction_item.dart';
-import 'package:bookkeeping_flutter_app/features/Customers/presentation/widgets/customer_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bookkeeping_flutter_app/core/utils/responsive_values.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart'; // Assume this widget exists
-
-// Providers
-
-import '../../../../core/providers/responsive_notifier.dart';
-import '../../../../core/providers/theme_data_provider.dart';
 import '../../../../core/widgets/custom_empty_state.dart';
 import '../../../../core/widgets/custom_icon_button.dart';
-import '../../../Currencies/presentation/widgets/custom_show_balince.dart';
-import '../../../Customers/presentation/providers/customer_provider.dart';
-import '../../../Customers/presentation/screens/customer_actions.dart';
+import '../../../../core/widgets/responsive_space.dart';
 import '../../../Transactions/domain/entities/transaction.dart';
-import '../../../Transactions/presentation/Providers/transaction_provider.dart';
 
-// import 'package:bookkeeping_flutter_app/features/home/data/providers/currency_provider.dart'; // Assume this provider exists
 
-// Domain Entities (Simplified for demonstration)
-// You should have these in your 'domain/entities' folder
 
-// class Transaction {
-//   final String id;
-//   final String description;
-//   final double amount;
-//   final DateTime date;
-//   final TransactionType type; // Income, Expense, Transfer
-//   final String accountName; // Name of the account involved
-//   final IconData categoryIcon; // Icon for the category (e.g., food, transport)
 
-//   Transaction({
-//     required this.id,
-//     required this.description,
-//     required this.amount,
-//     required this.date,
-//     required this.type,
-//     required this.accountName,
-//     required this.categoryIcon,
-//   });
-// }
-
-// enum TransactionType { income, expense, transfer }
-
-// class AppAlert {
-//   final String id;
-//   final String message;
-//   final AlertType type;
-//   final DateTime? date;
-//   final VoidCallback? onPressed; // Action to take when alert is tapped
-
-//   AppAlert({
-//     required this.id,
-//     required this.message,
-//     required this.type,
-//     this.date,
-//     this.onPressed,
-//   });
-// }
-
-enum AlertType { warning, info, critical }
-
-// final List<Transaction> mockTransactions = [
-//   Transaction(id: 't1', description: 'راتب شهر يونيو', amount: 300000.00, date: DateTime.now().subtract(const Duration(days: 1)), type: TransactionType.income, accountName: 'حساب التوفير الرئيسي', categoryIcon: Icons.attach_money),
-//   Transaction(id: 't2', description: 'إيجار الشقة', amount: 500.00, date: DateTime.now().subtract(const Duration(days: 2)), type: TransactionType.expense, accountName: 'بطاقة ائتمان فيزا', categoryIcon: Icons.house),
-//   Transaction(id: 't3', description: 'مشتريات سوبر ماركت', amount: 15000.00, date: DateTime.now().subtract(const Duration(days: 3)), type: TransactionType.expense, accountName: 'محفظة الكاش', categoryIcon: Icons.shopping_cart),
-//   Transaction(id: 't4', description: 'تحويل إلى حساب الأخت', amount: 100.00, date: DateTime.now().subtract(const Duration(days: 4)), type: TransactionType.transfer, accountName: 'حساب التوفير الرئيسي', categoryIcon: Icons.sync_alt),
-//   Transaction(id: 't5', description: 'فاتورة الكهرباء', amount: 200.00, date: DateTime.now().subtract(const Duration(days: 5)), type: TransactionType.expense, accountName: 'حساب التوفير الرئيسي', categoryIcon: Icons.lightbulb),
-//   Transaction(id: 't6', description: 'مصاريف السيارة', amount: 300.00, date: DateTime.now().subtract(const Duration(days: 6)), type: TransactionType.expense, accountName: 'بطاقة ائتمان فيزا', categoryIcon: Icons.directions_car),
-// ];
-
-// final List<AppAlert> mockAlerts = [
-//   AppAlert(id: 'al1', message: 'الرصيد في محفظة الكاش منخفض!', type: AlertType.warning, onPressed: () => debugPrint('Top up cash')),
-//   AppAlert(id: 'al2', message: 'فاتورة الكهرباء مستحقة غدًا.', type: AlertType.info, onPressed: () => debugPrint('Pay electricity bill')),
-// ];
 
 // Main Screen Widget
 class AccountsScreen extends ConsumerWidget {
-  // final ThemeData theme;
-  final ResponsiveValues responsive;
-
-  
 
   const AccountsScreen({
     super.key,
-    // required this.theme,
-    required this.responsive,
-
-    
+   
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncTransactions = ref.watch(transactionViewModelProvider(''));
+    
     final List<String> categorices = [
       'العملاء',
       'الموردين',
@@ -108,7 +37,8 @@ class AccountsScreen extends ConsumerWidget {
       'المصروفات',
     ];
 
-    final theme = ref.watch(themeDataProvider);
+    final theme = ref.theme;
+    final responsive = ref.responsive;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -237,7 +167,7 @@ class _AccountsListSection extends ConsumerWidget {
   Widget _buildEmptyState() {
     return Consumer(
       builder: (context, ref, _) {
-        final theme = ref.watch(themeDataProvider);
+        
         
         return Padding(
           padding: responsive.paddingOnly(top:16),
@@ -257,7 +187,7 @@ class _AccountsListSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
-      spacing: responsive.h(4),
+      spacing: responsive.h(8),
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -267,25 +197,35 @@ class _AccountsListSection extends ConsumerWidget {
             CustomAutoSizeText(
               text: 'عدد الحسابات: ${accounts.length}',
               style: theme.textTheme.bodyMedium,
-              fontWeight: FontWeight.w500,
-              colorText: theme.colorScheme.secondary,
+              fontWeight: FontWeight.w600,
+              colorText: theme.colorScheme.tertiary,
               fontSize: 12,
             ),
             Spacer(),
             CustomIconButton(
-              icon: const Icon(Icons.sort_outlined),
-              iconSize: responsive.w(24),
-              iconColor: theme.colorScheme.secondary,
+              icon: const Icon(Icons.search_outlined),
+              iconSize: 20,
+              iconColor: theme.colorScheme.tertiary,
               onPressed: onAddAccount,
+              backgroundColor: theme.colorScheme.tertiary.withValues(alpha: 0.05),
+            ),
+            ResponsiveSpace(width: 8),
+            CustomIconButton(
+              icon: const Icon(Icons.sort_outlined),
+              iconSize: 20,
+              iconColor: theme.colorScheme.tertiary,
+              onPressed: onAddAccount,
+              backgroundColor: theme.colorScheme.tertiary.withValues(alpha: 0.05),
             ),
           ],
         ),
+        
     
         ...accounts.map(
           (account) => CustomAccountCard(
             account: account,
             onTap: onAccountTap,
-            responsive: responsive,
+            
             // theme: theme,
           ),
         ),

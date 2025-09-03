@@ -29,10 +29,10 @@ class CustomTransactionItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     
-    String sign = transaction.type == TransactionType.debit ? '+' : '-';
+    String sign = transaction.type == TransactionType.credit ? '+' : '-';
     return Card(
       elevation: 2,
-      margin: responsive.paddingOnly(bottom: responsive.h(8)),
+      margin: responsive.paddingOnly(bottom: responsive.h(4)),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(responsive.w(10)),
       ),
@@ -84,7 +84,9 @@ class CustomTransactionItem extends ConsumerWidget {
               leading: Icon(Icons.delete, color: theme.colorScheme.error),
               title: Text('حذف العملية', style: theme.textTheme.bodyMedium),
               onTap: () {
+                
                 _onDeleteTransaction(context, ref)(); // استدعاء دالة حذف العملية من Provider انا
+                
               },
             ),
             ListTile(
@@ -121,12 +123,33 @@ class CustomTransactionItem extends ConsumerWidget {
       title: 'تاكيد الحذف',
       content: Text('هل أنت متأكد من حذف هذه العملية؟'),
       onConfirm: () {
+        
         // استدعاء دالة حذف العملية من Provider أو ViewModel هنا
        ref.read(transactionViewModelProvider(transaction.accountId).notifier).deleteTransaction(transaction.id);
-        Navigator.pop(context); // إغلاق النافذة المنبثقة
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: CustomAutoSizeText(
+                      fontFamily: 'Cairo',
+                      text: 'تم حذف الحساب بنجاح!',
+                      colorText: Colors.white,
+                      fontSize: 12,
+                    ),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+                Navigator.pop(context); // Close the bottom sheet
+        
        
       },
+      confirmButtonText: 'حذف',
+      cancelButtonText: 'إلغاء',
+      confirmButtonColor: theme.colorScheme.error,
        );
+       
+      
+      
+     
     };
   }
 
@@ -134,15 +157,15 @@ class CustomTransactionItem extends ConsumerWidget {
     return Container(
       padding: responsive.paddingAll(6),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primary.withValues(alpha: 0.1),
+        color: theme.colorScheme.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(responsive.w(6)),
       ),
       child: Icon(
-        transaction.type == TransactionType.debit
+        transaction.type == TransactionType.credit
             ? Icons.arrow_upward
             : Icons.arrow_downward,
         color:
-            transaction.type == TransactionType.debit
+            transaction.type == TransactionType.credit
                 ? Colors.green.shade600
                 : Colors.red.shade600,
         size: responsive.w(24),
@@ -170,7 +193,7 @@ class CustomTransactionItem extends ConsumerWidget {
         CustomAutoSizeText(
           text: '$sign ${transaction.amount.toStringAsFixed(2)}',
           fontWeight: FontWeight.bold,
-          colorText: transaction.type == TransactionType.debit
+          colorText: transaction.type == TransactionType.credit
               ? Colors.green.shade600
               : Colors.red.shade600,
           style: theme.textTheme.bodyMedium,

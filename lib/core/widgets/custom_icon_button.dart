@@ -44,7 +44,7 @@ class CustomIconButton extends ConsumerWidget {
       
       
       style: backgroundColor != null ? IconButton.styleFrom(
-        backgroundColor: backgroundColor!.withAlpha( 60),
+        backgroundColor: backgroundColor!,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(responsive.w(55)),
         ),

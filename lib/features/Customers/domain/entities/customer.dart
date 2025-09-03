@@ -69,22 +69,26 @@ class Customer {
   });
 
   Customer copyWith({
-    String? id,
-    String? name,
-    double? balance,
-    String? phone,
-    DateTime? taskStartDate,
-    int? taskTotalDays,
-    String? currency,
+   Object? id = unchanged,
+    Object? name = unchanged,
+    Object? balance = unchanged,
+    Object? phone = unchanged,
+    Object? taskStartDate= unchanged,
+    Object? taskTotalDays = unchanged,
+    Object? currency= unchanged,
   }) {
     return Customer(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      balance: balance ?? this.balance,
-      phone: phone ?? this.phone,
-      taskStartDate: taskStartDate ?? this.taskStartDate,
-      taskTotalDays: taskTotalDays ?? this.taskTotalDays,
-      currency: currency ?? this.currency,
+      id: id == unchanged ? this.id : id as String,
+      name: name== unchanged ? this.name : name as String,
+      balance: balance ==unchanged ? this.balance : balance as double,
+      phone: phone ==unchanged ? this.phone : phone as String,
+      taskStartDate: taskStartDate == unchanged ? this.taskStartDate : taskStartDate as DateTime,
+      taskTotalDays: taskTotalDays == unchanged ? this.taskTotalDays : taskTotalDays as int,
+      currency: currency == unchanged ? this.currency : currency as String,
     );
   }
+  static const unchanged = Object(); // استخدام طريقة Sentinel Pattern لتعبئة القيم الخالية
+  // لحل مشكلة عند تمرير قيمة null للكونستركتور
+  // اذا مررت قيمة: بيظل المعامل قيمته uncganded فسينسخ الحقل الاصلي (this.field).
+  // اذا مررت قيمة null: المعامل بيصير null مش unchanged, فبيصير المعامل قيمة null.
 }

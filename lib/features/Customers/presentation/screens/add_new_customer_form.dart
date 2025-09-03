@@ -20,17 +20,17 @@ import '../../../Currencies/presentation/providers/currency_provider.dart';
 import '../../domain/entities/customer.dart';
 import '../providers/customer_provider.dart';
 
-class AddNewCustomerSheet extends ConsumerStatefulWidget {
+class AddNewCustomerForm extends ConsumerStatefulWidget {
   final Customer? existingCustomer;
 
-  const AddNewCustomerSheet({super.key, this.existingCustomer});
+  const AddNewCustomerForm({super.key, this.existingCustomer});
 
   @override
-  ConsumerState<AddNewCustomerSheet> createState() =>
-      _AddNewCustomerSheetState();
+  ConsumerState<AddNewCustomerForm> createState() =>
+      _AddNewCustomerFormState();
 }
 
-class _AddNewCustomerSheetState extends ConsumerState<AddNewCustomerSheet> {
+class _AddNewCustomerFormState extends ConsumerState<AddNewCustomerForm> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _balanceController;
@@ -235,8 +235,14 @@ class _AddNewCustomerSheetState extends ConsumerState<AddNewCustomerSheet> {
 
     return BaseLayoutScreen(
       body: BuildNonTabbarLayout(
-        title:
-            widget.existingCustomer == null ? 'إضافة حساب جديد' : 'تعديل حساب',
+        titleWidget:
+            CustomAutoSizeText(
+              text: widget.existingCustomer == null ? 'إضافة عميل جديد' : 'تعديل عميل',
+              style: theme.textTheme.bodyMedium,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              colorText: theme.colorScheme.primary,
+            ),
 
         slivers: [
           SliverToBoxAdapter(

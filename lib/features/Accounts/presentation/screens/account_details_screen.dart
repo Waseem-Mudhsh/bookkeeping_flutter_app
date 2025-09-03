@@ -2,25 +2,25 @@
 // File: lib/presentation/account/account_details_screen.dart
 // The main screen that ties everything together.
 //
-import 'package:bookkeeping_flutter_app/core/base_layout/build_tab_bar_layout.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_horizontal_list_view.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_overlay.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_segmented_button.dart';
+import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/account_actions_row.dart';
 import 'package:bookkeeping_flutter_app/features/Currencies/presentation/widgets/custom_show_balince.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/base_layout/base_layout_screen.dart';
 import '../../../../core/base_layout/build_non_tabbar_layout.dart';
-import '../../../../core/providers/responsive_notifier.dart';
-import '../../../../core/providers/theme_data_provider.dart';
 import '../../../../core/utils/route_names.dart';
 import '../../../../core/widgets/custom_auto_size_text.dart';
-import '../../../../core/widgets/custom_overlay.dart';
 import '../../../../core/widgets/responsive_space.dart';
-import '../../../Currencies/presentation/providers/currency_provider.dart';
 import '../../../Transactions/presentation/widgets/transaction_list.dart';
 import '../../domain/entities/account.dart';
 import '../providers/account_provider.dart';
+import '../widgets/balance_card.dart';
+
 
 
 class AccountDetailsScreen extends ConsumerWidget {
@@ -31,13 +31,36 @@ class AccountDetailsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.theme;
+    final responsive = ref.responsive;
    
     
 
     return BaseLayoutScreen(
       body: BuildNonTabbarLayout(
        
-        title: account!.name,
+        titleWidget: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+            CustomAutoSizeText(
+              text: account?.name ?? 'تفاصيل الحساب',
+              style: theme.textTheme.bodyMedium,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              colorText: theme.colorScheme.primary,
+            ),
+             ResponsiveSpace(height: 4),
+             CustomAutoSizeText(
+              text: 'هاتف الحساب: ${account?.phoneNumber}',
+              style: theme.textTheme.bodyMedium,
+              
+              fontSize: 10,
+              colorText: theme.colorScheme.primary,
+            ),
+          ],
+        ),
+         toolbarHeight: responsive.h(60),
         actions:[ 
         
         ResponsiveSpace(width: 16),
@@ -100,19 +123,20 @@ class AccountDetailsScreen extends ConsumerWidget {
         ],
        slivers: [
           SliverToBoxAdapter(
-            child: ResponsiveSpace(height: 16),
+            child: ResponsiveSpace( height: 16,),
           ),
-         SliverToBoxAdapter(
-          child: CustomShowBalince(account:account!),
-         ),
-         SliverToBoxAdapter(
-          child: ResponsiveSpace(height: 16),
-         ),
-         SliverToBoxAdapter(
-          child: TransactionList(
-            account: account!,
+          SliverToBoxAdapter(
+            child: CustomSegmentedButton(
+              nameButtons: ['يمني', 'سعودي', 'دولار',],
+              contentButtons:[
+                _buildTransactionListByCurrency(),
+                _buildTransactionListByCurrency(),
+                _buildTransactionListByCurrency(),
+              
+              ] ,
+               theme: theme, responsive: responsive),
           ),
-         ),
+         
        ],
         
        
@@ -144,6 +168,22 @@ class AccountDetailsScreen extends ConsumerWidget {
       ),
       // bottomNavigationBar: AccountBalanceInfo(account: account!),
      
+    );
+  }
+  Widget _buildTransactionListByCurrency(){
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ResponsiveSpace( height: 16,),
+        BalanceCard(account: account!,),
+        ResponsiveSpace(height: 16),
+        AccountActionsRow(account:  account!, isCompact: true,),
+        ResponsiveSpace(height: 16),
+        TransactionList(account: account!),
+
+
+      ],
     );
   }
 }

@@ -51,7 +51,13 @@ class FinanceScreen extends ConsumerWidget {
     
         initialTabIndex: 0,
         tabs: mainAccounts.map((account) => Tab(text: account.name)).toList(),
-        title: 'الحسابات',
+       titleWidget: CustomAutoSizeText(
+          text: 'الحسابات المالية',
+          style: theme.textTheme.bodyMedium,
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+          colorText: theme.colorScheme.primary,
+        ),
         hasLeading: false,
         actions: [
           _buildNotificationButton(context, responsive, theme, mockAlerts),
@@ -70,12 +76,7 @@ class FinanceScreen extends ConsumerWidget {
             mainAccounts.map((mainAccount) {
               return CustomTabViewContainer(
                 responsive: responsive,
-                child: AccountsScreen(
-                  
-                  // theme: theme,
-                  responsive: responsive,
-                 
-                ));
+                child: AccountsScreen());
             }).toList(),
       ),
       floatingActionButton: FloatingActionButton.extended(
