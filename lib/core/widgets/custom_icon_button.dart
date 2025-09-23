@@ -1,16 +1,16 @@
 // ignore: file_names
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 
-import '../providers/responsive_notifier.dart';
-import '../providers/theme_data_provider.dart';
+
 
 class CustomIconButton extends ConsumerWidget {
   final VoidCallback onPressed;
-  final Icon icon;
+  final HugeIcon hugeIcon;
 
-  final Color? iconColor;
-  final double? iconSize;
+  
   final Color? backgroundColor;
   final String? tooltip;
 
@@ -18,29 +18,23 @@ class CustomIconButton extends ConsumerWidget {
     super.key,
 
     required this.onPressed,
-    required this.icon,
+    required this.hugeIcon,
 
-    this.iconColor,
-    this.iconSize,
+    
     this.backgroundColor,
     this.tooltip,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeDataProvider);
-    final responsive = ref.watch(responsiveProvider);
+    
+    final responsive = ref.responsive;
 
     return IconButton(
       tooltip: tooltip,
       padding: responsive.paddingAll(8),
       onPressed: onPressed,
-      icon: Icon(
-        icon.icon,
-        size:   responsive.w(iconSize ??24),
-        color: iconColor ?? theme.colorScheme.onPrimaryFixed,
-        semanticLabel: icon.semanticLabel,
-      ),
+      icon: hugeIcon,
       
       
       style: backgroundColor != null ? IconButton.styleFrom(

@@ -1,3 +1,4 @@
+import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
@@ -6,6 +7,7 @@ import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart'
 import 'package:bookkeeping_flutter_app/core/widgets/custom_button.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/domain/entities/account.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 class CustomDrawer extends ConsumerWidget {
   final Account? account;
@@ -140,10 +142,16 @@ class CustomDrawer extends ConsumerWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     )
-                  : Icon(
-                      Icons.account_circle,
-                      size: 40,
-                      color: theme.colorScheme.primaryContainer,
+                  : IconButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RouteNames.profile.screen));
+                    },
+                    icon: CustomHugeIcon(icon: HugeIcons.strokeRoundedUser,
+                    color: theme.colorScheme.primary,
+                    size: 32,)
+                      
+                      
+                      
                     ),
             ),
             const ResponsiveSpace(width: 12),

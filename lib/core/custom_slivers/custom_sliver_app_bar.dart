@@ -1,6 +1,9 @@
 import 'package:bookkeeping_flutter_app/core/providers/theme_data_provider.dart';
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import '../providers/responsive_notifier.dart';
 
@@ -38,8 +41,8 @@ class CustomSliverAppBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeDataProvider);
-    final responsive = ref.watch(responsiveProvider);
+    final theme = ref.theme;
+    final responsive = ref.responsive;
     return SliverAppBar(
       titleSpacing:0.0 ,
       title:title ,
@@ -52,7 +55,7 @@ class CustomSliverAppBar extends ConsumerWidget {
       leading:hasLeading ?  Builder(
       builder: (context) {
         return IconButton(
-          icon: const Icon(Icons.menu),
+          icon: const CustomHugeIcon(icon: HugeIcons.strokeRoundedMenuTwoLine),
           color: theme.colorScheme.primary,
           onPressed: () {
             Scaffold.of(context).openDrawer();
@@ -61,7 +64,7 @@ class CustomSliverAppBar extends ConsumerWidget {
       },
     ): null,
       actions: actions,
-      actionsPadding: responsive.paddingSym(h:16,),
+      actionsPadding: responsive.paddingOnly(left: 16),
       // backgroundColor: backgroundColor ?? theme.colorScheme.secondary,
       flexibleSpace: flexibleSpaceContent ,
       bottom: bottom ,

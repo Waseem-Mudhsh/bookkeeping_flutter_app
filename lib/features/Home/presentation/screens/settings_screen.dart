@@ -7,6 +7,7 @@ import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/balance_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import '../../../../core/base_layout/base_layout_screen.dart';
 import '../../../../core/providers/settings_provider.dart';
@@ -63,7 +64,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget _buildLanguageTile(BuildContext context, WidgetRef ref) {
     final selectedLanguage = ref.watch(languageProvider);
     return CustomExpansionTile(
-      leading:Icons.language_outlined,
+      leading:HugeIcons.strokeRoundedGlobe,
       title: 'اللغة',
       subtitle: 
         'اللغة الحالية: ${selectedLanguage == 'ar' ? 'العربية' : 'English'}',
@@ -71,7 +72,7 @@ class SettingsScreen extends ConsumerWidget {
         RadioListTile<String>(
           title: const CustomAutoSizeText(
             text: 'العربية',
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: FontWeight.w700,
           ),
           value: 'ar',
@@ -86,7 +87,7 @@ class SettingsScreen extends ConsumerWidget {
         RadioListTile<String>(
           title: const CustomAutoSizeText(
             text: 'English',
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: FontWeight.w700,
           ),
           value: 'en',
@@ -98,6 +99,7 @@ class SettingsScreen extends ConsumerWidget {
             }
           },
         ),
+      
       ],
     );
   }
@@ -109,7 +111,7 @@ class SettingsScreen extends ConsumerWidget {
 
     return CustomExpansionTile(
       leading: 
-        isDark == true ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+        isDark == true ? HugeIcons.strokeRoundedMoon02 :HugeIcons.strokeRoundedSun01,
       
       title: 'الثيم',
       subtitle: 'الثيم الحالي: ${isDark == true ? 'داكن' : 'فاتح'}',
@@ -117,7 +119,7 @@ class SettingsScreen extends ConsumerWidget {
         RadioListTile(
           title: const CustomAutoSizeText(
             text: 'فاتح',
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: FontWeight.w700,
           ),
           value: false,
@@ -129,7 +131,7 @@ class SettingsScreen extends ConsumerWidget {
         RadioListTile(
           title: const CustomAutoSizeText(
             text: 'داكن',
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: FontWeight.w700,
           ),
           value: true,
@@ -146,7 +148,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget _buildCurrencyTile(BuildContext context, WidgetRef ref) {
     final selectedCurrency = ref.watch(currencyProvider);
     return CustomExpansionTile(
-      leading: Icons.currency_exchange_outlined,
+      leading: HugeIcons.strokeRoundedDollar01,
       title: 'العملة الافتراضية',
       subtitle: 
         'العملة الحالية: ${selectedCurrency == 'SAR'
@@ -159,7 +161,7 @@ class SettingsScreen extends ConsumerWidget {
         RadioListTile<String>(
           title: const CustomAutoSizeText(
             text: 'ريال سعودي (SAR)',
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: FontWeight.w700,
           ),
           value: 'SAR',
@@ -173,7 +175,7 @@ class SettingsScreen extends ConsumerWidget {
         RadioListTile<String>(
           title: const CustomAutoSizeText(
             text: 'دولار امريكي (USD)',
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: FontWeight.w700,
           ),
           value: 'USD',
@@ -187,7 +189,7 @@ class SettingsScreen extends ConsumerWidget {
         RadioListTile<String>(
           title:const CustomAutoSizeText(
             text: 'يمني (YER)',
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: FontWeight.w700,
           ),
           value: 'YER',
@@ -202,22 +204,20 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
   Widget _buildBackupTile(BuildContext context, WidgetRef ref) {
-    
+   final theme = ref.theme;
     return CustomExpansionTile(
-      leading: Icons.backup_outlined,
+      leading: HugeIcons.strokeRoundedCloudUpload,
       title: 'نسخة احتياطية',
       subtitle: 'تاريخ اخر نسخة احتياطية: 2023-06-25',
        children: <Widget>[
         ListTile(
           title: const CustomAutoSizeText(
             text: 'انشاء نسخة احتياطية',
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: FontWeight.w700,
           ),
-          leading: Icon(
-            Icons.backup_outlined,
-            
-          ),
+          leading:HugeIcon(icon: HugeIcons.strokeRoundedCloudUpload,
+           color: theme.colorScheme.onSurface),
           onTap: () {
             _showBackupDialog(context, ref);
           },
@@ -225,13 +225,11 @@ class SettingsScreen extends ConsumerWidget {
         ListTile(
           title: const CustomAutoSizeText(
             text: 'تحميل نسخة احتياطية',
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: FontWeight.w700,
           ),
-          leading: Icon(
-            Icons.download_outlined,
-            
-          ),
+          leading:HugeIcon(icon: HugeIcons.strokeRoundedCloudDownload,
+           color: theme.colorScheme.onSurface,),
           onTap: () {
             _showBackupDialog(context, ref);
           },
@@ -239,13 +237,11 @@ class SettingsScreen extends ConsumerWidget {
         ListTile(
           title: const CustomAutoSizeText(
             text: 'حذف نسخة احتياطية',
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: FontWeight.w700,
           ),
-          leading: Icon(
-            Icons.delete_outlined,
-            
-          ),
+          leading: HugeIcon(icon: HugeIcons.strokeRoundedDelete01,
+           color: theme.colorScheme.onSurface,),
           onTap: () {
             _showBackupDialog(context, ref);
           },

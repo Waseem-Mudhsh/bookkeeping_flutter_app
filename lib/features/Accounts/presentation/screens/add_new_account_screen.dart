@@ -2,12 +2,13 @@
 
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_expansion_tile.dart'; // إذا كنت ترغب في قسم قابل للتوسيع
+import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/domain/entities/main_account.dart';
 import 'package:bookkeeping_flutter_app/features/Transactions/domain/entities/transaction_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import '../../../../core/base_layout/base_layout_screen.dart';
 import '../../../../core/base_layout/build_non_tabbar_layout.dart';
@@ -23,8 +24,6 @@ import '../../../../core/widgets/responsive_space.dart';
 import '../../../Accounts/domain/entities/account.dart'; // تأكد من وجود Account entity
 import '../../../Currencies/domain/entities/currency.dart';
 import '../../../Currencies/presentation/providers/currency_provider.dart';
-import '../../../Transactions/domain/entities/transaction.dart';
-import '../../../Transactions/presentation/Providers/transaction_provider.dart';
 import '../providers/account_provider.dart';
 // import '../../../Accounts/presentation/providers/account_provider.dart'; // تأكد من وجود provider خاص بالحسابات
 
@@ -54,8 +53,8 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
   late TextEditingController _phoneController;
   late TextEditingController _balanceController;
   late TextEditingController _notesController;
-  late TextEditingController _detailsController;
-  late TextEditingController _dateController;
+  
+  
   late List<MainAccountModel> listMockAccountTypes = [];
 
   late List<Currency> currencies = [];
@@ -90,12 +89,7 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
           mockCurrencies; // استخدام بيانات وهمية إذا كانت القائمة فارغة
     }
     // تعيين العملة الافتراضية أو العملة الحالية للحساب
-    currencySelected = currencies.firstWhere(
-      (c) =>
-          c.code ==
-          (widget.existingAccount?.currencyCode ?? currencies.first.code),
-      orElse: () => currencies.first,
-    );
+    currencySelected = currencies.first;
 
     // تهيئة حقول التحكم بالنصوص
     _nameController = TextEditingController(
@@ -108,14 +102,8 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
     _notesController = TextEditingController(
       text: widget.existingAccount?.note ?? '',
     );
-    _detailsController = TextEditingController(
-      text: widget.existingAccount?.note ?? '',
-    );
-    _dateController = TextEditingController(
-      text: widget.existingAccount != null
-          ? DateFormat('dd-MM-yyyy').format(widget.existingAccount!.createdAt)
-          : DateFormat('dd-MM-yyyy').format(DateTime.now()),
-    );
+    
+    
 
     _phoneController = TextEditingController(
       text: widget.existingAccount?.phoneNumber ?? '',
@@ -146,14 +134,14 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
 
     try {
       showTemporaryMessage(context, 'جاري الحفظ...'); // رسالة مؤقتة
-      DateFormat dateFormat = DateFormat('dd-MM-yyyy');
+      
 
       final account = Account(
         id:
             widget.existingAccount?.id ??
             IdGenerator.generateCompactId(prefix: 'acc_'),
         name: _nameController.text,
-        totalAccountBalance: double.parse(_balanceController.text),
+        totalAccountBalance: 0.0,
         currencyCode: currencySelected.code,
         category:
             accountTypeSelected!.name.toString(),
@@ -172,26 +160,14 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
       );
 
       debugPrint('Saving account: ${account.name}');
-      Transaction? transaction;
+    
       if (widget.existingAccount == null) {
-        transaction = Transaction(
-          id: IdGenerator.generateCompactId(prefix: 'txn_'),
-          accountId: account.id,
-          amount: double.parse(_balanceController.text),
-          date: dateFormat.parse(_dateController.text),
-          description: _detailsController.text,
-          type: debtorOption == TransactionType.debit
-              ? TransactionType.debit
-              : TransactionType.credit,
-          currency: currencySelected.name,
-          referenceNumber: '',
-        );
+       
 
         await ref.read(accountViewModelProvider.notifier).addAccount(account);
-        await ref.read(transactionViewModelProvider(account.id).notifier).addTransaction(transaction);
+       
         debugPrint('Adding new account: ${account.name}');
       } else {
-        // TODO: استدعاء دالة تحديث الحساب من الـ ViewModel/Provider
         await ref.read(accountViewModelProvider.notifier).updateAccount(account);
         debugPrint('Updating account: ${account.name}');
       }
@@ -234,28 +210,7 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
     }
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (picked != null) {
-      _dateController.text = DateFormat('dd-MM-yyyy').format(picked);
-    }
-  }
-  String? _validateDate(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'يرجى إدخال التاريخ';
-    }
-    try {
-      DateFormat('dd-MM-yyyy').parseStrict(value);
-    } catch (e) {
-      return 'تاريخ غير صالح';
-    }
-    return null;
-  }
+ 
 
   // دوال التحقق من صحة المدخلات
   String? _validateName(String? value) {
@@ -268,28 +223,14 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
     if (value == null || value.isEmpty) {
       return 'يرجى إدخال رقم الهاتف';
     }
-    if (value.length < 9) {
-      return 'رقم الهاتف يجب أن يكون 9 أرقام على الأقل';
+    if (value.length < 9 && value.length > 9) {
+      return 'رقم الهاتف يجب أن يكون 9 ارقام';
     }
     return null;
   }
 
-  String? _validateAmount(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'يرجى إدخال المبلغ';
-    }
-    if (double.tryParse(value) == null) {
-      return 'يرجى إدخال رقم صحيح';
-    }
-    return null;
-  }
 
-  String? _validateAccountType(MainAccountModel? value) {
-    if (value == null) {
-      return 'يرجى اختيار نوع الحساب';
-    }
-    return null;
-  }
+ 
 
   String? _validateCategory(String? value) {
     if (value == null) {
@@ -327,11 +268,6 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
                     _buildAccountBasicInfo(theme, responsive),
                     ResponsiveSpace(height: responsive.h(16)),
     
-                    // قسم الرصيد الافتتاحي
-                    if (widget.existingAccount == null) ...[
-                      _buildInitialBalance(theme, responsive),
-                      ResponsiveSpace(height: responsive.h(16)),
-                    ],
     
                     // قسم المعلومات الإضافية (الملاحظات)
                     _buildAdditionalInfo(theme, responsive),
@@ -431,66 +367,30 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
             ),
             const ResponsiveSpace(height: 12,),
           // Dropdown لاختيار نوع الحساب
-          Row(
-            children: [
-              Expanded(
-                child: CustomTextFieldDropdown<MainAccountModel>(
-                  
-                  items:
-                      listMockAccountTypes
-                          .map(
-                            (type) => DropdownMenuItem(
-                              value: type,
-                              child: CustomAutoSizeText(
-                                text: type.name, // دالة لتحويل Enum إلى نص عربي
-                                fontSize: 12,
-                                colorText: theme.colorScheme.onSurface,
-                              ),
-                            ),
-                          )
-                          .toList(),
-                  value: accountTypeSelected,
-                  onChanged:
-                      (value) => setState(() => accountTypeSelected = value),
-                  hintText: 'اختر نوع الحساب',
-                  labelText: 'نوع الحساب',
-                  
-                  validator: _validateAccountType,
-                  prefixIcon: Icon(
-                    Icons.category_outlined,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-                ),
-              const ResponsiveSpace(width: 16),
-              Expanded(
-                child: CustomTextFieldDropdown<String>(
-                  items:
-                      categorices
-                          .map(
-                            (type) => DropdownMenuItem(
-                              value: type,
-                              child: CustomAutoSizeText(
-                                text: type, // دالة لتحويل Enum إلى نص عربي
-                                fontSize: 14,
-                                colorText: theme.colorScheme.onSurface,
-                              ),
-                            ),
-                          )
-                          .toList(),
-                  value: categorySelected,
-                  onChanged:
-                      (value) => setState(() => categorySelected = value),
-                  hintText: 'اختر نوع التصنيف',
-                  labelText: 'نوع التصنيف',
-                  validator: _validateCategory,
-                  prefixIcon: Icon(
-                    Icons.category_outlined,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-              ),
-            ],
+          CustomTextFieldDropdown<String>(
+            items:
+                categorices
+                    .map(
+                      (type) => DropdownMenuItem(
+                        value: type,
+                        child: CustomAutoSizeText(
+                          text: type, // دالة لتحويل Enum إلى نص عربي
+                          fontSize: 14,
+                          colorText: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                    )
+                    .toList(),
+            value: categorySelected,
+            onChanged:
+                (value) => setState(() => categorySelected = value),
+            hintText: 'اختر نوع التصنيف',
+            labelText: 'نوع التصنيف',
+            validator: _validateCategory,
+            prefixIcon: Icon(
+              Icons.category_outlined,
+              color: theme.colorScheme.primary,
+            ),
           ),
         ],
       ),
@@ -498,98 +398,7 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
   }
 
   // بناء قسم "الرصيد الافتتاحي"
-  Widget _buildInitialBalance(ThemeData theme, ResponsiveValues responsive) {
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: theme.colorScheme.surfaceContainerHighest,
-          width: responsive.w(0.8),
-        ),
-      ),
-      padding: responsive.paddingAll(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomAutoSizeText(
-            text: 'إضافة العملية الأولى',
-            style: theme.textTheme.bodyMedium,
-            fontSize: 12,
-              fontWeight: FontWeight.bold,
-              colorText: theme.colorScheme.primary,
-          ),
-          const ResponsiveSpace(height: 24),
-          Row(
-            children: [
-              Expanded(
-                child: CustomTextField(
-                  controller: _balanceController,
-                  label: 'المبلغ',
-                  hint: 'ادخل المبلغ',
-                  keyboardType: TextInputType.numberWithOptions(
-                    decimal: true,
-                  ), // لوحة مفاتيح رقمية مع دعم عشري
-                  validator: _validateAmount,
-                  
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      Icons.calculate, // أيقونة الحاسبة
-                      color: theme.colorScheme.primary,
-                    ),
-                    onPressed: () {
-                      // TODO: فتح الحاسبة أو شاشة حاسبة مصغرة هنا
-                      debugPrint('فتح الحاسبة');
-                    },
-                    tooltip: 'فتح الحاسبة',
-                  ),
-                ),
-              ),
-              const ResponsiveSpace(width: 16),
-              Expanded(child: _buildCurrencyDropdown(theme, responsive)),
-            ],
-          ),
-
-          const ResponsiveSpace(height: 16),
-          CustomTextField(
-            controller: _detailsController,
-            label: 'التفاصيل',
-            hint: ' أكتب تفاصيل العملية',
-            keyboardType: TextInputType.text,
-            validator: _validateName,
-            suffixIcon: IconButton(
-              icon: Icon(Icons.camera_alt, color: theme.colorScheme.primary),
-              onPressed: () {},
-            ),
-          ),
-          // Dropdown لاختيار العملة
-          const ResponsiveSpace(height: 16),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-
-            children: [
-              Expanded(
-                child: CustomTextField(
-                  controller: _dateController,
-                  validator: _validateDate,
-                  label: 'تاريخ العملية',
-                  hint: 'DD/MM/YYYY',
-                  suffixIcon: Icon(
-                    Icons.calendar_today,
-                    color: theme.colorScheme.primary,
-                  ),
-                  readOnly: true,
-                  onTap: () => _selectDate(context),
-                ),
-              ),
-              const ResponsiveSpace(width: 2),
-              Expanded(child: _buildCkickBox(theme, responsive)),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+ 
 
   // بناء قسم "المعلومات الإضافية" (باستخدام CustomExpansionTile للحقول الاختيارية)
   Widget _buildAdditionalInfo(ThemeData theme, ResponsiveValues responsive) {
@@ -613,16 +422,12 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
           
           CustomTextField(
             controller: _notesController,
-            label: 'ملاحظة',
-            hint: 'أكتب الملاحظة هنا...',
+            label: 'العنوان',
+            hint: '  اضف العنوان...',
             keyboardType: TextInputType.text,
 
-            suffixIcon: IconButton(
-              icon: Icon(Icons.notes, color: theme.colorScheme.primary),
-              onPressed: () {
-                // Handle calculation logic here
-              },
-            ),
+            suffixIcon: CustomHugeIcon(icon: HugeIcons.strokeRoundedLocation01,
+            color:theme.colorScheme.primary)
           ),
           const ResponsiveSpace(height: 16),
           ResponsiveSpace(
@@ -733,105 +538,7 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
     );
   }
 
-  // بناء Dropdown لاختيار العملة (معزول لسهولة إعادة الاستخدام)
-  Widget _buildCurrencyDropdown(ThemeData theme, ResponsiveValues responsive) {
-    return CustomTextFieldDropdown<Currency>(
-      items:
-          currencies
-              .map(
-                (currency) => DropdownMenuItem(
-                  value: currency,
-                  child: Row(
-                    children: [
-                      // يمكنك عرض العلم هنا إذا كان لديك مساره في Currency entity
-                      // Image.asset(currency.flagUrl, width: 24, height: 24),
-                      // ResponsiveSpace(width: responsive.w(8)),
-                      CustomAutoSizeText(
-                        text: '${currency.name} (${currency.code})',
-                        fontSize: 14,
-                        colorText: theme.colorScheme.onSurface,
-                      ),
-                    ],
-                  ),
-                ),
-              )
-              .toList(),
-      value: currencySelected,
-      onChanged: (value) => setState(() => currencySelected = value!),
-      hintText: 'اختر العملة',
-      labelText: 'العملة',
-      validator: (value) => value == null ? 'العملة مطلوبة' : null,
-      prefixIcon: Icon(
-        Icons.currency_exchange_outlined,
-        color: theme.colorScheme.primary,
-      ),
-    );
-  }
 
-  Widget _buildCkickBox(ThemeData theme, ResponsiveValues responsive) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(
-          child: InkWell(
-            onTap: () => setState(() => debtorOption = TransactionType.debit),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Radio<String>(
-                  value: TransactionType.debit.toString(),
-                  groupValue: debtorOption.toString(),
-                  fillColor: WidgetStateProperty.all(Colors.green.shade600),
-                  activeColor: Colors.green.shade600,
-                  onChanged: (value) {
-                    setState(() {
-                      debtorOption =TransactionType.debit;
-                    });
-                  },
-                ),
-                const SizedBox(width: 4),
-                CustomAutoSizeText(
-                  text: ' له',
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  style: theme.textTheme.bodySmall,
-                  colorText: theme.colorScheme.primary,
-                ),
-              ],
-            ),
-          ),
-        ),
-        Expanded(
-          child: InkWell(
-            onTap: () => setState(() => debtorOption = TransactionType.credit),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Radio<String>(
-                  value: TransactionType.credit.toString(),
-                  groupValue: debtorOption.toString(),
-                  fillColor: WidgetStateProperty.all(theme.colorScheme.error),
-                  activeColor: theme.colorScheme.error,
-                  onChanged: (value) {
-                    setState(() {
-                      debtorOption = TransactionType.credit;
-                    });
-                  },
-                ),
-                const SizedBox(width: 4),
-                CustomAutoSizeText(
-                  text: ' عليه',
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  style: theme.textTheme.bodySmall,
-                  colorText: theme.colorScheme.onSurface,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+
+ 
 }

@@ -33,6 +33,7 @@ class _CustomHorizontalListViewState
   late List<Widget> contents;
   int selectedIndex = 0;
   final ScrollController _scrollController = ScrollController();
+  
 
   @override
   void initState() {
@@ -62,56 +63,11 @@ class _CustomHorizontalListViewState
     );
   }
 
-  void _showAddDialog() {
-    
-    String newName = '';
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title:  CustomAutoSizeText(text: 'إضافة تصنيف جديد',
-        style: widget.theme.textTheme.bodyMedium,
-        fontWeight: FontWeight.bold,
-         colorText: widget.theme.colorScheme.secondary,),
-        content: CustomTextField(
-          
-        controller: TextEditingController(),
-        label: 'اسم التصنيف',
-        hint: 'أدخل اسم التصنيف الجديد',
-        keyboardType: TextInputType.text,
-          onChanged: (val) => newName = val,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const CustomAutoSizeText(text: 'إلغاء'),
-          ),
-          CustomButton(
-            backgroundColor: widget.theme.colorScheme.secondary,
-            textColor: widget.theme.colorScheme.onSecondary,
-            onPressed: () {
-              if (newName.trim().isNotEmpty) {
-                _addNewButton(newName.trim());
-                Navigator.pop(context);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: CustomAutoSizeText(text: 'الرجاء إدخال اسم صالح',
-                  colorText: Colors.white,)),
-                );
-              }
-            },
-            text: 'إضافة',
-          ),
-        ],
-      ),
-      animationStyle: AnimationStyle(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      ),
-    );
-  }
+  
 
   @override
   Widget build(BuildContext context) {
+    
     // final theme = ref.watch(themeDataProvider);
     
 
@@ -163,8 +119,8 @@ class _CustomHorizontalListViewState
                   label: CustomAutoSizeText(text:buttons[index],
                   style: widget.theme.textTheme.bodyMedium,
                   fontSize: 12,
-                  colorText: isSelected? widget.theme.colorScheme.onTertiary
-                        : widget.theme.colorScheme.onSurface,
+                  // colorText: isSelected? widget.theme.colorScheme.onPrimaryContainer
+                  //       : widget.theme.colorScheme.onSurface,
                   fontWeight:
                         isSelected ? FontWeight.bold : FontWeight.normal,
                   ),
@@ -174,17 +130,8 @@ class _CustomHorizontalListViewState
                       selectedIndex = index;
                     });
                   },
-                  selectedColor: widget.theme.colorScheme.tertiary,
-                  backgroundColor: widget.theme.colorScheme.surface,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
-                    side: BorderSide(
-                      color: isSelected
-                          ? widget.theme.colorScheme.tertiary
-                          : widget.theme.colorScheme.onSurface.withValues(alpha: 0.2),
-                      width: isSelected ? 1 : 0.5,
-                    ),
-                  ),
+                 
+                  
                 ),
               );
             },
@@ -209,6 +156,53 @@ class _CustomHorizontalListViewState
           ),
         ),
       ],
+    );
+  }
+  void _showAddDialog() {
+    
+    String newName = '';
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title:  CustomAutoSizeText(text: 'إضافة تصنيف جديد',
+        style: widget.theme.textTheme.bodyMedium,
+        fontWeight: FontWeight.bold,
+         colorText: widget.theme.colorScheme.secondary,),
+        content: CustomTextField(
+          
+        controller: TextEditingController(),
+        label: 'اسم التصنيف',
+        hint: 'أدخل اسم التصنيف الجديد',
+        keyboardType: TextInputType.text,
+          onChanged: (val) => newName = val,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const CustomAutoSizeText(text: 'إلغاء'),
+          ),
+          CustomButton(
+            backgroundColor: widget.theme.colorScheme.secondary,
+            textColor: widget.theme.colorScheme.onSecondary,
+            onPressed: () {
+              if (newName.trim().isNotEmpty) {
+                _addNewButton(newName.trim());
+                Navigator.pop(context);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: CustomAutoSizeText(text: 'الرجاء إدخال اسم صالح',
+                  colorText: Colors.white,)),
+                );
+              }
+            },
+            text: 'إضافة',
+          ),
+        ],
+      ),
+      animationStyle: AnimationStyle(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      ),
     );
   }
 }

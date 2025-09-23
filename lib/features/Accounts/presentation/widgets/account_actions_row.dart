@@ -3,11 +3,12 @@
 //
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 
-import '../../../../core/providers/responsive_notifier.dart';
-import '../../../../core/providers/theme_data_provider.dart';
+
 import '../../../../core/utils/responsive_values.dart';
 import '../../../../core/widgets/responsive_space.dart';
 import '../../domain/entities/account.dart';
@@ -32,7 +33,7 @@ class AccountActionsRow extends ConsumerWidget {
           context: context,
           responsive: responsive,
           theme: theme,
-          icon: Icons.call_outlined, // اتصال
+          icon: HugeIcons.strokeRoundedCall02, // اتصال
           label: 'اتصال',
           onPressed: () => debugPrint('Call'),
           isCompact: isCompact,
@@ -41,7 +42,7 @@ class AccountActionsRow extends ConsumerWidget {
           context: context,
           responsive: responsive,
           theme: theme,
-          icon: Icons.message_outlined, // فاتورة
+          icon: HugeIcons.strokeRoundedMessage01, // فاتورة
           label: 'رسالة',
           onPressed: () => debugPrint('message'),
           isCompact: isCompact,
@@ -50,7 +51,7 @@ class AccountActionsRow extends ConsumerWidget {
           context: context,
           responsive: responsive,
           theme: theme,
-          icon: Icons.picture_as_pdf_outlined, // تقرير
+          icon:HugeIcons.strokeRoundedPdf01, // تقرير
           label: 'تقرير',
           onPressed: () => debugPrint('Report'),
           isCompact: isCompact,
@@ -59,7 +60,7 @@ class AccountActionsRow extends ConsumerWidget {
           context: context,
           responsive: responsive,
           theme: theme,
-          icon: Icons.alarm, // تنبيهات
+          icon: HugeIcons.strokeRoundedAlarmClock, // تنبيهات
           label: 'منبه',
           onPressed: () => debugPrint('Alarm'),
           isCompact: isCompact,
@@ -68,7 +69,7 @@ class AccountActionsRow extends ConsumerWidget {
           context: context,
           responsive: responsive,
           theme: theme,
-          icon: Icons.refresh_outlined, // تحديث
+          icon:HugeIcons.strokeRoundedRefresh, // تحديث
           label: 'تحديث',
           onPressed: () => debugPrint('Settings'),
           isCompact: isCompact,
@@ -96,11 +97,12 @@ class AccountActionsRow extends ConsumerWidget {
           child: Container(
             padding: responsive.paddingAll(8),
             decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withValues(alpha: 0.01),
+              color: theme.colorScheme.primary.withValues(alpha: 0.04),
               borderRadius: BorderRadius.circular(responsive.w(12)),
-              border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.1),width: 0.5),
+          
+              border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.6),width: 0.5),
             ),
-            child: Icon(icon, size: responsive.w(24), color:theme.colorScheme.primary),),
+            child: CustomHugeIcon(icon: icon, size:20, color:theme.colorScheme.primary),),
         ),
         if (isCompact) ...{
           ResponsiveSpace(height: responsive.h(6)),
@@ -110,7 +112,7 @@ class AccountActionsRow extends ConsumerWidget {
             colorText: theme.colorScheme.primary,
             fontSize: 10,
             textAlign: TextAlign.center,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w500,
           ),
         }
       ],

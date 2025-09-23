@@ -1,14 +1,9 @@
-//
-// File: lib/presentation/account/widgets/transaction_list_tabbar.dart
-//
+
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/features/Transactions/presentation/widgets/custom_transaction_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/providers/responsive_notifier.dart';
-import '../../../../core/providers/theme_data_provider.dart';
-
-import '../../../../core/utils/responsive_values.dart';
+import 'package:hugeicons/hugeicons.dart';
 import '../../../../core/widgets/custom_auto_size_text.dart';
 import '../../../../core/widgets/custom_empty_state.dart';
 import '../../../../core/widgets/custom_icon_button.dart';
@@ -28,38 +23,33 @@ class TransactionList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.theme;
-    final responsive = ref.responsive;
+    
     
     final asyncTransactionsByAccountId = ref.watch(transactionViewModelProvider(account.id));
      
 
     return _RecentTransactionsSection(asyncTransactions: asyncTransactionsByAccountId,
-     theme: theme, responsive: responsive, onViewAll: () {}, 
-     onTransactionTap: (Transaction transaction) {
-        // Handle transaction tap
-        debugPrint('Tapped on transaction: ${transaction.description}');
-      },);
+     
+    );
   }
 }
-class _RecentTransactionsSection extends StatelessWidget {
+class _RecentTransactionsSection extends ConsumerWidget {
   final AsyncValue<List<Transaction>> asyncTransactions;
-  final ThemeData theme;
-  final ResponsiveValues responsive;
-  final VoidCallback onViewAll;
-  final ValueChanged<Transaction> onTransactionTap;
+ 
+  
+  
 
   const _RecentTransactionsSection({
     required this.asyncTransactions,
-    required this.theme,
-    required this.responsive,
-    required this.onViewAll,
-    required this.onTransactionTap,
+   
+    
+    
   });
 
   @override
-  Widget build(BuildContext context) {
-   
+  Widget build(BuildContext context, WidgetRef ref) {
+   final theme = ref.theme;
+   final responsive = ref.responsive;
 
     return Column(
        crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,41 +57,39 @@ class _RecentTransactionsSection extends StatelessWidget {
           spacing: responsive.h(8),
       children: [
         Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CustomAutoSizeText(
-                  text: 'عدد العمليات: ${asyncTransactions.value?.length ?? 0}',
-                  style: theme.textTheme.bodyMedium,
-                  fontWeight: FontWeight.w600,
-                  colorText: theme.colorScheme.tertiary,
-                  fontSize: 12,
-                ),
-                Spacer(),
-                CustomIconButton(
-                  icon: const Icon(Icons.search_outlined),
-                  iconSize: 20,
-                  iconColor: theme.colorScheme.tertiary,
-                  backgroundColor: theme.colorScheme.tertiary.withValues(alpha: 0.05),
-                  onPressed: () {
-                    // Handle search action
-                    debugPrint('Search transactions');
-                  },
-                ),
-                ResponsiveSpace(width: 8),
-                CustomIconButton(
-                  icon: const Icon(Icons.sort_outlined),
-                  iconSize: 20,
-                  iconColor: theme.colorScheme.tertiary,
-                  backgroundColor: theme.colorScheme.tertiary.withValues(alpha: 0.05),
-                  onPressed: () {
-                    // Handle sort action
-                    debugPrint('Sort transactions');
-                  },
-                ),
-              ],
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomAutoSizeText(
+              text: 'عدد العمليات: ${asyncTransactions.value?.length ?? 0}',
+              style: theme.textTheme.bodyMedium,
+              fontWeight: FontWeight.w600,
+              colorText: theme.colorScheme.primary,
+              fontSize: 12,
             ),
+            Spacer(),
+            CustomIconButton(
+              hugeIcon:  HugeIcon(icon:HugeIcons.strokeRoundedSearch01,
+               color: theme.colorScheme.primary,
+               size: responsive.h(20),),
+             
+              
+              onPressed: (){},
+             
+            ),
+            ResponsiveSpace(width: 8),
+            CustomIconButton(
+              hugeIcon: HugeIcon(icon: HugeIcons.strokeRoundedSorting01,
+               color: theme.colorScheme.primary,
+               size: responsive.h(20),),
+            
+              onPressed:(){},
+              
+            ),
+     
+          ],
+        ),
         
 
         asyncTransactions.when(
@@ -120,9 +108,7 @@ class _RecentTransactionsSection extends StatelessWidget {
                 ...transactions.reversed.map((transaction) {
                   return CustomTransactionItem(
                     transaction: transaction,
-                    
-                    theme: theme,
-                    responsive: responsive,
+                  
                   );
                 })
               ],

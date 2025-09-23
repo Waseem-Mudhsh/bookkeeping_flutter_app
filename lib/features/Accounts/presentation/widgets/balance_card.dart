@@ -1,10 +1,12 @@
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_icon_button.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/domain/entities/account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import '../../../../core/utils/responsive_values.dart';
 
@@ -25,63 +27,68 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
     return Stack(
       alignment: Alignment.centerLeft,
       children: [
-        Container(
+        Card(
           
-          // height: responsive.h(150),
-          
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withValues(alpha: 0.01),
-            borderRadius: BorderRadius.circular(25),
-            border: Border.all(
-              color: theme.colorScheme.primary.withValues(alpha: 0.3),
-              width: 0.5,
-            ),
-            image: const DecorationImage(
-              opacity: 0.09,
-              image: AssetImage("assets/images/graph.png"),
-            ),
+          child: Container(
+            decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                theme.colorScheme.primary,
+                theme.colorScheme.primary.withValues(alpha: 0.8),
+              ],
             
+            ),
+           
           ),
-          padding: responsive.paddingAll(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CustomAutoSizeText(
-                    text: "رصيدك",
-                    style: theme.textTheme.bodyMedium,
-                    fontSize: 12,
-                    colorText: theme.colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  ResponsiveSpace(width: 8),
-                  Expanded(child: _buildBalanceDisplay(theme, responsive)),
-                  ResponsiveSpace(width: 8),
-                  CustomIconButton(
-                    icon: Icon(
-                      _obscureText ? Icons.visibility_off : Icons.visibility, ),
-                    iconColor:  theme.colorScheme.primary, // لون الأيقونة من primary,
-                    iconSize: 20,
-                    onPressed: _toggleBalanceVisibility,
-                    tooltip: _obscureText ? 'إظهار الرصيد' : 'إخفاء الرصيد',
-                  ),
-                ],
-              ),
-             
-             ResponsiveSpace(height:8,),
-             
-             
-              _buildBalanceOverviewSection(theme, responsive),
-            
+           padding: responsive.paddingSym(h: 16, v: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CustomAutoSizeText(
+                      text: "رصيدك",
+                      style: theme.textTheme.bodyMedium,
+                      fontSize: 12,
+                      colorText: theme.colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    ResponsiveSpace(width: 16),
+                    Expanded(child: _buildBalanceDisplay(theme, responsive)),
+                    ResponsiveSpace(width: 12),
+                    CustomIconButton(
+                      hugeIcon: HugeIcon(
+                        icon: _obscureText
+                            ? HugeIcons.strokeRoundedViewOffSlash
+                            : HugeIcons.strokeRoundedEye,
+                        size: 20,
+                        color: theme.colorScheme.onPrimary,
+                      ),
+                      // لون الأيقونة من primary,
+                     
+                      onPressed: _toggleBalanceVisibility,
+                      tooltip: _obscureText ? 'إظهار الرصيد' : 'إخفاء الرصيد',
+                    ),
+                  ],
+                ),
+               
+               ResponsiveSpace(height:12,),
+               
+               
+                _buildBalanceOverviewSection(theme, responsive),
               
-            ],
+                
+              ],
+            ),
           ),
         ),
+        
          Positioned(
               left: -30,
               child: ResponsiveSpace(
@@ -90,7 +97,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
                 child: CircularProgressIndicator(
                   strokeWidth: 0.7,
                   value:1,
-                  color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                  color: theme.colorScheme.onPrimary.withValues(alpha: 0.2),
                   
                 ),
               ),
@@ -103,7 +110,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
                 child: CircularProgressIndicator(
                   strokeWidth: 0.7,
                   value: 1,
-                  color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                  color: theme.colorScheme.onPrimary.withValues(alpha: 0.2),
                 ),
               ),
             ),
@@ -116,8 +123,8 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
     return Container(
       padding: responsive.paddingSym(h: 8, v: 4),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primary.withValues(alpha: 0.05), // خلفية شبه شفافة
-        borderRadius: BorderRadius.circular(responsive.w(8)),
+        color: theme.colorScheme.onPrimary.withValues(alpha: 0.06), // خلفية شبه شفافة
+        borderRadius: BorderRadius.circular(responsive.w(12)),
       ),
       child: Center(
         child: Row(
@@ -129,7 +136,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
                   child: CustomAutoSizeText(
                     text: _obscureText ? '••••••' :  widget.account.totalAccountBalance.toStringAsFixed(2),
                     fontWeight: FontWeight.bold,
-                    colorText: theme.colorScheme.primary,
+                    colorText: theme.colorScheme.onPrimary,
                     fontSize: responsive.w(20),
             
                     style: theme.textTheme.bodyLarge,
@@ -138,7 +145,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
                 const ResponsiveSpace(width: 8),
                 CustomAutoSizeText(
                   text: widget.account.currencyCode!,
-                  colorText: theme.colorScheme.primary.withValues(alpha: 0.7,),
+                  colorText: theme.colorScheme.onPrimary.withValues(alpha: 0.7,),
                   fontSize: 16,
                   style: theme.textTheme.bodyMedium,
                 ),
@@ -166,8 +173,8 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
           ),
           ResponsiveSpace(width: responsive.w(6)),
           VerticalDivider(
-            thickness: 1.5, // سمك أكبر للفاصل
-            color: theme.primaryColorDark.withValues(alpha: 0.3), // لون الفاصل
+            thickness: 1.0, // سمك أكبر للفاصل
+            color: theme.colorScheme.onPrimary.withValues(alpha: 0.3), // لون الفاصل
           ),
           
           ResponsiveSpace(width: responsive.w(6)),
@@ -193,7 +200,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
     required bool isDebtor,
   }) {
     Color balanceColor = isDebtor ? Colors.redAccent.shade200 : Colors.greenAccent.shade200; // ألوان مميزة
-    IconData icon = isDebtor ? Icons.arrow_downward : Icons.arrow_upward; // أيقونات توضيحية
+    IconData icon = isDebtor ? HugeIcons.strokeRoundedSquareArrowDownRight : HugeIcons.strokeRoundedSquareArrowUpRight; // أيقونات توضيحية
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -202,16 +209,16 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
+            CustomHugeIcon(
+              icon: icon,
               color: balanceColor,
-              size: responsive.w(18),
+              size:18,
             ),
-            ResponsiveSpace(width: responsive.w(4)),
+            ResponsiveSpace(width: responsive.w(8)),
             CustomAutoSizeText(
               text: label,
               style: theme.textTheme.bodyMedium,
-                colorText: theme.colorScheme.primary.withValues(alpha: 0.7),
+                colorText: theme.colorScheme.onPrimary.withValues(alpha: 0.9),
                 fontWeight: FontWeight.bold,
                 fontSize: 12  ,
               
@@ -222,8 +229,8 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
         CustomAutoSizeText(
           text: _obscureText ? '••••••' : value.toStringAsFixed(2),
           fontWeight: FontWeight.bold,
-          colorText: _obscureText ?theme.colorScheme.primary.withValues(alpha: 0.7) : theme.colorScheme.primary,
-          style: theme.textTheme.headlineSmall
+          colorText: _obscureText ?theme.colorScheme.onPrimary.withValues(alpha: 0.9) : theme.colorScheme.onPrimary,
+          style: theme.textTheme.bodyMedium
         ),
       ],
     );

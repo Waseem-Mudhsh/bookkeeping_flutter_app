@@ -1,9 +1,11 @@
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 import '../../../../core/utils/responsive_values.dart';
 import '../../../../core/utils/route_names.dart';
 import '../../../../core/widgets/custom_overlay.dart';
@@ -28,46 +30,27 @@ class CustomAccountCard extends ConsumerWidget {
     final theme = ref.theme;
     final responsive =ref.responsive;
     return Card(
-      color: theme.colorScheme.surface,
-      elevation: 2,
+      // color: theme.colorScheme.surface,
+      
       margin: responsive.paddingOnly(bottom: responsive.h(4)),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(responsive.w(10))),
-      // child: InkWell(
-      //   borderRadius: BorderRadius.circular(responsive.w(10)),
-      //   onTap: () => onTap(account),
-      //   child: Padding(
-      //     padding: responsive.paddingAll(12),
-      //     child: Row(
-      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //       crossAxisAlignment: CrossAxisAlignment.center,
-      //       children: [
-             
-              
-      //         const ResponsiveSpace(width: 8),
-              
-      //         // Account Details
-      //         Expanded(
-      //           child: _buildAccountDetails(theme),
-      //         ),
-              
-      //         // Balance Information
-      //         _buildBalanceInfo(theme),
-      //       ],
-      //     ),
-      //   ),
-      // ),
+        borderRadius: BorderRadius.circular(responsive.w(12)),
+        side: BorderSide(color: theme.colorScheme.outline.withValues(alpha: 0.5),
+        width: 0.5,
+        )
+      ),
+      
       child: InkWell(
-        borderRadius: BorderRadius.circular(responsive.w(10)),
+       
         onTap: () => onTap(account!),
         child: Padding(
-          padding: responsive.paddingAll(12),
+          padding: responsive.paddingSym(h: 12, v: 16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _buildAccountInfo(context,theme, ref),
-              ResponsiveSpace(height: 12),
+              ResponsiveSpace(height: 16),
               
               _buildBalanceInfo2(theme),
             ],
@@ -151,35 +134,43 @@ class CustomAccountCard extends ConsumerWidget {
           child: Row(
             
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Flexible(
                 child: CustomAutoSizeText(
                   text: account!.name,
                   fontWeight: FontWeight.bold,
-                  colorText: theme.colorScheme.onSurface,
+                  // colorText: theme.colorScheme.onSurface,
                   style: theme.textTheme.bodyMedium,
                  
                   overflow: TextOverflow.ellipsis,
                   fontSize: 12,
                 ),
               ),
-              ResponsiveSpace(width: 8),
+              Spacer(),
               CustomIconButton(
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => AccountSubRoutes.edit.screenEdit(account!)));
                 },
-                 icon:  Icon(Icons.edit_outlined),
-                 iconSize: 20,
-                 iconColor: theme.colorScheme.onSurface.withValues(alpha: 0.5),)
+                  hugeIcon: HugeIcon(
+                    icon: HugeIcons.strokeRoundedEdit02,
+                    
+                    color: theme.colorScheme.onSurface,
+                    size: 20
+                  ),
+                 
+                
+                 )
             ],
           ),
         ),
-        ResponsiveSpace(width: 4),
+        ResponsiveSpace(width: 8),
          CustomIconButton(
           
               onPressed: () {
                 showConfirmationDialog(
+                  responsive: ref.responsive,
+                  theme: theme,
                   context: context,
                   title: 'تأكيد الحذف',
                   content: Column(
@@ -224,9 +215,11 @@ class CustomAccountCard extends ConsumerWidget {
                   },
                 );
               },
-               icon:  Icon(Icons.delete_outline,  ),
-               iconSize: 20,
-               iconColor:theme.colorScheme.error,),
+              hugeIcon: HugeIcon(icon: HugeIcons.strokeRoundedDelete01,
+               color: theme.colorScheme.error,
+               size: 20),
+               ),
+               
         
       ],
     );
@@ -261,7 +254,7 @@ class CustomAccountCard extends ConsumerWidget {
   }
   Widget _buildCurrencyInfo(ThemeData theme,String currencyName,String balance,bool isDebtor ) {
      Color balanceColor = isDebtor ? Colors.red.shade600 : Colors.green.shade600; // ألوان مميزة
-     IconData icon = isDebtor ? Icons.arrow_downward : Icons.arrow_upward; // أيقونات توضيحية
+     IconData icon = isDebtor ? HugeIcons.strokeRoundedSquareArrowDownRight : HugeIcons.strokeRoundedSquareArrowUpRight; // أيقونات توضيحية
     return Column(  
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -271,26 +264,17 @@ class CustomAccountCard extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerLow,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(4),
-                child: Icon(
-                  icon,
-                  color: balanceColor,
-                  size: 16,
-                ),
-              )
+            CustomHugeIcon(
+              icon:icon,
+              color: balanceColor,
+              size: 16,
             ),
             ResponsiveSpace(width: 4),
             CustomAutoSizeText(
               text: currencyName,
-              fontWeight: FontWeight.bold,
-              colorText: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-              style: theme.textTheme.bodyMedium,
+              fontWeight: FontWeight.w700,
+              colorText: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+              style: theme.textTheme.bodySmall,
               fontSize: 12,
             ),]),
             ResponsiveSpace(height: 4),
@@ -298,8 +282,8 @@ class CustomAccountCard extends ConsumerWidget {
               text: balance,
               fontWeight: FontWeight.bold,
               colorText: account!.debtor != 0
-              ? Colors.green.shade600
-              : Colors.red.shade600,
+              ? Colors.green.shade700
+              : Colors.red.shade700,
               style: theme.textTheme.bodyMedium,
               fontSize: 12,
               maxLines: 1,

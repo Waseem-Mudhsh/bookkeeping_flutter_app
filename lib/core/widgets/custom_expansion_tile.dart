@@ -2,6 +2,7 @@ import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 
 
@@ -73,11 +74,11 @@ class _CustomExpansionTileState extends ConsumerState<CustomExpansionTile> {
           _isExpanded = value;
         });
       },
-      leading:widget.leading != null ? Icon( widget.leading, color: _isExpanded ? theme.colorScheme.onPrimaryContainer : theme.colorScheme.primary,) : null,
+      leading:widget.leading != null ? HugeIcon( icon:widget.leading!, color: _isExpanded ? theme.colorScheme.onPrimaryContainer : theme.colorScheme.primary,) : null,
       title: CustomAutoSizeText(
         text: widget.title!,
         style: theme.textTheme.bodyMedium,
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: FontWeight.w700,
         colorText: _isExpanded ? theme.colorScheme.onPrimaryContainer : theme.colorScheme.primary,
        
@@ -86,7 +87,7 @@ class _CustomExpansionTileState extends ConsumerState<CustomExpansionTile> {
           ? CustomAutoSizeText(
               text: widget.subtitle!,
               style: theme.textTheme.bodySmall,
-              fontSize: 12,
+              fontSize: 10,
               colorText: _isExpanded ? theme.colorScheme.onPrimaryContainer : theme.colorScheme.onSurface.withValues(alpha: 0.7),
             )
           : null,

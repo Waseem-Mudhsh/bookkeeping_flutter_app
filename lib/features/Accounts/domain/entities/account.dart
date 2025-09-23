@@ -48,35 +48,38 @@ class Account {
   });
 
   Account copyWith({
-    String? id,
-    String? name,
-    int? mainAccountId,
-    String? category,
-    double? totalAccountBalance,
-    double? debtor,
-    double? creditor,
-    String? currencyCode,
-    DateTime? createdAt,
-    String? note,
-    String? image,
-    String? phoneNumber
+    Object? id= unchanged,
+    Object? name,
+    Object? mainAccountId,
+    Object? category,
+    Object? totalAccountBalance,
+    Object? debtor,
+    Object? creditor,
+    Object? currencyCode,
+    Object? createdAt,
+    Object? note,
+    Object? image,
+    Object? phoneNumber
   }) {
     return Account(
-      id: id ?? IdGenerator.generateCompactId(prefix: 'acc_'),
-      name: name ?? this.name,
-      mainAccountId: mainAccountId ?? this.mainAccountId,
-      category: category ?? this.category,
-      totalAccountBalance: totalAccountBalance ?? this.totalAccountBalance,
-      debtor: debtor ?? this.debtor,
-      creditor: creditor ?? this.creditor,
-      currencyCode: currencyCode ?? this.currencyCode,
-      createdAt: createdAt ?? this.createdAt,
-      note: note ?? this.note,
-      image: image ?? this.image,
-      phoneNumber: phoneNumber ?? this.phoneNumber
+      id: id == unchanged? IdGenerator.generateCompactId(prefix: 'acc_'):id as String,
+      name: name == unchanged ? this.name : name as String,
+      mainAccountId: mainAccountId ==unchanged ? this.mainAccountId : mainAccountId as int,
+      category: category == unchanged ? this.category : category as String,
+      totalAccountBalance: totalAccountBalance == unchanged ? this.totalAccountBalance : totalAccountBalance as double,
+      debtor: debtor == unchanged ? this.debtor : debtor as double,
+      creditor: creditor == unchanged ? this.creditor : creditor as double,
+      currencyCode: currencyCode == unchanged ? this.currencyCode : currencyCode as String,
+      createdAt: createdAt == unchanged ? this.createdAt : createdAt as DateTime,
+      note: note == unchanged ? this.note : note as String,
+      image: image == unchanged ? this.image : image as String,
+      phoneNumber: phoneNumber == unchanged ? this.phoneNumber : phoneNumber as String
     );
   }
-  
+  static const unchanged = Object(); // استخدام طريقة Sentinel Pattern لتعبئة القيم الخالية
+  // لحل مشكلة عند تمرير قيمة null للكونستركتور
+  // اذا مررت قيمة: بيظل المعامل قيمته uncganded فسينسخ الحقل الاصلي (this.field).
+  // اذا مررت قيمة null: المعامل بيصير null مش unchanged, فبيصير المعامل قيمة null.
 }
 
  final List<Account>  mockAccounts = [

@@ -1,5 +1,4 @@
 import 'package:bookkeeping_flutter_app/features/Accounts/domain/entities/account.dart';
-import 'package:bookkeeping_flutter_app/features/Customers/domain/entities/customer.dart';
 import 'package:bookkeeping_flutter_app/features/Transactions/domain/entities/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -28,9 +27,7 @@ class HiveConfig {
   }
 
   static void _registerAdapters() {
-    if (!Hive.isAdapterRegistered(CustomerAdapter().typeId)) {
-      Hive.registerAdapter(CustomerAdapter());
-    }
+   
     if (!Hive.isAdapterRegistered(AccountAdapter().typeId)) {
       Hive.registerAdapter(AccountAdapter());
     }
@@ -43,14 +40,7 @@ class HiveConfig {
   }
 
   static Future<void> _openBoxes() async {
-    try {
-      if (!Hive.isBoxOpen(HiveBoxNames.customers)) {
-        await Hive.openBox<Customer>(HiveBoxNames.customers);
-      }
-    } catch (e) {
-      debugPrint('Failed to open customers box: $e');
-      // يمكنك هنا إعادة المحاولة أو اتخاذ إجراء آخر
-    }
+   
 
     try {
       if (!Hive.isBoxOpen(HiveBoxNames.accounts)) {

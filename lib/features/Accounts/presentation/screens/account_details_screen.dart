@@ -3,13 +3,13 @@
 // The main screen that ties everything together.
 //
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/custom_horizontal_list_view.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_overlay.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_segmented_button.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/account_actions_row.dart';
-import 'package:bookkeeping_flutter_app/features/Currencies/presentation/widgets/custom_show_balince.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import '../../../../core/base_layout/base_layout_screen.dart';
 import '../../../../core/base_layout/build_non_tabbar_layout.dart';
@@ -38,7 +38,64 @@ class AccountDetailsScreen extends ConsumerWidget {
     return BaseLayoutScreen(
       body: BuildNonTabbarLayout(
        
-        titleWidget: Column(
+        titleWidget: _buildHeader(theme),
+         toolbarHeight: responsive.h(60),
+        actions:[ 
+
+      _buildPopupMenuButton(context, ref, theme)
+
+        ],
+       slivers: [
+          SliverToBoxAdapter(
+            child: ResponsiveSpace( height: 16,),
+          ),
+          SliverToBoxAdapter(
+            child: CustomSegmentedButton(
+              nameButtons: ['يمني', 'سعودي', 'دولار',],
+              contentButtons:[
+                _buildTransactionListByCurrency(),
+                _buildTransactionListByCurrency(),
+                _buildTransactionListByCurrency(),
+              
+              ] ,
+               theme: theme, responsive: responsive),
+          ),
+         
+       ],
+        
+       
+        hasLeading: false,
+        
+      ),
+      // FloatingActionButton.extended for adding new transactions
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: theme.colorScheme.secondaryContainer,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TransactionSubRoutes.create.screenAdd(account!.id, ),
+            ),
+          );
+        },
+        label: CustomAutoSizeText(
+          text: 'إضافة عملية جديدة',
+          style: theme.textTheme.bodyMedium,
+          fontSize: 12,
+          colorText: theme.colorScheme.onSecondaryContainer,
+          
+        ),
+        icon: CustomHugeIcon(
+          icon: HugeIcons.strokeRoundedMoneyAdd01,
+          size:20,
+          color: theme.colorScheme.onSecondaryContainer,),
+      ),
+      // bottomNavigationBar: AccountBalanceInfo(account: account!),
+     
+    );
+  }
+  Widget _buildHeader( ThemeData theme){
+    return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -59,12 +116,11 @@ class AccountDetailsScreen extends ConsumerWidget {
               colorText: theme.colorScheme.primary,
             ),
           ],
-        ),
-         toolbarHeight: responsive.h(60),
-        actions:[ 
-        
-        ResponsiveSpace(width: 16),
-        PopupMenuButton(itemBuilder: 
+        );
+  }
+  Widget _buildPopupMenuButton(BuildContext context, WidgetRef ref, ThemeData theme){
+    return PopupMenuButton(
+      itemBuilder: 
         (context) {
           return [
             PopupMenuItem(
@@ -102,6 +158,8 @@ class AccountDetailsScreen extends ConsumerWidget {
           } else if (value == 'delete') {
             // Show confirmation dialog before deleting
            showConfirmationDialog(
+              responsive: ref.responsive,
+              theme: theme,
               context: context,
               title: 'تأكيد الحذف',
               content: CustomAutoSizeText(
@@ -118,57 +176,12 @@ class AccountDetailsScreen extends ConsumerWidget {
           
             // Handle delete
           }
-        }),
-
-        ],
-       slivers: [
-          SliverToBoxAdapter(
-            child: ResponsiveSpace( height: 16,),
-          ),
-          SliverToBoxAdapter(
-            child: CustomSegmentedButton(
-              nameButtons: ['يمني', 'سعودي', 'دولار',],
-              contentButtons:[
-                _buildTransactionListByCurrency(),
-                _buildTransactionListByCurrency(),
-                _buildTransactionListByCurrency(),
-              
-              ] ,
-               theme: theme, responsive: responsive),
-          ),
-         
-       ],
-        
-       
-        hasLeading: false,
-        
-      ),
-      // FloatingActionButton.extended for adding new transactions
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TransactionSubRoutes.create.screenAdd(account!.id, ),
-            ),
-          );
         },
-        label: CustomAutoSizeText(
-          text: 'إضافة عملية جديدة',
-          colorText: theme.colorScheme.onPrimary,
-          fontSize: 12,
-          style: theme.textTheme.bodyMedium,
-        ),
-        icon: Icon(Icons.add, color: theme.colorScheme.onPrimary),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: theme.colorScheme.onPrimary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        )
-      ),
-      // bottomNavigationBar: AccountBalanceInfo(account: account!),
-     
-    );
+        icon: CustomHugeIcon(
+          icon:HugeIcons.strokeRoundedMoreVertical,
+          color: theme.colorScheme.primary,
+          size: 20,),
+        );
   }
   Widget _buildTransactionListByCurrency(){
     return Column(
