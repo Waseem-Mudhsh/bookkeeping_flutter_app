@@ -1,6 +1,7 @@
 import 'package:bookkeeping_flutter_app/features/Accounts/domain/entities/account.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/add_new_account_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Home/presentation/screens/home_main_screen.dart';
+import 'package:bookkeeping_flutter_app/features/Home/presentation/widgets/animated_list.dart';
 import 'package:flutter/material.dart';
 
 import '../../features/Accounts/presentation/screens/account_details_screen.dart';
@@ -18,7 +19,8 @@ enum RouteNames {
   settings,
   accounts,
   notifications,
-  accountDetails;
+  accountDetails,
+  animationList;
   
 
   Widget get screen {
@@ -36,6 +38,8 @@ enum RouteNames {
         return NotificationsScreen(mockNotifications: []);
       case RouteNames.accountDetails:
         return AccountDetailsScreen();
+      case RouteNames.animationList:
+        return AnimatedListDemo();
       default:
        return Scaffold(body: Center(child: Text('No screen found')));
     }

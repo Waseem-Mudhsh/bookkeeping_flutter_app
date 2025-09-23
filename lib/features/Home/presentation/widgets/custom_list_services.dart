@@ -29,7 +29,7 @@ class CustomListServices extends ConsumerWidget {
     {
       'name': 'القياسات',
       'icon': HugeIcons.strokeRoundedTapeMeasure,
-      'route': RouteNames.accounts,
+      'route': RouteNames.animationList,
     },
   ];
 
