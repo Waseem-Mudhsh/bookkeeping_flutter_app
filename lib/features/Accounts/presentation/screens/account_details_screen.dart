@@ -104,7 +104,7 @@ class AccountDetailsScreen extends ConsumerWidget {
               text: account?.name ?? 'تفاصيل الحساب',
               style: theme.textTheme.bodyMedium,
               fontWeight: FontWeight.bold,
-              fontSize: 14,
+              fontSize: 12,
               colorText: theme.colorScheme.primary,
             ),
              ResponsiveSpace(height: 4),
@@ -197,7 +197,7 @@ class AccountDetailsScreen extends ConsumerWidget {
 
 
       ],
-    );
+    );  
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:bookkeeping_flutter_app/features/Home/presentation/screens/home_
 import 'package:bookkeeping_flutter_app/features/Home/presentation/widgets/animated_list.dart';
 import 'package:flutter/material.dart';
 
+import '../../features/Accounts/presentation/screens/Clients Screen/debts_of_client_screen.dart';
 import '../../features/Accounts/presentation/screens/account_details_screen.dart';
 import '../../features/Home/presentation/screens/finance_screen.dart';
 import '../../features/Home/presentation/screens/profile_screen.dart';
@@ -20,7 +21,8 @@ enum RouteNames {
   accounts,
   notifications,
   accountDetails,
-  animationList;
+  animationList,
+  debtsOfClientScreen;
   
 
   Widget get screen {
@@ -40,6 +42,9 @@ enum RouteNames {
         return AccountDetailsScreen();
       case RouteNames.animationList:
         return AnimatedListDemo();
+      case RouteNames.debtsOfClientScreen:
+        return DebtsOfClientScreen();
+      
       default:
        return Scaffold(body: Center(child: Text('No screen found')));
     }

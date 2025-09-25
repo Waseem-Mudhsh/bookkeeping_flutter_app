@@ -11,7 +11,7 @@ class AppTheme {
     if (isDarkMode) {
       return FlexThemeData.dark(
         fontFamily: 'Cairo',
-        // scaffoldBackground: const Color(0xff161616),
+        scaffoldBackground: const Color(0xff161616),
         surfaceMode: FlexSurfaceMode.highScaffoldLevelSurface, // Surface mode
         scheme: FlexScheme.blueM3,
         useMaterial3: true,
@@ -40,7 +40,7 @@ class AppTheme {
     } else {
       return FlexThemeData.light(
         fontFamily: 'Cairo',
-        // scaffoldBackground: const Color(0xffFCFCFC),
+        scaffoldBackground: const Color(0xffFCFCFC),
         surfaceMode: FlexSurfaceMode.highScaffoldLevelSurface, // Surface mode
         scheme: FlexScheme.blueM3,
         useMaterial3: true,

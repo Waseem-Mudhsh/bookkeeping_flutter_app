@@ -14,8 +14,12 @@ class SettingsNotifier extends StateNotifier<Map<String, dynamic>> {
       'isDarkMode': prefs.getBool('isDarkMode') ?? false,
       'language': prefs.getString('language') ?? 'ar',
       'isRTL': prefs.getBool('isRTL') ?? true,
+      'userName': prefs.getString('userName') ?? 'Waseem User',
+      'userEmail': prefs.getString('userEmail') ?? 'was@gmail.com',
+      'userPassword':prefs.getString('userPassword') ?? '123',
     };
   }
+  
 
   Future<void> toggleDarkMode(bool value) async {
     

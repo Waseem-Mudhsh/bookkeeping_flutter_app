@@ -28,6 +28,7 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
       alignment: Alignment.centerLeft,
       children: [
         Card(
+          elevation: 6,
           
           child: Container(
             decoration: BoxDecoration(

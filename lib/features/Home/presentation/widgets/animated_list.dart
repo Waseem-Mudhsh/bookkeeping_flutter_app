@@ -80,15 +80,31 @@ class _AnimatedListDemoState extends State<AnimatedListDemo> {
         ],
       ),
       body: SafeArea(
-        child: AnimatedList(
-          key: _listKey,
-          initialItemCount: 5,
-          itemBuilder: (context, index, animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: _buildItem(listData[index]),
-            );
-          },
+        child: Column(
+          
+          
+          children: [
+           
+            Expanded(
+              child: AnimatedList(
+                key: _listKey,
+                initialItemCount: 5,
+                itemBuilder: (context, index, animation) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: _buildItem(listData[index]),
+                  );
+                },
+              ),
+            ),
+            const SizedBox( height:20),
+            const Text('List with staggered animations'),
+            const SizedBox( height:20),
+             SizedBox(
+                height: 300,
+                width: double.infinity,
+              child: StaggeredAnimation())
+          ],
         ),
       ),
     );
@@ -104,3 +120,63 @@ class UserModel {
 }
 
 int _maxIdValue = 4;
+
+class StaggeredAnimation extends StatefulWidget {
+  const StaggeredAnimation({super.key});
+
+  @override
+  StaggeredAnimationState createState() => StaggeredAnimationState();
+}
+
+class StaggeredAnimationState extends State<StaggeredAnimation> 
+    with SingleTickerProviderStateMixin {
+    
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    _controller = AnimationController(
+      duration: Duration(seconds: 2),
+      vsync: this,
+    );
+    _controller.forward();
+  }
+  @override
+  void dispose(){
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Animation 1 - يبدأ أولاً
+        SlideTransition(
+          position: Tween<Offset>(
+            begin: Offset(-1, 0),
+            end: Offset.zero,
+          ).animate(CurvedAnimation(curve: Interval(0.2, 0.8),
+          parent: _controller)),
+          child: Container(color: Colors.red, height: 100),
+        ),
+
+        // Animation 2 - يبدأ بعد الأول
+        FadeTransition(
+          opacity: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+            parent: _controller,
+            curve: Interval(0.3, 0.5), // من 30% إلى 80%
+          )),
+          child: Container(color: Colors.blue, height: 100),
+        ),
+        
+        ElevatedButton(
+          onPressed: () => _controller.reverse( ),
+          child: Text('Start Animation'),
+        ),
+      ],
+    );
+  }
+}

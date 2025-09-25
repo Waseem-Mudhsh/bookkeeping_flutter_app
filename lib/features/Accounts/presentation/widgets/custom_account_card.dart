@@ -6,7 +6,6 @@ import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart'
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
-import '../../../../core/utils/responsive_values.dart';
 import '../../../../core/utils/route_names.dart';
 import '../../../../core/widgets/custom_overlay.dart';
 import '../../domain/entities/account.dart';

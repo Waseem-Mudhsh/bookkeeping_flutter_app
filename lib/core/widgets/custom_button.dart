@@ -44,18 +44,18 @@ class CustomButton extends ConsumerWidget {
         // استخدام اللون الافتراضي إذا لم يتم تحديده
         backgroundColor: backgroundColor ?? theme.colorScheme.primary, // جعل اللون الرئيسي هو الافتراضي
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4), // استخدام ResponsiveValues لـ BorderRadius
+          borderRadius: BorderRadius.circular(12), // استخدام ResponsiveValues لـ BorderRadius
         ),
         textStyle: textStyle ??
             theme.textTheme.bodyMedium?.copyWith(
               color: textColor ?? theme.colorScheme.onPrimary,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w600,
             ),
         // 4. تحديد لون foregroundColor للـ ElevatedButton نفسه
         // هذا سيؤثر على لون النص أو الأيقونة الداخلية
         foregroundColor: textColor ?? theme.colorScheme.onPrimary,
         // يمكنك أيضًا إضافة لون للـ overlay (التأثير عند الضغط)
-        overlayColor: Colors.transparent,
+        // overlayColor: theme.colorScheme.primaryContainer,
       ),
       // 5. عرض مؤشر التحميل أو النص بناءً على isLoading
       child: isLoading

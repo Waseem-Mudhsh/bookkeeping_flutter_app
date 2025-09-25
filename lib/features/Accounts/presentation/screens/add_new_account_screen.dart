@@ -223,7 +223,7 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
     if (value == null || value.isEmpty) {
       return 'يرجى إدخال رقم الهاتف';
     }
-    if (value.length < 9 && value.length > 9) {
+    if (value.length < 9 ) {
       return 'رقم الهاتف يجب أن يكون 9 ارقام';
     }
     return null;

@@ -25,8 +25,12 @@ class CustomDrawer extends ConsumerWidget {
       backgroundColor: theme.colorScheme.surface,
       child: Column(
         children: <Widget>[
+          const ResponsiveSpace(height: 48,),
           // 1. رأس الـ Drawer (Header)
-          _buildHeader(context, theme, account),
+          _buildHeader(context, ref, account),
+          const ResponsiveSpace(height: 8),
+          const Divider(thickness: 0.5, height: 0.5, color: Colors.grey),
+          const ResponsiveSpace(height: 8),
 
           // 2. قائمة الخيارات (Menu)
           Expanded(
@@ -37,14 +41,29 @@ class CustomDrawer extends ConsumerWidget {
                   _buildMenuItem(
                     context,
                     ref,
-                    title: 'الصفحة الرئيسية',
-                    subTitle: 'العودة إلى الصفحة الرئيسية للتطبيق',
+                    title: 'دفتر حساباتي (كتاجر)',
+                    subTitle: 'إجمالي ديون العملاء: 1,500',
                     icon: Icons.home_outlined,
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => RouteNames.home.screen));
                     },
                   ),
+                  _buildMenuItem(
+                    context,
+                    ref,
+                    title: 'ديوني (كعميل)', 
+                    subTitle: 'إجمالي ديوني المستحقة: 1,500',
+                    icon: Icons.home_outlined,
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => RouteNames.debtsOfClientScreen.screen));
+                    },
+                  ),  
+                  
+                  const ResponsiveSpace(height: 8),
+                  const Divider(thickness: 0.5, height: 0.5, color: Colors.grey),
+                  const ResponsiveSpace(height: 8),
                   _buildMenuItem(
                     context,
                     ref,
@@ -55,9 +74,6 @@ class CustomDrawer extends ConsumerWidget {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => RouteNames.settings.screen));
                     },
                   ),
-                  const ResponsiveSpace(height: 8),
-                  const Divider(thickness: 0.5, height: 0.5, color: Colors.grey),
-                  const ResponsiveSpace(height: 8),
                   _buildMenuItem(
                     context,
                     ref,
@@ -121,72 +137,64 @@ class CustomDrawer extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context, ThemeData theme, Account? account) {
-    return DrawerHeader(
-      margin: EdgeInsets.zero,
-      padding: EdgeInsets.zero,
-      decoration: BoxDecoration(color: theme.colorScheme.primary),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundColor: theme.colorScheme.onPrimaryContainer,
-              child: account != null
-                  ? Text(
-                      account.name.isNotEmpty ? account.name[0] : '',
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                  : IconButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => RouteNames.profile.screen));
-                    },
-                    icon: CustomHugeIcon(icon: HugeIcons.strokeRoundedUser,
-                    color: theme.colorScheme.primary,
-                    size: 32,)
-                      
-                      
-                      
-                    ),
-            ),
-            const ResponsiveSpace(width: 12),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomAutoSizeText(
-                    text: account?.name.isNotEmpty ?? false
-                        ? account!.name
-                        : 'حساب تجريبي',
-                    style: theme.textTheme.bodyMedium,
-                    fontWeight: FontWeight.bold,
-                    colorText: theme.colorScheme.onPrimary,
-                    fontSize: 16,
-                  ),
-                  const ResponsiveSpace(height: 4),
-                  CustomAutoSizeText(
-                    text: account?.category.isNotEmpty ?? false
-                        ? account!.category
-                        : 'حساب تجريبي',
-                    style: theme.textTheme.bodyMedium,
-                    fontWeight: FontWeight.w600,
-                    colorText: theme.colorScheme.onPrimary.withValues(alpha: 0.6),
-                    fontSize: 12,
-                  ),
-                ],
-              ),
-            ),
-          ],
+  Widget _buildHeader(BuildContext context, WidgetRef ref,Account? account) {
+    final theme = ref.theme;
+    final responsive = ref.responsive;
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+     
+      child: Container(
+        padding: responsive.paddingSym(h: 12,v: 8),
+        decoration: BoxDecoration(
+          color:theme.colorScheme.primary,
+          borderRadius: BorderRadius.circular(12),
+          
+          border: Border.all(color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.6), width: 0.5),
         ),
+        child: ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: CircleAvatar(
+            radius: 30,
+            backgroundColor: theme.colorScheme.onPrimary,
+            child: account != null
+                ? Text(
+                    account.name.isNotEmpty ? account.name[0] : '',
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                : CustomHugeIcon(icon: HugeIcons.strokeRoundedUser,
+                    color: theme.colorScheme.primary,
+                    size: 24,)
+          ),
+          title: CustomAutoSizeText(
+            text: account?.name.isNotEmpty ?? false
+                ? account!.name
+                : 'اسم المستخدم',
+            style: theme.textTheme.bodyMedium,
+            fontWeight: FontWeight.bold,
+            colorText: theme.colorScheme.onPrimary,
+            fontSize: 16,
+          ),
+          subtitle: CustomAutoSizeText(
+            text: account?.category.isNotEmpty ?? false
+                ? account!.category
+                : 'تعديل البيانات الشخصية',
+            style: theme.textTheme.bodyMedium,
+            fontWeight: FontWeight.w600,
+            colorText: theme.colorScheme.onPrimary.withValues(alpha: 0.6),
+            fontSize: 12,
+          ),
+          
+          onTap:() {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RouteNames.profile.screen));
+          },
+              ),
       ),
     );
   }
+  
 
   Widget _buildMenuItem(
     BuildContext context,

@@ -191,6 +191,7 @@ class CustomTransactionItem extends ConsumerWidget {
     );
   }
 
+
   Widget _buildTransactionDetails(WidgetRef ref) {
     final theme = ref.theme;
     return CustomAutoSizeText(
