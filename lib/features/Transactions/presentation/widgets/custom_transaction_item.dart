@@ -94,7 +94,7 @@ class CustomTransactionItem extends ConsumerWidget {
                 title: 'مشاركة العملية',
                 onTap: () {
                   Navigator.pop(context);
-                  // TODO: تنفيذ مشاركة العملية
+                  
                 },
               ),
             ],

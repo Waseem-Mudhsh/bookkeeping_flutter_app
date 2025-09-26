@@ -1,6 +1,5 @@
 import 'package:bookkeeping_flutter_app/core/utils/responsive_values.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/custom_button.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter/material.dart';
 

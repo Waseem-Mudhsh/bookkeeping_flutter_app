@@ -1,11 +1,9 @@
-import 'package:bookkeeping_flutter_app/core/providers/theme_data_provider.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-import '../providers/responsive_notifier.dart';
 
 class CustomSliverAppBar extends ConsumerWidget {
   final Widget? title;

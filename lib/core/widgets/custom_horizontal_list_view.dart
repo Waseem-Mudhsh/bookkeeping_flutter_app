@@ -1,7 +1,5 @@
 import 'package:bookkeeping_flutter_app/core/utils/responsive_values.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/custom_button.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/custom_text_form_field.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,27 +46,27 @@ class _CustomHorizontalListViewState
     super.dispose();
   }
 
-  void _addNewButton(String name) {
-    setState(() {
-      buttons.add(name);
-      contents.add(
-        CustomAutoSizeText(text: '📌 محتوى $name',textAlign: TextAlign.center,),
-      );
-      selectedIndex = buttons.length - 1;
-    });
+  // void _addNewButton(String name) {
+  //   setState(() {
+  //     buttons.add(name);
+  //     contents.add(
+  //       CustomAutoSizeText(text: '📌 محتوى $name',textAlign: TextAlign.center,),
+  //     );
+  //     selectedIndex = buttons.length - 1;
+  //   });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: CustomAutoSizeText(text: 'تمت إضافة "$name"',
-      colorText: Colors.white,)),
-    );
-  }
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(content: CustomAutoSizeText(text: 'تمت إضافة "$name"',
+  //     colorText: Colors.white,)),
+  //   );
+  // }
 
   
 
   @override
   Widget build(BuildContext context) {
     
-    // final theme = ref.watch(themeDataProvider);
+    
     
 
     return Column(
@@ -158,51 +156,51 @@ class _CustomHorizontalListViewState
       ],
     );
   }
-  void _showAddDialog() {
+  // void _showAddDialog() {
     
-    String newName = '';
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title:  CustomAutoSizeText(text: 'إضافة تصنيف جديد',
-        style: widget.theme.textTheme.bodyMedium,
-        fontWeight: FontWeight.bold,
-         colorText: widget.theme.colorScheme.secondary,),
-        content: CustomTextField(
+  //   String newName = '';
+  //   showDialog(
+  //     context: context,
+  //     builder: (_) => AlertDialog(
+  //       title:  CustomAutoSizeText(text: 'إضافة تصنيف جديد',
+  //       style: widget.theme.textTheme.bodyMedium,
+  //       fontWeight: FontWeight.bold,
+  //        colorText: widget.theme.colorScheme.secondary,),
+  //       content: CustomTextField(
           
-        controller: TextEditingController(),
-        label: 'اسم التصنيف',
-        hint: 'أدخل اسم التصنيف الجديد',
-        keyboardType: TextInputType.text,
-          onChanged: (val) => newName = val,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const CustomAutoSizeText(text: 'إلغاء'),
-          ),
-          CustomButton(
-            backgroundColor: widget.theme.colorScheme.secondary,
-            textColor: widget.theme.colorScheme.onSecondary,
-            onPressed: () {
-              if (newName.trim().isNotEmpty) {
-                _addNewButton(newName.trim());
-                Navigator.pop(context);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: CustomAutoSizeText(text: 'الرجاء إدخال اسم صالح',
-                  colorText: Colors.white,)),
-                );
-              }
-            },
-            text: 'إضافة',
-          ),
-        ],
-      ),
-      animationStyle: AnimationStyle(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      ),
-    );
-  }
+  //       controller: TextEditingController(),
+  //       label: 'اسم التصنيف',
+  //       hint: 'أدخل اسم التصنيف الجديد',
+  //       keyboardType: TextInputType.text,
+  //         onChanged: (val) => newName = val,
+  //       ),
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () => Navigator.pop(context),
+  //           child: const CustomAutoSizeText(text: 'إلغاء'),
+  //         ),
+  //         CustomButton(
+  //           backgroundColor: widget.theme.colorScheme.secondary,
+  //           textColor: widget.theme.colorScheme.onSecondary,
+  //           onPressed: () {
+  //             if (newName.trim().isNotEmpty) {
+  //               _addNewButton(newName.trim());
+  //               Navigator.pop(context);
+  //             } else {
+  //               ScaffoldMessenger.of(context).showSnackBar(
+  //                 const SnackBar(content: CustomAutoSizeText(text: 'الرجاء إدخال اسم صالح',
+  //                 colorText: Colors.white,)),
+  //               );
+  //             }
+  //           },
+  //           text: 'إضافة',
+  //         ),
+  //       ],
+  //     ),
+  //     animationStyle: AnimationStyle(
+  //       duration: const Duration(milliseconds: 300),
+  //       curve: Curves.easeInOut,
+  //     ),
+  //   );
+  // }
 }

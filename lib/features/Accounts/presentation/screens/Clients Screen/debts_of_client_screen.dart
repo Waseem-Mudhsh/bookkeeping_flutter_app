@@ -270,6 +270,12 @@ final storesProvider = Provider<List<StoreModel>>((ref) {
       status: 'نشط',
       type: 'صيدلية',
     ),
+    const StoreModel(
+      name: 'صيدلية ظمران',
+      imageUrl: 'assets/images/store.png',
+      status: 'نشط',
+      type: 'صيدلية',
+    ),
   ];
 });
 
@@ -295,7 +301,7 @@ class DebtsOfClientScreen extends ConsumerWidget {
           SliverToBoxAdapter(child: _RequestsNotificationButton()),
           const SliverToBoxAdapter(child: ResponsiveSpace(height: 16)),
           const SliverToBoxAdapter(child: _StoresPreviewWidget()),
-          const SliverToBoxAdapter(child: ResponsiveSpace(height: 24)),
+          const SliverToBoxAdapter(child: ResponsiveSpace(height: 16)),
           const SliverToBoxAdapter(child: _TransactionsListWidget()),
           const SliverToBoxAdapter(child: ResponsiveSpace(height: 16)),
         ],
@@ -325,7 +331,7 @@ class _RequestsNotificationButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.theme;
-    
+    final responsive = ref.responsive;
     final newRequests = ref.watch(newRequestsCountProvider);
 
     if (newRequests == 0) return const SizedBox.shrink();
@@ -335,11 +341,11 @@ class _RequestsNotificationButton extends ConsumerWidget {
         // انتقل إلى صفحة الطلبات الجديدة
       },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        padding: responsive.paddingSym(h: 16, v: 16),
         decoration: BoxDecoration(
-          color: theme.colorScheme.secondary.withValues(alpha: 0.1),
+          color: theme.colorScheme.secondary,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: theme.colorScheme.secondary, width: 1),
+         
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -349,25 +355,26 @@ class _RequestsNotificationButton extends ConsumerWidget {
               children: [
                 CustomHugeIcon(
                   icon: HugeIcons.strokeRoundedNotification01,
-                  color: theme.colorScheme.secondary,
+                  color: theme.colorScheme.onSecondary,
                   size: 24,
                 ),
                 if (newRequests > 0)
                   Positioned(
                     right: 0,
                     top: 0,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        '$newRequests',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
+                    child: CircleAvatar(
+                      
+                      backgroundColor: Colors.red.shade700,
+                      radius: 8,
+                      child: Center(
+                        child: CustomAutoSizeText(
+                          text: '$newRequests',
+                          style: theme.textTheme.bodySmall,
+                            colorText: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            textAlign: TextAlign.center,
+                          
                         ),
                       ),
                     ),
@@ -379,13 +386,13 @@ class _RequestsNotificationButton extends ConsumerWidget {
               text: 'لديك $newRequests طلب جديد لمشاركة الديون',
               style: theme.textTheme.bodyMedium,
               fontWeight: FontWeight.bold,
-              colorText: theme.colorScheme.secondary,
+              colorText: theme.colorScheme.onSecondary,
               fontSize: 12,
             ),
             const Spacer(),
             CustomHugeIcon(
-              icon: HugeIcons.strokeRoundedArrowRight01,
-              color: theme.colorScheme.secondary,
+              icon: HugeIcons.strokeRoundedArrowLeft01,
+              color: theme.colorScheme.onSecondary,
               size: 16,
             ),
           ],
@@ -402,10 +409,10 @@ class _StoresPreviewWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.theme;
-    final responsive = ref.responsive;
     final stores = ref.watch(storesProvider);
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
@@ -426,12 +433,15 @@ class _StoresPreviewWidget extends ConsumerWidget {
                 'عرض الكل',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.secondary,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 10
+
                 ),
               ),
             ),
           ],
         ),
+        ResponsiveSpace(height: 12,),
         ResponsiveSpace(
           height: 120,
           child: ListView.separated(
@@ -462,6 +472,7 @@ class _StoreCard extends ConsumerWidget {
       onTap: () {},
       child: Container(
         width: responsive.w(120),
+        height: responsive.h(120),
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerLowest,
           borderRadius: BorderRadius.circular(16),

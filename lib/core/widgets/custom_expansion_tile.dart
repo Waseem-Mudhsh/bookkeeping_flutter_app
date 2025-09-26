@@ -1,5 +1,6 @@
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -63,8 +64,9 @@ class _CustomExpansionTileState extends ConsumerState<CustomExpansionTile> {
       textColor: theme.colorScheme.onPrimaryContainer,
       collapsedBackgroundColor: theme.colorScheme.surface,
       collapsedTextColor: theme.colorScheme.error,
-      trailing: Icon(
-        _isExpanded ? Icons.expand_less : Icons.expand_more,
+      trailing: CustomHugeIcon(
+        icon: _isExpanded ? HugeIcons.strokeRoundedArrowUp01
+        : HugeIcons.strokeRoundedArrowDown01,
         color: _isExpanded
             ? theme.colorScheme.onPrimaryContainer
             : theme.colorScheme.primary,

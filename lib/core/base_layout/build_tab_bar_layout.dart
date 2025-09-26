@@ -1,12 +1,9 @@
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_tab_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../custom_slivers/custom_sliver_app_bar.dart';
-import '../providers/responsive_notifier.dart';
-import '../providers/theme_data_provider.dart';
 
 class BuildTabBarLayout extends ConsumerStatefulWidget {
   final ScrollPhysics? physics;
@@ -92,7 +89,6 @@ class _TabbedLayoutState extends ConsumerState<BuildTabBarLayout>
 
   @override
   Widget build(BuildContext context) {
-    final theme = ref.theme;
     final responsive = ref.responsive;
     return NestedScrollView(
       physics: widget.physics ?? const ClampingScrollPhysics(),

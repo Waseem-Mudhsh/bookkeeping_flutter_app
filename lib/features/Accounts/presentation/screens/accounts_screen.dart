@@ -54,7 +54,7 @@ class AccountsScreen extends ConsumerWidget {
                         (context) => AccountDetailsScreen(account: account),
                   ),
                 );
-                // TODO: Navigate to Account Details
+                
                 debugPrint('Account tapped: ${account.name}');
               },
               onAddAccount: () {
@@ -64,7 +64,7 @@ class AccountsScreen extends ConsumerWidget {
             AccountsListSection(
               
               onAccountTap: (account) {
-                // TODO: Navigate to Account Details
+                
                 debugPrint('Account tapped: ${account.name}');
               },
               onAddAccount: () {
@@ -74,7 +74,7 @@ class AccountsScreen extends ConsumerWidget {
             AccountsListSection(
              
               onAccountTap: (account) {
-                // TODO: Navigate to Account Details
+                
                 debugPrint('Account tapped: ${account.name}');
               },
               onAddAccount: () {
@@ -84,7 +84,7 @@ class AccountsScreen extends ConsumerWidget {
             AccountsListSection(
               
               onAccountTap: (account) {
-                // TODO: Navigate to Account Details
+               
                 debugPrint('Account tapped: ${account.name}');
               },
               onAddAccount: () {
@@ -94,7 +94,7 @@ class AccountsScreen extends ConsumerWidget {
             AccountsListSection(
               
               onAccountTap: (account) {
-                // TODO: Navigate to Account Details
+                
                 debugPrint('Account tapped: ${account.name}');
               },
               onAddAccount: () {
