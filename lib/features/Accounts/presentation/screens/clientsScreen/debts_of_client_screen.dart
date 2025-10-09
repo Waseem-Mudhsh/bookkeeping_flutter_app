@@ -223,6 +223,7 @@
 import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
 import 'package:bookkeeping_flutter_app/core/base_layout/build_non_tabbar_layout.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
+import 'package:bookkeeping_flutter_app/core/utils/route_names.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_drawer.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
@@ -233,6 +234,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 import '../../../../Transactions/presentation/widgets/custom_list_transation_item.dart';
+import '../../widgets/financial_bottom_navbar.dart';
 
 // نموذج متجر بسيط
 class StoreModel {
@@ -290,7 +292,7 @@ class DebtsOfClientScreen extends ConsumerWidget {
     final responsive = ref.responsive;
 
     return BaseLayoutScreen(
-      drawer: const CustomDrawer(),
+      // drawer: const CustomDrawer(),
       body: BuildNonTabbarLayout(
         titleWidget: const _HeaderWidget(),
         toolbarHeight: responsive.h(60),
@@ -306,6 +308,7 @@ class DebtsOfClientScreen extends ConsumerWidget {
           const SliverToBoxAdapter(child: ResponsiveSpace(height: 16)),
         ],
       ),
+     
     );
   }
 }
@@ -317,7 +320,7 @@ class _HeaderWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.theme;
     return CustomAutoSizeText(
-      text: 'اسم المستخدم كعميل',
+      text: 'الديون الشخصية',
       style: theme.textTheme.bodyMedium,
       fontWeight: FontWeight.bold,
       fontSize: 14,
@@ -469,13 +472,16 @@ class _StoreCard extends ConsumerWidget {
     final theme = ref.theme;
     final responsive = ref.responsive;
     return InkWell(
-      onTap: () {},
+      borderRadius: BorderRadius.circular(12),
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => RouteNames.merchantLedgerScreen.screen));
+      },
       child: Container(
         width: responsive.w(120),
         height: responsive.h(120),
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerLowest,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.5), width:1),
         ),
         child: Padding(
@@ -542,12 +548,38 @@ class _TransactionsListWidget extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomAutoSizeText(
-          text: 'العمليات الأخيرة',
-          style: theme.textTheme.bodyMedium,
-          fontWeight: FontWeight.w600,
-          colorText: theme.colorScheme.primary,
-          fontSize: 12,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+
+            CustomAutoSizeText(
+              text: 'ديون اليوم ',
+              style: theme.textTheme.bodyMedium,
+              fontWeight: FontWeight.w600,
+              colorText: theme.colorScheme.primary,
+              fontSize: 12,
+            ),
+            // dropdown for deys filter
+            GestureDetector(
+              onTap: () {
+                
+             
+            },
+              child: Row(
+                children: [
+                  CustomAutoSizeText(
+                    text: 'اليوم ',
+                    style: theme.textTheme.bodyMedium,
+                    fontWeight: FontWeight.w600,
+                    colorText: theme.colorScheme.primary,
+                    fontSize: 12,
+                  ),
+                  const Icon(Icons.arrow_drop_down)
+                ],
+              ),
+            )
+          ],
         ),
         const ResponsiveSpace(height: 12),
         ListView.separated(

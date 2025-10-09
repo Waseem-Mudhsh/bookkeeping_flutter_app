@@ -1,8 +1,8 @@
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/responsive_notifier.dart';
-import '../providers/theme_data_provider.dart';
+
 
 class CustomTextFieldDropdown<T> extends ConsumerWidget {
   final List<DropdownMenuItem<T>>? items;
@@ -29,13 +29,13 @@ class CustomTextFieldDropdown<T> extends ConsumerWidget {
     this.decoration,
     this.isEnabled = true,
     this.icon,
-    this.fillColor, required Icon prefixIcon,
+    this.fillColor,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeDataProvider);
-    final responsive = ref.watch(responsiveProvider);
+    final theme = ref.theme;
+    final responsive = ref.responsive;
     
 
     return DropdownButtonFormField<T>(
@@ -58,30 +58,30 @@ class CustomTextFieldDropdown<T> extends ConsumerWidget {
           maxHeight: responsive.h(100),
         ),
         enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                   borderSide: BorderSide(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    color: theme.colorScheme.outline.withValues(alpha: 0.4),
                     width: responsive.w(0.5),
                   ),
                 ),
         focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                   borderSide: BorderSide(
                     color: theme.colorScheme.primary,
                     width: responsive.w(0.5),
                   ),
                 ),
         focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                   borderSide: BorderSide(
                     color: theme.colorScheme.error,
                     width: responsive.w(0.5),
                   ),
                 ),
         disabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                   borderSide: BorderSide(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    color: theme.colorScheme.outline.withValues(alpha: 0.2),
                     width: responsive.w(0.5),
                   ),
                 ),

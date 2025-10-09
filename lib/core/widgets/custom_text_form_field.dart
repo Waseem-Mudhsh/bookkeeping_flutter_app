@@ -88,9 +88,9 @@ class CustomTextField extends ConsumerWidget {
         enabledBorder:
             hasBorder!
                 ? OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                   borderSide: BorderSide(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    color: theme.colorScheme.outline.withValues(alpha: 0.4),
                     width: responsive.w(0.5),
                   ),
                 )
@@ -98,7 +98,7 @@ class CustomTextField extends ConsumerWidget {
         focusedBorder:
             hasBorder!
                 ? OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                   borderSide: BorderSide(
                     color: theme.colorScheme.primary,
                     width: responsive.w(0.5),
@@ -109,7 +109,7 @@ class CustomTextField extends ConsumerWidget {
         focusedErrorBorder:
             hasBorder!
                 ? OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                   borderSide: BorderSide(
                     color: theme.colorScheme.error,
                     width: responsive.w(0.5),
@@ -119,9 +119,9 @@ class CustomTextField extends ConsumerWidget {
         disabledBorder:
             hasBorder!
                 ? OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                   borderSide: BorderSide(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    color: theme.colorScheme.outline.withValues(alpha: 0.2),
                     width: responsive.w(0.5),
                   ),
                 )
@@ -143,11 +143,12 @@ class CustomTextField extends ConsumerWidget {
               fontSize: 12,
             ),
         suffixIcon: Container(
+          
           margin: responsive.paddingAll(4),
           decoration: BoxDecoration(
             color: theme.colorScheme.primary.withValues(alpha: 0.1),
            
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: suffixIcon,
         ),

@@ -1,7 +1,7 @@
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/theme_data_provider.dart';
 
 class CustomTabBar extends ConsumerWidget implements PreferredSizeWidget {
   final List<Tab> tabs;
@@ -18,7 +18,8 @@ class CustomTabBar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeDataProvider);
+    final theme = ref.theme;
+    final responsive = ref.responsive;
     return TabBar(
       controller: tabController,
       isScrollable: isScrollable,
@@ -27,13 +28,14 @@ class CustomTabBar extends ConsumerWidget implements PreferredSizeWidget {
       tabs: tabs,
       indicatorAnimation: TabIndicatorAnimation.elastic,
           indicatorSize: TabBarIndicatorSize.tab,
-          indicatorPadding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
+          indicatorPadding:  responsive.paddingSym(h: 4, v: 4),
           // indicatorWeight: 0.5,
-          
+          mouseCursor: MouseCursor.defer,
+          physics: const ClampingScrollPhysics(),
           labelColor: theme.colorScheme.onPrimary,
-          unselectedLabelColor: Colors.grey.shade500,
+          unselectedLabelColor: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
            indicator: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4.0),
+                      borderRadius: BorderRadius.circular(8.0),
                       color: theme.colorScheme.primary,
                       ),
           labelStyle: theme.textTheme.bodySmall!.copyWith(
@@ -44,6 +46,7 @@ class CustomTabBar extends ConsumerWidget implements PreferredSizeWidget {
             
             fontWeight: FontWeight.w500
           ),
+         
       );
   }
   

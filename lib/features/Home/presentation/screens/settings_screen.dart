@@ -2,10 +2,11 @@ import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart
 import 'package:bookkeeping_flutter_app/core/base_layout/build_non_tabbar_layout.dart';
 import 'package:bookkeeping_flutter_app/core/providers/settings_provider.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_alert_dialog_enhanced.dart';
+
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_button.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_expansion_tile.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/custom_overlay.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -192,66 +193,53 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   void _showBackupDialog(BuildContext context, WidgetRef ref) {
-    final responsive = ref.responsive;
+    
     final theme = ref.theme;
-    CustomOverlay.show(
-      context: context,
-      child: Card(
-        margin: responsive.paddingAll(24),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        elevation: 10,
-        child: Padding(
-          padding: responsive.paddingAll(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CustomAutoSizeText(
-                text: 'إنشاء نسخة احتياطية',
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                colorText: theme.colorScheme.primary,
-              ),
-              const ResponsiveSpace(height: 16),
-              CustomAutoSizeText(
-                text: 'هل أنت متأكد من رغبتك في إنشاء نسخة احتياطية الآن؟',
-                fontSize: 14,
-                maxLines: 3,
-                colorText: theme.colorScheme.onSurface,
-              ),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CustomButton(
-                    text: 'إلغاء',
-                    onPressed: CustomOverlay.dismiss,
-                    backgroundColor: theme.colorScheme.surface,
-                    textColor: theme.colorScheme.onSurface,
-                  ),
-                  const ResponsiveSpace(width: 16),
-                  CustomButton(
-                    text: 'تأكيد',
-                    onPressed: () {
-                      CustomOverlay.dismiss();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'تم إنشاء نسخة احتياطية بنجاح!',
-                            style: theme.textTheme.bodyMedium,
-                          ),
-                        ),
-                      );
-                    },
-                    backgroundColor: theme.colorScheme.primary,
-                    textColor: theme.colorScheme.onPrimary,
-                  ),
-                ],
-              ),
-            ],
-          ),
+   
+    showCustomDialog(
+        context: context,
+        barrierDismissible: false,
+        titleWidget: CustomAutoSizeText(
+          text: 'إنشاء نسخة احتياطية',
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          colorText: theme.colorScheme.onPrimary,
         ),
-      ),
-    );
+        content: CustomAutoSizeText(
+          text: 'هل أنت متأكد من رغبتك في إنشاء نسخة احتياطية الآن؟',
+          fontSize: 14,
+          maxLines: 3,
+          colorText: theme.colorScheme.onSurface,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: CustomAutoSizeText(
+              text: 'إلغاء',
+              colorText: theme.colorScheme.onSurface,
+            ),
+          ),
+          CustomButton(
+            width: 100,
+            height: 40,
+            text: 'تأكيد',
+            onPressed: () {
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: theme.colorScheme.primary,
+                  content: CustomAutoSizeText(
+                    text: 'تم إنشاء نسخة احتياطية بنجاح!',
+                    style: theme.textTheme.bodyMedium,
+                    colorText: theme.colorScheme.onPrimary,
+                  ),
+                ),
+              );
+            },
+          ),
+            
+        ],
+      );
   }
 }
 

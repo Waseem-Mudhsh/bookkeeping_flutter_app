@@ -1,11 +1,14 @@
 import 'package:bookkeeping_flutter_app/features/Accounts/domain/entities/account.dart';
+import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/account_ceiling_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/add_new_account_screen.dart';
+import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/beneficiaries_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Home/presentation/screens/home_main_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Home/presentation/widgets/animated_list.dart';
 import 'package:flutter/material.dart';
 
-import '../../features/Accounts/presentation/screens/Clients Screen/debts_of_client_screen.dart';
+import '../../features/Accounts/presentation/screens/clientsScreen/debts_of_client_screen.dart';
 import '../../features/Accounts/presentation/screens/account_details_screen.dart';
+import '../../features/Accounts/presentation/screens/clientsScreen/merchant_ledger_screen.dart';
 import '../../features/Home/presentation/screens/finance_screen.dart';
 import '../../features/Home/presentation/screens/profile_screen.dart';
 import '../../features/Home/presentation/screens/settings_screen.dart';
@@ -22,7 +25,10 @@ enum RouteNames {
   notifications,
   accountDetails,
   animationList,
-  debtsOfClientScreen;
+  debtsOfClientScreen,
+  merchantLedgerScreen,
+  accountCeilingScreen,
+  beneficiariesScreen;
   
 
   Widget get screen {
@@ -44,7 +50,12 @@ enum RouteNames {
         return AnimatedListDemo();
       case RouteNames.debtsOfClientScreen:
         return DebtsOfClientScreen();
-      
+      case RouteNames.merchantLedgerScreen:
+        return MerchantLedgerScreen();
+      case RouteNames.accountCeilingScreen:
+        return AccountCeilingScreen();
+      case RouteNames.beneficiariesScreen:
+        return BeneficiariesScreen();
       default:
        return Scaffold(body: Center(child: Text('No screen found')));
     }

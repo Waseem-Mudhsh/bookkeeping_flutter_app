@@ -1,7 +1,6 @@
-
-
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/custom_expansion_tile.dart'; // إذا كنت ترغب في قسم قابل للتوسيع
+import 'package:bookkeeping_flutter_app/core/widgets/custom_expansion_tile.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/domain/entities/main_account.dart';
 import 'package:bookkeeping_flutter_app/features/Transactions/domain/entities/transaction_type.dart';
@@ -9,63 +8,60 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
-
 import '../../../../core/base_layout/base_layout_screen.dart';
 import '../../../../core/base_layout/build_non_tabbar_layout.dart';
-import '../../../../core/providers/responsive_notifier.dart';
-import '../../../../core/providers/theme_data_provider.dart';
 import '../../../../core/utils/id_generator.dart';
-import '../../../../core/utils/responsive_values.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_field_dropdown.dart';
-import '../../../../core/widgets/custom_overlay.dart'; // لرسائل التأكيد/الخطأ
 import '../../../../core/widgets/custom_text_form_field.dart';
 import '../../../../core/widgets/responsive_space.dart';
 import '../../../Accounts/domain/entities/account.dart'; // تأكد من وجود Account entity
 import '../../../Currencies/domain/entities/currency.dart';
 import '../../../Currencies/presentation/providers/currency_provider.dart';
 import '../providers/account_provider.dart';
-// import '../../../Accounts/presentation/providers/account_provider.dart'; // تأكد من وجود provider خاص بالحسابات
 
-// تعريف AccountType إذا لم تكن موجودة في Account entity
-enum AccountType { bank, cash, creditCard, investment, eWallet, other }
-
-// Mock data for demonstration if actual Account data is not yet set up
+// ----------------------------------------------------------------------
+// Mock Data (Moved to a standard Dart file in a real app)
+// ----------------------------------------------------------------------
 List<Currency> mockCurrencies = [
   Currency(code: 'USD', name: 'دولار أمريكي', flagUrl: 'assets/flags/us.png'),
   Currency(code: 'YER', name: 'ريال يمني', flagUrl: 'assets/flags/ye.png'),
   Currency(code: 'SAR', name: 'ريال سعودي', flagUrl: 'assets/flags/sa.png'),
 ];
 
+// ----------------------------------------------------------------------
+// Main Screen Widget
+// ----------------------------------------------------------------------
+
 class AddNewAccountScreen extends ConsumerStatefulWidget {
-  final Account? existingAccount; // لتمرير الحساب الحالي للتعديل
+  final Account? existingAccount;
 
   const AddNewAccountScreen({super.key, this.existingAccount});
 
   @override
-  ConsumerState<AddNewAccountScreen> createState() =>
-      _AddNewAccountScreenState();
+  ConsumerState<AddNewAccountScreen> createState() => _AddNewAccountScreenState();
 }
 
 class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
-  final _formKey = GlobalKey<FormState>(); // مفتاح للتحقق من صحة النموذج
+  final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _phoneController;
   late TextEditingController _balanceController;
   late TextEditingController _notesController;
-  
-  
-  late List<MainAccountModel> listMockAccountTypes = [];
 
+  late List<MainAccountModel> listMockAccountTypes = [];
   late List<Currency> currencies = [];
+
+  // State Variables
   late Currency currencySelected;
-  MainAccountModel? accountTypeSelected; // نوع الحساب المختار
+  MainAccountModel? accountTypeSelected;
   String? categorySelected;
-  String? currentOption;
   TransactionType? debtorOption;
-  bool? _isNotificationEnabled = false;
+  String? currentOption;
+  bool _isNotificationEnabled = false;
   bool _isSaving = false;
-  final List<String> categorices = [
+
+  final List<String> categories = [
     'العملاء',
     'الموردين',
     'الرواتب',
@@ -76,44 +72,39 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
   @override
   void initState() {
     super.initState();
+    _initializeState();
+  }
 
-    // تهيئة قايمة نوع الحسابات
+  void _initializeState() {
     listMockAccountTypes = mainAccounts;
+    categorySelected = categories.first;
 
-    categorySelected = categorices.first;
-
-    // تهيئة قائمة العملات
+    // Currency setup
     currencies = ref.read(currencyListProvider);
     if (currencies.isEmpty) {
-      currencies =
-          mockCurrencies; // استخدام بيانات وهمية إذا كانت القائمة فارغة
+      currencies = mockCurrencies;
     }
-    // تعيين العملة الافتراضية أو العملة الحالية للحساب
     currencySelected = currencies.first;
 
-    // تهيئة حقول التحكم بالنصوص
+    // Text Controller initialization
     _nameController = TextEditingController(
       text: widget.existingAccount?.name ?? '',
     );
     _balanceController = TextEditingController(
-      text: (widget.existingAccount?.totalAccountBalance ?? 0.0)
-          .toStringAsFixed(2),
-    ); // تنسيق الرقم العشري
+      text: (widget.existingAccount?.totalAccountBalance ?? 0.0).toStringAsFixed(0),
+    );
     _notesController = TextEditingController(
       text: widget.existingAccount?.note ?? '',
     );
-    
-    
-
     _phoneController = TextEditingController(
       text: widget.existingAccount?.phoneNumber ?? '',
     );
 
-    // تعيين نوع الحساب الحالي أو افتراضي
+    // Default or existing account setup
     accountTypeSelected = listMockAccountTypes.first;
     debtorOption = widget.existingAccount?.debtor != 0
         ? TransactionType.debit
-        : TransactionType.credit; // تعيين نوع المعاملة بناءً على الحساب الحالي
+        : TransactionType.credit;
   }
 
   @override
@@ -121,131 +112,97 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
     _nameController.dispose();
     _balanceController.dispose();
     _notesController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
-  // دالة لحفظ الحساب (إضافة أو تعديل)
   Future<void> _saveAccount() async {
     if (!(_formKey.currentState?.validate() ?? false)) {
-      return; // لا تفعل شيئًا إذا كان النموذج غير صالح
+      return;
     }
 
-    setState(() => _isSaving = true); // تفعيل مؤشر التحميل
+    setState(() => _isSaving = true);
 
     try {
-      showTemporaryMessage(context, 'جاري الحفظ...'); // رسالة مؤقتة
-      
+      // In a real app, use a proper overlay or toast for messages
+      // showTemporaryMessage(context, 'جاري الحفظ...');
 
       final account = Account(
-        id:
-            widget.existingAccount?.id ??
-            IdGenerator.generateCompactId(prefix: 'acc_'),
+        id: widget.existingAccount?.id ?? IdGenerator.generateCompactId(prefix: 'acc_'),
         name: _nameController.text,
-        totalAccountBalance: 0.0,
+        totalAccountBalance: 1200.0,
         currencyCode: currencySelected.code,
-        category:
-            accountTypeSelected!.name.toString(),
-                // يجب أن يكون غير null بفضل الـ validator
+        category: categorySelected!,
         note: _notesController.text.isNotEmpty ? _notesController.text : null,
-        image: '', // يمكن لاحقًا إضافة منطق لاختيار أيقونة مخصصة
-        debtor: debtorOption == TransactionType.debit
-            ? double.parse(_balanceController.text)
-            : 0,
-        creditor: debtorOption == TransactionType.credit
-            ? double.parse(_balanceController.text)
-            : 0,
+        image: '',
+        debtor: debtorOption == TransactionType.debit ? double.tryParse(_balanceController.text) ?? 0 : 0,
+        creditor: debtorOption == TransactionType.credit ? double.tryParse(_balanceController.text) ?? 0 : 0,
         createdAt: DateTime.now(),
         mainAccountId: accountTypeSelected!.id,
         phoneNumber: _phoneController.text,
       );
 
-      debugPrint('Saving account: ${account.name}');
-    
       if (widget.existingAccount == null) {
-       
-
         await ref.read(accountViewModelProvider.notifier).addAccount(account);
-       
-        debugPrint('Adding new account: ${account.name}');
       } else {
         await ref.read(accountViewModelProvider.notifier).updateAccount(account);
-        debugPrint('Updating account: ${account.name}');
       }
 
       if (mounted) {
-        // رسالة نجاح واضحة
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: CustomAutoSizeText(
-              fontFamily: 'Cairo',
-             text:  widget.existingAccount == null
-                  ? 'تم إضافة الحساب بنجاح!'
-                  : 'تم تعديل الحساب بنجاح!',
-              colorText: Colors.white,
-              fontSize: 12,
+            text:   widget.existingAccount == null ? 'تم إضافة الحساب بنجاح!' : 'تم تعديل الحساب بنجاح!',
+             fontSize: 10,
+             style: ref.theme.textTheme.bodySmall,
+             colorText: Colors.white,
             ),
-            backgroundColor: Colors.green,
+            backgroundColor:ref.theme.colorScheme.primary,
           ),
         );
-        
-        Navigator.pop(context); // إغلاق الشاشة بعد الحفظ الناجح
-       
+        Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('حدث خطأ أثناء الحفظ: ${e.toString()}'),
-           
             backgroundColor: Colors.red,
           ),
-           
         );
-        debugPrint('Error saving account: ${e.toString()}');
       }
     } finally {
       if (mounted) {
-        setState(() => _isSaving = false); // إيقاف مؤشر التحميل
+        setState(() => _isSaving = false);
       }
     }
   }
 
- 
-
-  // دوال التحقق من صحة المدخلات
   String? _validateName(String? value) {
     if (value == null || value.isEmpty) {
       return 'اسم الحساب مطلوب';
     }
     return null;
   }
+
   String? _validatePhone(String? value) {
     if (value == null || value.isEmpty) {
       return 'يرجى إدخال رقم الهاتف';
     }
-    if (value.length < 9 ) {
-      return 'رقم الهاتف يجب أن يكون 9 ارقام';
+    if (value.length < 9) {
+      return 'رقم الهاتف يجب أن يكون 9 أرقام على الأقل';
     }
     return null;
   }
 
-
- 
-
-  String? _validateCategory(String? value) {
-    if (value == null) {
-      return 'يرجى اختيار تصنيف الحساب';
-    }
-    return null;
-  }
+  
 
   @override
   Widget build(BuildContext context) {
-    final responsive = ref.watch(responsiveProvider);
-    final theme = ref.watch(themeDataProvider);
+    final theme = ref.theme;
+    final responsive = ref.responsive;
 
     return BaseLayoutScreen(
-      // عنوان الشاشة يتغير بناءً على عملية الإضافة أو التعديل
       body: BuildNonTabbarLayout(
         titleWidget: CustomAutoSizeText(
           text: widget.existingAccount == null ? 'إضافة حساب جديد' : 'تعديل حساب',
@@ -254,283 +211,61 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
           fontSize: 14,
           colorText: theme.colorScheme.primary,
         ),
-           
         slivers: [
+          SliverToBoxAdapter(child: ResponsiveSpace(height: 16,),),
           SliverToBoxAdapter(
             child: Form(
-              key: _formKey, // ربط الـ formKey بالنموذج
-              child: Padding(
-                padding: responsive.paddingSym( v: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // قسم البيانات الأساسية (اسم الحساب، نوع الحساب، العملة)
-                    _buildAccountBasicInfo(theme, responsive),
-                    ResponsiveSpace(height: responsive.h(16)),
-    
-    
-                    // قسم المعلومات الإضافية (الملاحظات)
-                    _buildAdditionalInfo(theme, responsive),
-                    ResponsiveSpace(
-                      height: responsive.h(48),
-                    ), // مسافة قبل الأزرار
-                    // أزرار الحفظ والإلغاء
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                          child: CustomButton(
-                            text: "إلغاء",
-                            textColor: theme.colorScheme.primary,
-                            backgroundColor: theme.colorScheme.surfaceBright,
-                            onPressed:
-                                () => Navigator.pop(context), // إغلاق الشاشة
-                          ),
-                        ),
-                        ResponsiveSpace(width: responsive.w(16)),
-                        Expanded(
-                          child: CustomButton(
-                            text: "حفظ",
-                            textColor: theme.colorScheme.onPrimary,
-                            backgroundColor: theme.colorScheme.primary,
-                            isLoading: _isSaving, // عرض مؤشر تحميل داخل الزر
-                            onPressed: _saveAccount, // استدعاء دالة الحفظ
-                          ),
-                        ),
-                      ],
-                    ),
-                    ResponsiveSpace(height: responsive.h(8)),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // بناء قسم "البيانات الأساسية للحساب"
-  Widget _buildAccountBasicInfo(ThemeData theme, ResponsiveValues responsive) {
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(8), // زوايا مستديرة أكثر
-        border: Border.all(
-          color: theme.colorScheme.surfaceContainerHighest,
-          width: responsive.w(0.8),
-        ),
-      ),
-      padding: responsive.paddingAll(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomAutoSizeText(
-            text: 'البيانات الأساسية',
-            style: theme.textTheme.bodyMedium,
-            fontSize: 12,
-              fontWeight: FontWeight.bold,
-              colorText: theme.colorScheme.primary,
-          ),
-          const ResponsiveSpace(height: 12),
-          CustomTextField(
-            controller: _nameController,
-            label: 'إسم الحساب',
-            hint: 'ادخل إسم الحساب',
-            validator: _validateName,
-            // أيقونة بادئة لتعريف الحقل
-            suffixIcon: Icon(
-              Icons.account_balance_wallet_outlined,
-              color: theme.colorScheme.primary,
-            ),
-          ),
-          const ResponsiveSpace(height: 12),
-           CustomTextField(
-              controller: _phoneController,
-              label: 'هاتف',
-              hint: 'أدخل رقم الهاتف',
-              keyboardType: TextInputType.phone,
-              validator: _validatePhone,
-              inputFormatters: [
-                 FilteringTextInputFormatter.allow(RegExp(r'[+\d-]')), // يسمح فقط بالأرقام و + و -
-              ],
-              suffixIcon: IconButton(
-                icon: Icon(
-                  Icons.contact_phone, // أيقونة تدل على جهات الاتصال
-                  color: theme.colorScheme.primary,
-                ),
-                onPressed: () {
-                  debugPrint('Open contacts');
-                },
-                tooltip: 'اختيار من جهات الاتصال',
-              ),
-            ),
-            const ResponsiveSpace(height: 12,),
-          // Dropdown لاختيار نوع الحساب
-          CustomTextFieldDropdown<String>(
-            items:
-                categorices
-                    .map(
-                      (type) => DropdownMenuItem(
-                        value: type,
-                        child: CustomAutoSizeText(
-                          text: type, // دالة لتحويل Enum إلى نص عربي
-                          fontSize: 14,
-                          colorText: theme.colorScheme.onSurface,
-                        ),
-                      ),
-                    )
-                    .toList(),
-            value: categorySelected,
-            onChanged:
-                (value) => setState(() => categorySelected = value),
-            hintText: 'اختر نوع التصنيف',
-            labelText: 'نوع التصنيف',
-            validator: _validateCategory,
-            prefixIcon: Icon(
-              Icons.category_outlined,
-              color: theme.colorScheme.primary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // بناء قسم "الرصيد الافتتاحي"
- 
-
-  // بناء قسم "المعلومات الإضافية" (باستخدام CustomExpansionTile للحقول الاختيارية)
-  Widget _buildAdditionalInfo(ThemeData theme, ResponsiveValues responsive) {
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(
-          color: theme.colorScheme.surfaceContainerHighest,
-          width: responsive.w(0.8),
-        ),
-      ),
-      child: CustomExpansionTile(
-        title: 'البيانات الإضافية',
-        subtitle: 'اختياري',
-        isExpanded: false,
-        children: [
-          const ResponsiveSpace(height: 16),
-
-
-          
-          CustomTextField(
-            controller: _notesController,
-            label: 'العنوان',
-            hint: '  اضف العنوان...',
-            keyboardType: TextInputType.text,
-
-            suffixIcon: CustomHugeIcon(icon: HugeIcons.strokeRoundedLocation01,
-            color:theme.colorScheme.primary)
-          ),
-          const ResponsiveSpace(height: 16),
-          ResponsiveSpace(
-            // height: 70,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-
-              children: [
-                ListTile(
-                  title: CustomAutoSizeText(
-                    text: 'تفعيل خدمة الاشعارات ',
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    style: theme.textTheme.bodyMedium,
-                    colorText: theme.colorScheme.secondary,
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 1. Basic Info Section (Modularized)
+                  _AccountBasicInfoSection(
+                    nameController: _nameController,
+                    phoneController: _phoneController,
+                    categories: categories,
+                    selectedCategory: categorySelected,
+                    onCategoryChanged: (value) => setState(() => categorySelected = value),
+                    validateName: _validateName,
+                    validatePhone: _validatePhone,
                   ),
-                  trailing: Switch(
-                    activeColor: theme.colorScheme.onSecondary,
-                    activeTrackColor: theme.colorScheme.secondary,
-                    value: _isNotificationEnabled!,
-                    onChanged: (value) {
-                      setState(() {
-                        _isNotificationEnabled = value;
-                      });
-                    },
-                  ),
-                ),
-
-                ResponsiveSpace(height: 8),
-
-                if (_isNotificationEnabled!)
+              
+                  ResponsiveSpace(height: responsive.h(20)),
+              
+                  
+              
+                  // 3. Additional Info Section (Refactored for style)
+                  _buildAdditionalInfo(),
+              
+                  ResponsiveSpace(height: responsive.h(48)),
+              
+                  // Action Buttons
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(
-                        child: InkWell(
-                          onTap:
-                              () => setState(() => currentOption = 'الواتساب'),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Radio<String>(
-                                value: 'الواتساب',
-                                groupValue: currentOption,
-                                fillColor: WidgetStateProperty.all(
-                                  theme.colorScheme.secondary,
-                                ),
-                                activeColor: theme.colorScheme.secondary,
-                                onChanged: (value) {
-                                  setState(() {
-                                    currentOption = value;
-                                  });
-                                },
-                              ),
-                              const SizedBox(width: 4),
-                              CustomAutoSizeText(
-                                text: 'الواتساب',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                style: theme.textTheme.bodySmall,
-                                colorText: theme.colorScheme.secondary,
-                              ),
-                            ],
-                          ),
+                        child: CustomButton(
+                          text: "إلغاء",
+                          textColor: theme.colorScheme.primary,
+                          backgroundColor: theme.colorScheme.surface,
+                          onPressed: () => Navigator.pop(context),
                         ),
                       ),
+                      ResponsiveSpace(width: responsive.w(16)),
                       Expanded(
-                        child: InkWell(
-                          onTap:
-                              () => setState(() => currentOption = 'رسائل SMS'),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Radio<String>(
-                                value: 'رسائل SMS',
-                                groupValue: currentOption,
-                                fillColor: WidgetStateProperty.all(
-                                  theme.colorScheme.secondary,
-                                ),
-                                activeColor: theme.colorScheme.secondary,
-                                onChanged: (value) {
-                                  setState(() {
-                                    currentOption = value;
-                                  });
-                                },
-                              ),
-                              const SizedBox(width: 4),
-                              CustomAutoSizeText(
-                                text: 'رسائل SMS',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                style: theme.textTheme.bodySmall,
-                                colorText: theme.colorScheme.secondary,
-                              ),
-                            ],
-                          ),
+                        child: CustomButton(
+                          text: "حفظ",
+                          textColor: theme.colorScheme.onPrimary,
+                          backgroundColor: theme.colorScheme.primary,
+                          isLoading: _isSaving,
+                          onPressed: _saveAccount,
                         ),
                       ),
                     ],
                   ),
-              ],
+                  ResponsiveSpace(height: responsive.h(8)),
+                ],
+              ),
             ),
           ),
         ],
@@ -538,7 +273,250 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
     );
   }
 
+  // Building the additional info section using a clean Card layout
+  Widget _buildAdditionalInfo() {
+    final responsive = ref.responsive;
+    final theme = ref.theme;
+    return Card(
+      elevation: 4, // Subtle shadow for a professional feel
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: ref.responsive.paddingAll(8),
+        child: CustomExpansionTile(
+          title: 'البيانات الإضافية',
+          subtitle: 'اختياري',
+          leading: HugeIcons.strokeRoundedInformationSquare,
+          isExpanded: false,
+          children: [
+            const ResponsiveSpace(height: 12),
+            CustomTextField(
+              controller: _notesController,
+              label: 'العنوان',
+              hint: 'أضف العنوان...',
+              keyboardType: TextInputType.text,
+              suffixIcon: CustomHugeIcon(icon: HugeIcons.strokeRoundedLocation01, color: theme.colorScheme.primary),
+            ),
+            const ResponsiveSpace(height: 16),
+
+            // Notification Switch & Options (using AnimatedSwitcher)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Switch Tile
+                Padding(
+                  padding:  responsive.paddingSym(h: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomAutoSizeText(
+                        text: 'تفعيل خدمة الإشعارات',
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        colorText: theme.colorScheme.onSurface,
+                      ),
+                      Switch(
+                        value: _isNotificationEnabled,
+                        onChanged: (value) => setState(() => _isNotificationEnabled = value),
+                        
+                      ),
+                    ],
+                  ),
+                ),
+            
+                // Animated Notification Options
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder: (child, animation) => SizeTransition(sizeFactor: animation, child: FadeTransition(opacity: animation, child: child)),
+                  child: _isNotificationEnabled
+                      ? Column(
+                          key: const ValueKey('notification_options'),
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomAutoSizeText(
+                              text: 'إرسال الإشعارات عبر:',
+                              style: theme.textTheme.bodySmall,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              colorText: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                            ),
+                            ResponsiveSpace(height: 8),
+                            Row(
+                              children: [
+                                _NotificationOption(
+                                  label: 'الواتساب',
+                                  value: 'الواتساب',
+                                  groupValue: currentOption,
+                                  onChanged: (value) => setState(() => currentOption = value),
+                                ),
+                                _NotificationOption(
+                                  label: 'رسائل SMS',
+                                  value: 'رسائل SMS',
+                                  groupValue: currentOption,
+                                  onChanged: (value) => setState(() => currentOption = value),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : const SizedBox.shrink(key: ValueKey('empty')),
+                ),
+              ],
+            ),
+            
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ----------------------------------------------------------------------
+// Modular Widgets for Reusability and Clean Code
+// ----------------------------------------------------------------------
+
+// 1. Basic Information Section (Name, Phone, Category)
+class _AccountBasicInfoSection extends ConsumerWidget {
+  final TextEditingController nameController;
+  final TextEditingController phoneController;
+  final List<String> categories;
+  final String? selectedCategory;
+  final ValueChanged<String?> onCategoryChanged;
+  final FormFieldValidator<String> validateName;
+  final FormFieldValidator<String> validatePhone;
+
+  const _AccountBasicInfoSection({
+    required this.nameController,
+    required this.phoneController,
+    required this.categories,
+    required this.selectedCategory,
+    required this.onCategoryChanged,
+    required this.validateName,
+    required this.validatePhone,
+  });
+
+  @override
+  Widget build(BuildContext context , WidgetRef ref) {
+    final theme = Theme.of(context);
+    final responsive = ref.responsive;
+
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: responsive.paddingAll(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomAutoSizeText(
+              text: 'البيانات الأساسية',
+              style: theme.textTheme.titleMedium,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              colorText: theme.colorScheme.onSurface,
+            ),
+            const ResponsiveSpace(height: 12),
+            CustomTextField(
+              controller: nameController,
+              label: 'إسم الحساب',
+              hint: 'ادخل إسم الحساب',
+              validator: validateName,
+              suffixIcon: CustomHugeIcon(
+               icon: HugeIcons.strokeRoundedUser02,
+                color: theme.colorScheme.primary,
+                
+              ),
+            ),
+            const ResponsiveSpace(height: 12),
+            CustomTextField(
+              controller: phoneController,
+              label: 'هاتف',
+              hint: 'أدخل رقم الهاتف',
+              keyboardType: TextInputType.phone,
+              validator: validatePhone,
+              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[+\d-]'))],
+              suffixIcon: IconButton(
+                icon: CustomHugeIcon(
+               icon: HugeIcons.strokeRoundedContact01,
+                color: theme.colorScheme.primary,
+              ),
+                onPressed: () {}, 
+                tooltip: 'اختيار من جهات الاتصال',
+              ),
+            ),
+            const ResponsiveSpace(height: 12),
+            CustomTextFieldDropdown<String>(
+              items: categories
+                  .map(
+                    (type) => DropdownMenuItem(
+                      value: type,
+                      child: CustomAutoSizeText(
+                        text: type,
+                        fontSize: 14,
+                        colorText: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  )
+                  .toList(),
+              value: selectedCategory,
+              onChanged: onCategoryChanged,
+              hintText: 'اختر نوع التصنيف',
+              labelText: 'نوع التصنيف',
+              validator: (value) => value == null ? 'يرجى اختيار تصنيف الحساب' : null,
+              
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 
- 
+
+// Reusable Radio Button Option for Notification Method
+class _NotificationOption extends StatelessWidget {
+  final String label;
+  final String value;
+  final String? groupValue;
+  final ValueChanged<String?> onChanged;
+
+  const _NotificationOption({
+    required this.label,
+    required this.value,
+    required this.groupValue,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Expanded(
+      child: InkWell(
+        onTap: () => onChanged(value),
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Radio<String>(
+                value: value,
+                groupValue: groupValue,
+                activeColor: theme.colorScheme.secondary,
+                onChanged: onChanged,
+              ),
+              CustomAutoSizeText(
+                text: label,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                colorText: theme.colorScheme.onSurface,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

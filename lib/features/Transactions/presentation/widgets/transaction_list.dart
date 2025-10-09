@@ -1,4 +1,3 @@
-
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/features/Transactions/presentation/widgets/custom_transaction_item.dart';
 import 'package:flutter/material.dart';
@@ -19,42 +18,32 @@ class TransactionList extends ConsumerWidget {
 
   const TransactionList({super.key, required this.account});
 
- 
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    
-    
-    final asyncTransactionsByAccountId = ref.watch(transactionViewModelProvider(account.id));
-     
+    final asyncTransactionsByAccountId = ref.watch(
+      transactionViewModelProvider(account.id),
+    );
 
-    return _RecentTransactionsSection(asyncTransactions: asyncTransactionsByAccountId,
-     
+    return _RecentTransactionsSection(
+      asyncTransactions: asyncTransactionsByAccountId,
     );
   }
 }
+
 class _RecentTransactionsSection extends ConsumerWidget {
   final AsyncValue<List<Transaction>> asyncTransactions;
- 
-  
-  
 
-  const _RecentTransactionsSection({
-    required this.asyncTransactions,
-   
-    
-    
-  });
+  const _RecentTransactionsSection({required this.asyncTransactions});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-   final theme = ref.theme;
-   final responsive = ref.responsive;
+    final theme = ref.theme;
+    final responsive = ref.responsive;
 
     return Column(
-       crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          spacing: responsive.h(8),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: responsive.h(8),
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -70,27 +59,26 @@ class _RecentTransactionsSection extends ConsumerWidget {
             ),
             Spacer(),
             CustomIconButton(
-              hugeIcon:  HugeIcon(icon:HugeIcons.strokeRoundedSearch01,
-               color: theme.colorScheme.primary,
-               size: responsive.h(20),),
-             
-              
-              onPressed: (){},
-             
+              hugeIcon: HugeIcon(
+                icon: HugeIcons.strokeRoundedSearch01,
+                color: theme.colorScheme.primary,
+                size: responsive.h(20),
+              ),
+
+              onPressed: () {},
             ),
             ResponsiveSpace(width: 8),
             CustomIconButton(
-              hugeIcon: HugeIcon(icon: HugeIcons.strokeRoundedSorting01,
-               color: theme.colorScheme.primary,
-               size: responsive.h(20),),
-            
-              onPressed:(){},
-              
+              hugeIcon: HugeIcon(
+                icon: HugeIcons.strokeRoundedSorting01,
+                color: theme.colorScheme.primary,
+                size: responsive.h(20),
+              ),
+
+              onPressed: () {},
             ),
-     
           ],
         ),
-        
 
         asyncTransactions.when(
           data: (transactions) {
@@ -102,15 +90,11 @@ class _RecentTransactionsSection extends ConsumerWidget {
                     child: CustomEmptyState(
                       message: 'لا توجد عمليات حديثة.',
                       subMessage: 'يمكنك إضافة عمليات جدد من خلال زر الإضافة ',
-                      
                     ),
                   ),
                 ...transactions.reversed.map((transaction) {
-                  return CustomTransactionItem(
-                    transaction: transaction,
-                  
-                  );
-                })
+                  return CustomTransactionItem(transaction: transaction);
+                }),
               ],
             );
           },

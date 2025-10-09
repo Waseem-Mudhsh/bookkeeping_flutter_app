@@ -49,8 +49,8 @@ class CustomDrawer extends ConsumerWidget {
                       _buildMenuItem(
                         context,
                         ref,
-                        title: 'دفتر حساباتي (كتاجر)',
-                        subTitle: 'إجمالي ديون العملاء: 1,500',
+                        title: 'الصفحة الرئيسية',
+                        subTitle: 'عرض جميع الحسابات والرصيد الكلي',
                         icon: HugeIcons.strokeRoundedWallet01,
                         onTap: () {
                           Navigator.push(context,
@@ -60,8 +60,8 @@ class CustomDrawer extends ConsumerWidget {
                       _buildMenuItem(
                         context,
                         ref,
-                        title: 'ديوني (كعميل)',
-                        subTitle: 'إجمالي ديوني المستحقة: 1,500',
+                        title: 'الديون الشخصية',
+                        subTitle: 'عرض الديون الشخصية',
                         icon: HugeIcons.strokeRoundedWallet01,
                         onTap: () {
                           Navigator.push(

@@ -1,4 +1,6 @@
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_alert_dialog_enhanced.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_button.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_icon_button.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,6 @@ import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 import '../../../../core/utils/route_names.dart';
-import '../../../../core/widgets/custom_overlay.dart';
 import '../../domain/entities/account.dart';
 import '../providers/account_provider.dart';
 
@@ -60,69 +61,6 @@ class CustomAccountCard extends ConsumerWidget {
   }
 
  
-
-  // Widget _buildAccountDetails( ThemeData theme) {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     mainAxisSize: MainAxisSize.min,
-  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //     children: [
-  //       CustomAutoSizeText(
-  //         text: account.name,
-  //         fontWeight: FontWeight.bold,
-  //         colorText: theme.colorScheme.onSurface,
-  //         style: theme.textTheme.bodyMedium,
-  //         maxLines: 2,
-  //         overflow: TextOverflow.ellipsis,
-  //         fontSize: 12,
-  //       ),
-  //       ResponsiveSpace(height: 4),
-  //       CustomAutoSizeText(
-  //         text: account.category.toString().split('.').last, // Convert enum to string
-  //         colorText:theme.colorScheme.onSurface.withValues(alpha: 0.6) ,
-  //         fontSize: 12,
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  // Widget _buildBalanceInfo( ThemeData theme) {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.end,
-  //     mainAxisSize: MainAxisSize.min,
-  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //     children: [
-  //       Row(
-  //         mainAxisSize: MainAxisSize.min,
-          
-  //         children: [
-  //           CustomAutoSizeText(text:  account.debtor != 0 ? 'له: ' : 'عليه: ',
-  //             fontWeight: FontWeight.bold,
-  //             colorText: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-  //             style: theme.textTheme.bodyMedium,
-  //             fontSize: 12,
-  //           ),
-  //           ResponsiveSpace(width: 4),
-  //           CustomAutoSizeText(
-  //             text: account.totalAccountBalance.toStringAsFixed(2)+account.currencyCode!,
-  //             fontWeight: FontWeight.bold,
-  //             colorText: account.debtor != 0 
-  //                 ? Colors.green.shade600 
-  //                 : Colors.red.shade600,
-  //             style: theme.textTheme.bodyMedium
-  //           ),
-  //         ],
-  //       ),
-  //       ResponsiveSpace(height: 4),
-  //       if (account.currencyCode != null)
-  //         CustomAutoSizeText(
-  //           text: ' ${account.createdAt.year}/${account.createdAt.month}/${account.createdAt.day}',
-  //           colorText: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-  //           fontSize: 12,
-  //         ),
-  //     ],
-  //   );
-  // }
   Widget _buildAccountInfo( BuildContext context, ThemeData theme , WidgetRef ref) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -167,11 +105,27 @@ class CustomAccountCard extends ConsumerWidget {
          CustomIconButton(
           
               onPressed: () {
-                showConfirmationDialog(
-                  responsive: ref.responsive,
-                  theme: theme,
+                _buildDeleteAccountDialog(context,ref);
+              },
+              hugeIcon: HugeIcon(icon: HugeIcons.strokeRoundedDelete01,
+               color: theme.colorScheme.error,
+               size: 20),
+               ),
+               
+        
+      ],
+    );
+  }
+  void _buildDeleteAccountDialog(BuildContext context,WidgetRef ref) {
+    final theme = ref.theme;
+    showCustomDialog(
+                  
                   context: context,
-                  title: 'تأكيد الحذف',
+                  titleWidget: CustomAutoSizeText(text: 'حذف الحساب',
+                  style: theme.textTheme.bodyMedium,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  colorText: theme.colorScheme.onPrimary,),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,7 +144,25 @@ class CustomAccountCard extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  onConfirm: () {
+                  actions: [
+                    TextButton(
+                      onPressed:()=> Navigator.pop(context),
+                       child: CustomAutoSizeText(
+                        text: 'إلغاء',
+                        style: theme.textTheme.bodyMedium,
+                        fontSize: 12,
+                        colorText: theme.colorScheme.onSurface,
+                       ),
+                       ),
+
+                       CustomButton(
+                        text: 'حذف',
+                        width: 100,
+                        height: 40,
+                        onPressed: () {
+                    Navigator.pop(context);
+                          
+                         
                     // Handle account deletion logic here
                     // For example, call a function to delete the account
 
@@ -202,26 +174,14 @@ class CustomAccountCard extends ConsumerWidget {
                     content: CustomAutoSizeText(
                       fontFamily: 'Cairo',
                       text: 'تم حذف الحساب بنجاح!',
-                      colorText: Colors.white,
+                      colorText: theme.colorScheme.onPrimary,
                       fontSize: 12,
                     ),
-                    backgroundColor: Colors.green,
+                    backgroundColor:theme.colorScheme.primary,
                   ),
+                );     },)
+                  ]
                 );
-
-                    
-                    
-                  },
-                );
-              },
-              hugeIcon: HugeIcon(icon: HugeIcons.strokeRoundedDelete01,
-               color: theme.colorScheme.error,
-               size: 20),
-               ),
-               
-        
-      ],
-    );
   }
   Widget _buildBalanceInfo2(ThemeData theme) {
     return IntrinsicHeight(

@@ -32,7 +32,10 @@ class Transaction {
   
   @HiveField(8)
   final String? image;
+  @HiveField(9)
+  final String buyer;
   
+
   Transaction({
     required this.id,
     required this.accountId,
@@ -40,9 +43,11 @@ class Transaction {
     required this.date,
     required this.description,
     required this.type,
+    required this.buyer,
     this.currency,
     this.referenceNumber,
     this.image,
+    
   });
   
   Transaction copyWith({
@@ -55,6 +60,7 @@ class Transaction {
     String? currency,
     String? referenceNumber,
     String? image,
+    String? buyer
   }) {
     return Transaction(
       id: id ?? IdGenerator.generateCompactId(prefix: 'txn_'),
@@ -66,6 +72,7 @@ class Transaction {
       currency: currency ?? this.currency,
       referenceNumber: referenceNumber ?? this.referenceNumber,
       image: image ?? this.image,
+      buyer: buyer ?? this.buyer
     );
   }
 }

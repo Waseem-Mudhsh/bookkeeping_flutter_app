@@ -14,6 +14,7 @@ class BuildTabBarLayout extends ConsumerStatefulWidget {
   final Widget? titleWidget;
   final List<Widget>? actions;
   final double? toolbarHeight;
+  final bool? isScrollableTabs;
 
   const BuildTabBarLayout({
     super.key,
@@ -25,6 +26,7 @@ class BuildTabBarLayout extends ConsumerStatefulWidget {
     required this.hasLeading,
     required this.toolbarHeight,
     required this.titleWidget,
+    this.isScrollableTabs,
   });
 
   @override
@@ -115,12 +117,13 @@ class _TabbedLayoutState extends ConsumerState<BuildTabBarLayout>
                     height: responsive.h(50),
                     padding: responsive.paddingSym(h: 4, v: 4),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: Colors.grey.shade400, width: 1),
                     ),
                     child: CustomTabBar(
                       tabController: _tabController,
                       tabs: widget.tabs,
+                      isScrollable: widget.isScrollableTabs ?? false,
                     ),
                   ),
                 ),

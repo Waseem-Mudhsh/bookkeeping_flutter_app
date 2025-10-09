@@ -1,6 +1,7 @@
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_alert_dialog_enhanced.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/custom_overlay.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -22,22 +23,26 @@ class CustomTransactionItem extends ConsumerWidget {
     final responsive = ref.responsive;
 
     String sign = transaction.type == TransactionType.credit ? '+' : '-';
+    Color colorBorder = transaction.type == TransactionType.credit ? Colors.green :theme.colorScheme.error;
     return Padding(
       padding: responsive.paddingOnly(bottom: responsive.h(4)),
       child: ListTile(
+        // style: ListTileStyle.list,
         shape: RoundedRectangleBorder(
           side: BorderSide(
-            color: theme.colorScheme.outline.withValues(alpha: 0.5),
+            color: colorBorder.withValues(alpha: 0.3),width: 0.5
           ),
           borderRadius: BorderRadius.circular(responsive.w(12)),
         ),
         onTap: () {
           _showTransactionOptions(context, ref);
         },
-        leading: _buildTransactionIcon(),
+        // leading: _buildTransactionIcon(),
         title: _buildTransactionDetails(ref),
+        subtitle: _buildTransactionBuyer(ref),
         trailing: _buildTransactionBalance(sign, ref),
         contentPadding: responsive.paddingSym(h: 16, v: 8),
+       titleAlignment: ListTileTitleAlignment.top,
       ),
     );
   }
@@ -51,6 +56,7 @@ class CustomTransactionItem extends ConsumerWidget {
     final theme = ref.theme; // تأكد من الحصول على Theme
 
     return showModalBottomSheet(
+      isDismissible: true, // إضافة هذه الخاصية لمنع إغلاق الـ BottomSheet
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
@@ -82,8 +88,9 @@ class CustomTransactionItem extends ConsumerWidget {
                 iconColor: theme.colorScheme.error,
                 title: 'حذف العملية',
                 onTap: () {
-                  // Navigator.pop(context);
+                  
                   _onDeleteTransaction(context, ref)();
+                  
                 },
               ),
               _buildOption(
@@ -136,78 +143,95 @@ class CustomTransactionItem extends ConsumerWidget {
     };
   }
 
+
   VoidCallback _onDeleteTransaction(BuildContext context, WidgetRef ref) {
     final theme = ref.theme;
     return () {
-      showConfirmationDialog(
-        responsive: ref.responsive,
-        theme: theme,
+      showCustomAlert(
+        ref: ref,
         context: context,
         title: 'تاكيد الحذف',
-        content: Text('هل أنت متأكد من حذف هذه العملية؟'),
+        message: 'هل أنت متأكد من حذف هذه العملية؟',
         onConfirm: () {
-          // استدعاء دالة حذف العملية من Provider أو ViewModel هنا
-          ref
-              .read(
-                transactionViewModelProvider(transaction.accountId).notifier,
-              )
-              .deleteTransaction(transaction.id);
+           Navigator.of(context).pop(); // يغلق الـ AlertDialog أولاً
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop(); // يغلق الـ BottomSheet
+        }
+  ref
+      .read(
+        transactionViewModelProvider(transaction.accountId).notifier,
+      )
+      .deleteTransaction(transaction.id);
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: CustomAutoSizeText(
-                fontFamily: 'Cairo',
-                text: 'تم حذف الحساب بنجاح!',
-                colorText: Colors.white,
-                fontSize: 12,
-              ),
-              backgroundColor: Colors.green,
-            ),
-          );
-          // Navigator.pop(context); // Close the bottom sheet
-          // إذا أردت إغلاق الـ BottomSheet بعد الحذف:
-          if (Navigator.of(context).canPop()) {
-            Navigator.of(context).pop();
-          }
+  
+
+  // ثم أظهر SnackBar إذا كان الـ context ما زال فعالاً
+  Future.delayed(const Duration(milliseconds: 100), () {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: CustomAutoSizeText(
+            fontFamily: 'Cairo',
+            text: 'تم حذف الحساب بنجاح!',
+            colorText:theme.colorScheme.onPrimary,
+            fontSize: 12,
+          ),
+          backgroundColor: theme.colorScheme.primary,
+        ),
+      );
+    }
+  });
+
+
+},
+        confirmText: 'حذف',
+        cancelText: 'إلغاء',
+        onCancel: () {
+           Navigator.of(context).pop(); // يغلق الـ AlertDialog أولاً
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop(); // يغلق الـ BottomSheet
+        }
         },
-        confirmButtonText: 'حذف',
-        cancelButtonText: 'إلغاء',
-        confirmButtonColor: theme.colorScheme.error,
       );
     };
   }
 
-  Widget _buildTransactionIcon() {
-    return CustomHugeIcon(
-      icon:
-          transaction.type == TransactionType.credit
-              ? HugeIcons.strokeRoundedSquareArrowUpRight
-              : HugeIcons.strokeRoundedSquareArrowDownRight,
-      color:
-          transaction.type == TransactionType.credit
-              ? Colors.green.shade600
-              : Colors.red.shade600,
-      size: 24,
-    );
-  }
+
 
 
   Widget _buildTransactionDetails(WidgetRef ref) {
     final theme = ref.theme;
+    final responsive = ref.responsive;
+    return Padding(
+      padding: responsive.paddingOnly(bottom:4),
+      child: CustomAutoSizeText(
+        text: transaction.description,
+        fontWeight: FontWeight.w600,
+        colorText: theme.colorScheme.onSurface,
+        style: theme.textTheme.bodyMedium,
+        maxLines: 10,
+        overflow: TextOverflow.ellipsis,
+        fontSize: 12,
+      ),
+    );
+  }
+  Widget _buildTransactionBuyer(WidgetRef ref) {
+    final theme = ref.theme;
     return CustomAutoSizeText(
-      text: transaction.description,
-      fontWeight: FontWeight.w600,
-      colorText: theme.colorScheme.onSurface,
-      style: theme.textTheme.bodyMedium,
-      maxLines: 10,
+       text:'المستفيد: ${transaction.buyer}',
+      fontWeight: FontWeight.w400,
+      colorText: theme.colorScheme.primary,
+      style: theme.textTheme.bodySmall,
+      maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      fontSize: 12,
+      fontSize: 10,
     );
   }
 
   Widget _buildTransactionBalance(String sign, WidgetRef ref) {
     final theme = ref.theme;
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [

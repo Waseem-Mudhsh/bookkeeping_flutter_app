@@ -1,4 +1,4 @@
-import 'package:bookkeeping_flutter_app/core/utils/responsive_values.dart';
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,15 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class CustomSegmentedButton extends ConsumerStatefulWidget {
   final List<String> nameButtons;
   final List<Widget> contentButtons;
-  final ThemeData theme;
-  final ResponsiveValues responsive;
+  
 
   const CustomSegmentedButton({
     super.key,
     required this.nameButtons,
     required this.contentButtons,
-    required this.theme,
-    required this.responsive,
+    
   });
 
   @override
@@ -43,7 +41,8 @@ class _CustomSegmentedButtonState extends ConsumerState<CustomSegmentedButton> {
 
   @override
   Widget build(BuildContext context) {
-    // final theme = ref.watch(themeDataProvider);
+    final theme = ref.theme;
+    final responsive = ref.responsive;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,13 +55,13 @@ class _CustomSegmentedButtonState extends ConsumerState<CustomSegmentedButton> {
           child: SegmentedButton(
             showSelectedIcon: false,
             expandedInsets: EdgeInsets.only(
-              left: widget.responsive.w(16),
-              right: widget.responsive.w(16),
+              left: responsive.w(16),
+              right: responsive.w(16),
             ),
             style: SegmentedButton.styleFrom(
               
               side: BorderSide(
-                color: widget.theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                 width: 0.5,
               ),
              
@@ -75,7 +74,7 @@ class _CustomSegmentedButtonState extends ConsumerState<CustomSegmentedButton> {
                     value: index,
                     label: CustomAutoSizeText(
                       text: button,
-                      style: widget.theme.textTheme.bodyMedium, 
+                      style: theme.textTheme.bodyMedium, 
                       fontSize:12,
                     ),
                   );
