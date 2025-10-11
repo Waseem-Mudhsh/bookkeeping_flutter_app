@@ -55,7 +55,7 @@ class _RecentTransactionsSection extends ConsumerWidget {
               style: theme.textTheme.bodyMedium,
               fontWeight: FontWeight.w600,
               colorText: theme.colorScheme.primary,
-              fontSize: 12,
+              fontSize: 10,
             ),
             Spacer(),
             CustomIconButton(

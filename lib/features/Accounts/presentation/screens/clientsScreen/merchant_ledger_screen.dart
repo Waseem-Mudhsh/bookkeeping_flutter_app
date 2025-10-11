@@ -170,7 +170,7 @@ class MerchantLedgerScreen extends ConsumerWidget {
         ],
           initialTabIndex: 0,
            hasLeading: false,
-            toolbarHeight: 120,),
+            toolbarHeight: 90,),
        bottomNavigationBar: FinancialBottomNavBar( creditBalance: merchantProfile.creditBalance, debitBalance: merchantProfile.debitBalance,),
     );
   }
@@ -193,7 +193,7 @@ class MerchantLedgerScreen extends ConsumerWidget {
               style: theme.textTheme.bodyMedium,
               
               fontSize: 10,
-              colorText: theme.colorScheme.primary,
+              colorText: theme.colorScheme.onSurfaceVariant,
             ),
           ],
         );
@@ -315,7 +315,7 @@ class _TransactionTable extends ConsumerWidget {
               style: theme.textTheme.bodyMedium,
               fontWeight: FontWeight.w600,
               colorText: theme.colorScheme.secondary,
-              fontSize: 12,
+              fontSize: 10,
             ),
             Spacer(),
             CustomIconButton(

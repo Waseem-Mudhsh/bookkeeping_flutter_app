@@ -289,10 +289,12 @@ class _BeneficiariesScreenState extends ConsumerState<BeneficiariesScreen> {
     final result = await showCustomDialog<bool>(
       barrierDismissible: false,
       context: context,
-      titleWidget: CustomAutoSizeText(text: 'تعديل مستفيد',
+      titleWidget: CustomAutoSizeText(
+        text: 'تعديل مستفيد',
       style: theme.textTheme.bodyMedium,
       fontSize: 12,
       colorText: theme.colorScheme.onPrimary,
+      fontWeight: FontWeight.bold,
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -337,7 +339,7 @@ class _BeneficiariesScreenState extends ConsumerState<BeneficiariesScreen> {
           },
          backgroundColor: theme.colorScheme.secondary,
          text: 'حفظ',
-          width: 100, height: 40,
+          width: 100, height: 30,
         ),
       ],
     );

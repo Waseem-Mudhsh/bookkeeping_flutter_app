@@ -197,7 +197,7 @@ Future<T?> showCustomAlert<T>({
         Expanded(
           child: CustomAutoSizeText(
            text: title,
-            fontSize: 14,
+            fontSize: 12,
               fontWeight: FontWeight.bold,
             colorText: theme.colorScheme.onPrimary,
           ),
@@ -214,16 +214,6 @@ Future<T?> showCustomAlert<T>({
       fontWeight: FontWeight.w700,
     ),
     actions: [
-      if (showCancel)
-        CustomButton(
-          onPressed: onCancel ?? () => Navigator.pop(context),
-          backgroundColor: theme.colorScheme.surfaceContainerLowest,
-          width: 100,
-          text: cancelText,
-          textColor: theme.colorScheme.onSurface,
-          height: 40,
-        ),
-        
       CustomButton(
         onPressed: onConfirm ?? () => Navigator.pop(context),
        
@@ -231,10 +221,21 @@ Future<T?> showCustomAlert<T>({
          width: 100,
          text: confirmText,
          textColor: theme.colorScheme.onPrimary,
-         height: 40,
+         height: 30,
         
         
       ),
+      if (showCancel)
+        CustomButton(
+          onPressed: onCancel ?? () => Navigator.pop(context),
+          backgroundColor: theme.colorScheme.surfaceContainerLowest,
+          width: 100,
+          text: cancelText,
+          textColor: theme.colorScheme.onSurface,
+          height: 30,
+        ),
+        
+      
     ],
   );
 }

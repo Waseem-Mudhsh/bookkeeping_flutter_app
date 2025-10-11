@@ -208,7 +208,7 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
           text: widget.existingAccount == null ? 'إضافة حساب جديد' : 'تعديل حساب',
           style: theme.textTheme.bodyMedium,
           fontWeight: FontWeight.bold,
-          fontSize: 14,
+          fontSize: 12,
           colorText: theme.colorScheme.primary,
         ),
         slivers: [
@@ -277,12 +277,16 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
   Widget _buildAdditionalInfo() {
     final responsive = ref.responsive;
     final theme = ref.theme;
-    return Card(
-      elevation: 4, // Subtle shadow for a professional feel
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return Container(
+     decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.5), width: 0.5),
+        color: theme.colorScheme.surface,
+      ),
+      
       margin: EdgeInsets.zero,
       child: Padding(
-        padding: ref.responsive.paddingAll(8),
+        padding: responsive.paddingAll(4),
         child: CustomExpansionTile(
           title: 'البيانات الإضافية',
           subtitle: 'اختياري',
@@ -298,7 +302,7 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
               suffixIcon: CustomHugeIcon(icon: HugeIcons.strokeRoundedLocation01, color: theme.colorScheme.primary),
             ),
             const ResponsiveSpace(height: 16),
-
+        
             // Notification Switch & Options (using AnimatedSwitcher)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -397,12 +401,15 @@ class _AccountBasicInfoSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context , WidgetRef ref) {
-    final theme = Theme.of(context);
+    final theme = ref.theme;
     final responsive = ref.responsive;
 
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return Container(
+       decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.5), width: 0.5),
+        color: theme.colorScheme.surface,
+      ),
       margin: EdgeInsets.zero,
       child: Padding(
         padding: responsive.paddingAll(16),
@@ -453,7 +460,7 @@ class _AccountBasicInfoSection extends ConsumerWidget {
                       value: type,
                       child: CustomAutoSizeText(
                         text: type,
-                        fontSize: 14,
+                        fontSize: 12,
                         colorText: theme.colorScheme.onSurface,
                       ),
                     ),

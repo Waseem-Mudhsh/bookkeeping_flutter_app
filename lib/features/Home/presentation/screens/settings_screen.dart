@@ -201,15 +201,16 @@ class SettingsScreen extends ConsumerWidget {
         barrierDismissible: false,
         titleWidget: CustomAutoSizeText(
           text: 'إنشاء نسخة احتياطية',
-          fontSize: 14,
+          fontSize: 12,
           fontWeight: FontWeight.bold,
           colorText: theme.colorScheme.onPrimary,
         ),
         content: CustomAutoSizeText(
           text: 'هل أنت متأكد من رغبتك في إنشاء نسخة احتياطية الآن؟',
-          fontSize: 14,
+          fontSize: 12,
           maxLines: 3,
           colorText: theme.colorScheme.onSurface,
+          fontWeight: FontWeight.w700,
         ),
         actions: [
           TextButton(
@@ -221,7 +222,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           CustomButton(
             width: 100,
-            height: 40,
+            height: 30,
             text: 'تأكيد',
             onPressed: () {
               Navigator.of(context).pop();

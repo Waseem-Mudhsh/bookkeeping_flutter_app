@@ -295,7 +295,7 @@ class _TransactionHeader extends StatelessWidget {
       text: isEditing ? 'تعديل العملية' : 'إضافة عملية جديدة',
       style: theme.textTheme.bodyMedium,
       fontWeight: FontWeight.w800, // Extra bold for modern typography
-      fontSize: 14, // Larger font size
+      fontSize: 12, // Larger font size
       colorText: theme.colorScheme.primary,
     );
   }
@@ -344,9 +344,12 @@ class _TransactionInputSection extends ConsumerWidget {
     final theme = ref.theme;
     final responsive = ref.responsive;
 
-    return Card(
-      elevation: 6, // Increased elevation for a modern, floating effect
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), // Rounded corners
+    return Container(
+       decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.5), width: 0.5),
+        color: theme.colorScheme.surface,
+      ),
       margin: EdgeInsets.zero,
       child: Padding(
         padding: responsive.paddingAll(16),

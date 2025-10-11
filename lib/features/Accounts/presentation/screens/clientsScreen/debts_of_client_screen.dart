@@ -220,12 +220,12 @@
 
 
 
+
 import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
 import 'package:bookkeeping_flutter_app/core/base_layout/build_non_tabbar_layout.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/utils/route_names.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/custom_drawer.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/custom_debts_of_client_card.dart';
@@ -234,7 +234,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 import '../../../../Transactions/presentation/widgets/custom_list_transation_item.dart';
-import '../../widgets/financial_bottom_navbar.dart';
 
 // نموذج متجر بسيط
 class StoreModel {
@@ -323,7 +322,7 @@ class _HeaderWidget extends ConsumerWidget {
       text: 'الديون الشخصية',
       style: theme.textTheme.bodyMedium,
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: 12,
       colorText: theme.colorScheme.primary,
     );
   }
@@ -364,7 +363,7 @@ class _RequestsNotificationButton extends ConsumerWidget {
                 if (newRequests > 0)
                   Positioned(
                     right: 0,
-                    top: 0,
+                    top:-1,
                     child: CircleAvatar(
                       
                       backgroundColor: Colors.red.shade700,
@@ -374,7 +373,7 @@ class _RequestsNotificationButton extends ConsumerWidget {
                           text: '$newRequests',
                           style: theme.textTheme.bodySmall,
                             colorText: Colors.white,
-                            fontSize: 10,
+                            fontSize: 8,
                             fontWeight: FontWeight.bold,
                             textAlign: TextAlign.center,
                           
@@ -387,10 +386,10 @@ class _RequestsNotificationButton extends ConsumerWidget {
             const ResponsiveSpace(width: 8),
             CustomAutoSizeText(
               text: 'لديك $newRequests طلب جديد لمشاركة الديون',
-              style: theme.textTheme.bodyMedium,
+              style: theme.textTheme.bodySmall,
               fontWeight: FontWeight.bold,
               colorText: theme.colorScheme.onSecondary,
-              fontSize: 12,
+              fontSize: 10,
             ),
             const Spacer(),
             CustomHugeIcon(
@@ -422,7 +421,7 @@ class _StoresPreviewWidget extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             CustomAutoSizeText(
-              text: 'أهم المتاجر',
+              text: 'المتاجر',
               style: theme.textTheme.bodyMedium,
               fontWeight: FontWeight.w600,
               colorText: theme.colorScheme.primary,
@@ -477,8 +476,8 @@ class _StoreCard extends ConsumerWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) => RouteNames.merchantLedgerScreen.screen));
       },
       child: Container(
-        width: responsive.w(120),
-        height: responsive.h(120),
+        width: responsive.w(100),
+        height: responsive.h(100),
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerLowest,
           borderRadius: BorderRadius.circular(12),
@@ -488,11 +487,13 @@ class _StoreCard extends ConsumerWidget {
           padding: responsive.paddingSym(h: 8, v: 4),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               CircleAvatar(
                 
-                backgroundImage: Image.asset(store.imageUrl).image,
+                backgroundImage: Image.asset(store.imageUrl,
+                fit: BoxFit.scaleDown,
+                ).image,
                 radius: 22,
               ),
               
@@ -502,17 +503,8 @@ class _StoreCard extends ConsumerWidget {
                 fontWeight: FontWeight.w800,
                 colorText: theme.colorScheme.primary,
                 maxLines: 1,
-                fontSize: 12,
-                
-              ),
-              // const ResponsiveSpace(height: 2),
-              CustomAutoSizeText(
-                text:  store.type,
-                style: theme.textTheme.bodySmall,
-                fontWeight: FontWeight.w600,
-                colorText: theme.colorScheme.primary,
-                maxLines: 1,
                 fontSize: 10,
+                
               ),
               // const ResponsiveSpace(height: 2),
               CustomAutoSizeText(

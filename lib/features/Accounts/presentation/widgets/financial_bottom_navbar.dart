@@ -145,7 +145,7 @@ class FinancialBottomNavBar extends ConsumerWidget {
     );
   }
   Widget _buildNetBalanceView(double netBalanceAbsolute, ThemeData theme, Color netColor) {
-    debugPrint('_buildNetBalanceView: $netBalanceAbsolute');
+    
     return  Container(
              padding: const EdgeInsets.symmetric(horizontal: 4,),
               decoration: BoxDecoration(
@@ -159,7 +159,7 @@ class FinancialBottomNavBar extends ConsumerWidget {
                 ]
               ),
               child: BalanceItem(
-                label: 'الصافي',
+                label: 'الرصيد',
                 amount: netBalanceAbsolute,
                 color: netColor, // يتم تجاهل هذا اللون لأن الخلفية هي الأساس
                 isLarge: true,

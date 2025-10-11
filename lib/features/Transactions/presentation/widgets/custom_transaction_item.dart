@@ -209,7 +209,7 @@ class CustomTransactionItem extends ConsumerWidget {
         fontWeight: FontWeight.w600,
         colorText: theme.colorScheme.onSurface,
         style: theme.textTheme.bodyMedium,
-        maxLines: 10,
+        maxLines: 3,
         overflow: TextOverflow.ellipsis,
         fontSize: 12,
       ),

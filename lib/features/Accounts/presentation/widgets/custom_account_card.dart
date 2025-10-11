@@ -134,11 +134,14 @@ class CustomAccountCard extends ConsumerWidget {
                         text: 'هل أنت متأكد أنك تريد حذف هذا الحساب؟',
                         style: theme.textTheme.bodyMedium,
                         fontSize: 12,
+                        colorText: theme.colorScheme.onSurface,
+                        fontWeight: FontWeight.w700,
                       ),
                       ResponsiveSpace(height: 8),
                       CustomAutoSizeText(
                         text: 'سيتم حذف جميع المعاملات المرتبطة بهذا الحساب.',
                         style: theme.textTheme.bodyMedium,
+                        fontWeight: FontWeight.w500,
                         fontSize: 12,
                         colorText: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
@@ -158,7 +161,7 @@ class CustomAccountCard extends ConsumerWidget {
                        CustomButton(
                         text: 'حذف',
                         width: 100,
-                        height: 40,
+                        height: 30,
                         onPressed: () {
                     Navigator.pop(context);
                           

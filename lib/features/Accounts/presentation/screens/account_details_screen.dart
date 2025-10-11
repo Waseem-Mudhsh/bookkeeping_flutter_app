@@ -14,7 +14,6 @@ import '../../../../core/widgets/custom_auto_size_text.dart';
 import '../../../../core/widgets/responsive_space.dart';
 import '../../../Transactions/presentation/widgets/transaction_list.dart';
 import '../../domain/entities/account.dart';
-import '../widgets/balance_card.dart';
 
 
 
@@ -73,7 +72,7 @@ class AccountDetailsScreen extends ConsumerWidget {
           initialTabIndex: 0,
            hasLeading: false,
           //  isScrollableTabs: true,
-            toolbarHeight: 120,
+            toolbarHeight: 90,
         tabViews: [
           CustomTabViewContainer(responsive: responsive,
           child: _buildTransactionListByCurrency(context,ref)),
@@ -248,67 +247,7 @@ class AccountDetailsScreen extends ConsumerWidget {
     
   }
 
-  // Dialog for setting account limit
-  void _showAccountLimitDialog(BuildContext context) {
-    final theme = Theme.of(context);
-
-    showCustomDialog(
-      context: context,
-      barrierDismissible: true,
-      titleWidget: CustomAutoSizeText(
-        text: 'تعديل سقف الحساب',
-        fontSize: 14,
-        fontWeight: FontWeight.bold,
-        colorText: theme.colorScheme.onPrimary,
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomAutoSizeText(
-            text: '  الحالي: 20000 سقف الحساب',
-            fontSize: 12,
-            textAlign: TextAlign.center,
-            colorText: theme.colorScheme.onSurface,
-            style: theme.textTheme.bodyMedium,
-            fontWeight: FontWeight.w700,
-          ),
-          ResponsiveSpace(height: 16),
-          CustomAutoSizeText(
-            text: 'هل تريد تعديل سقف الحساب؟',
-            fontSize: 12,
-            textAlign: TextAlign.center,
-            colorText: theme.colorScheme.onSurface,
-          ),
-          ResponsiveSpace(height: 16),
-          
-        ],
-        
-      ),
-      actions: [
-        CustomButton(
-          text: 'اغلاق',
-          backgroundColor: theme.colorScheme.surfaceContainerLowest,
-          textColor: theme.colorScheme.onSurface,
-          width: 100,
-          height:  40,
-          onPressed: () {
-            // Implement account limit functionality here
-            Navigator.pop(context);
-          }, 
-        ),
-        CustomButton(
-          text: 'تعديل',
-          backgroundColor: theme.colorScheme.primary,
-          textColor: theme.colorScheme.onPrimary,
-          width: 100,
-          height:  40,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ]
-    );
-  }
+  
 
   // Dialog for generating report
   void _showReportDialog(BuildContext context) {
@@ -319,9 +258,9 @@ class AccountDetailsScreen extends ConsumerWidget {
       barrierDismissible: true,
       titleWidget: CustomAutoSizeText(
         text: 'تقرير الحساب',
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: FontWeight.bold,
-        colorText: theme.colorScheme.primary,
+        colorText: theme.colorScheme.onPrimary,
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -329,53 +268,46 @@ class AccountDetailsScreen extends ConsumerWidget {
           CustomAutoSizeText(
             text: 'هل تريد إنشاء تقرير عن الحساب: ${account?.name ?? "هذا الحساب"}',
             fontSize: 12,
-            textAlign: TextAlign.center,
+            
             colorText: theme.colorScheme.onSurface,
+            style: theme.textTheme.bodyMedium,
+            fontWeight: FontWeight.w700,
           ),
-          ResponsiveSpace(height: 16),
+          ResponsiveSpace(height: 8),
           CustomAutoSizeText(
             text: 'سيتم إنشاء تقرير شامل يحتوي على جميع العمليات والحسابات',
             fontSize: 12,
-            textAlign: TextAlign.center,
+            
             colorText: theme.colorScheme.onSurface,
+            style: theme.textTheme.bodyMedium,
+            fontWeight: FontWeight.w500,
+            maxLines: 2,
           ),
-          ResponsiveSpace(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
+          
+          
+        ],
+      ),
+      actions: [
+        CustomButton(
                 onPressed: () {
                   // Implement report generation functionality here
                   Navigator.pop(context);
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.primary,
-                  minimumSize: Size(80, 30),
-                ),
-                child: CustomAutoSizeText(
-                  text: 'إنشاء',
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  colorText: theme.colorScheme.onPrimary,
-                ),
+                 backgroundColor: theme.colorScheme.primary,
+                width: 80,
+                height: 30,
+                text: 'إنشاء تقرير',
+                
               ),
-              OutlinedButton(
-                onPressed: () => Navigator.pop(context),
-                style: OutlinedButton.styleFrom(
-                  minimumSize: Size(80, 30),
-                  side: BorderSide(color: theme.colorScheme.primary),
-                ),
-                child: CustomAutoSizeText(
-                  text: 'إلغاء',
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  colorText: theme.colorScheme.primary,
-                ),
-              ),
-            ],
+              TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: CustomAutoSizeText(
+              text: 'إلغاء',
+              colorText: theme.colorScheme.onSurface,
+            ),
           ),
-        ],
-      ),
+
+      ],
     );
   }
 }
