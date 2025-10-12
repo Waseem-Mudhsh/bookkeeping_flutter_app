@@ -34,7 +34,7 @@ class CustomTransactionItemOfClient extends ConsumerWidget {
         ),
        onTap: onTap,
         contentPadding: responsive.paddingSym(h: 16, v: 8),
-        titleAlignment: ListTileTitleAlignment.center,
+        titleAlignment: ListTileTitleAlignment.top,
       
         
         // TITLE: Transaction Details (البيان)

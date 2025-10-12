@@ -70,6 +70,9 @@ class CustomButton extends ConsumerWidget {
             )
           : CustomAutoSizeText(
               text: text,
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+              style: theme.textTheme.bodyMedium,
               colorText: textColor ?? theme.colorScheme.onPrimary,
             ),
     );

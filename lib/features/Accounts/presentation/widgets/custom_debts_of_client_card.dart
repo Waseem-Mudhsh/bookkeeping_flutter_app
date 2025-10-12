@@ -1,6 +1,5 @@
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/custom_button.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,7 +34,7 @@ class CurrencyDebt {
 
 // Provider وهمي للبيانات
 final multiCurrencyDebtProvider = FutureProvider<MultiCurrencyDebtModel>((ref) async {
-  await Future.delayed(const Duration(milliseconds: 800));
+  await Future.delayed(const Duration(milliseconds: 400));
   return const MultiCurrencyDebtModel(
     clientName: 'أحمد محمود',
     debts: [
@@ -87,54 +86,42 @@ class CustomDebtsOfClientCard extends ConsumerWidget {
         ),
       ),
       data: (data) {
-        return Card(
-          
-         
-          elevation: 6,
-          child: Container(
-            decoration: BoxDecoration(
-            gradient: LinearGradient(
-              tileMode: TileMode.decal,
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                theme.colorScheme.primary,
-                theme.colorScheme.primary.withValues(alpha: 0.8),
-              ],
-            
-            ),
+        return Container(
+          decoration: BoxDecoration(
+          gradient: LinearGradient(
            
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.primary,
+              theme.colorScheme.primary.withValues(alpha: 0.8),
+            ],
+          
           ),
-            child: Padding(
-              padding: responsive.paddingAll(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                 
-                  
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      _buildDebtStatusIcon(true, theme),
-                      const ResponsiveSpace(width: 8),
-                      CustomAutoSizeText(
-                        text: 'إجمالي ديوني المستحقة',
-                        style: theme.textTheme.titleMedium,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        colorText: theme.colorScheme.onPrimary.withValues(alpha: 0.9),
-                      ),
-                    ],
-                  ),
-                  const ResponsiveSpace(height: 16),
-                  _buildBalanceInfoCurrencies(theme, data.debts),
-                  const ResponsiveSpace(height: 16),
-                  _buildCallToActionButton(context, theme),
-                ],
-              ),
+          borderRadius: BorderRadius.circular(12),
+         
+        ),
+          child: Padding(
+            padding: responsive.paddingAll(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+               
+                
+                CustomAutoSizeText(
+                  text: 'إجمالي ديوني المستحقة',
+                  style: theme.textTheme.titleMedium,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                  colorText: theme.colorScheme.onPrimary.withValues(alpha: 0.9),
+                ),
+                const ResponsiveSpace(height: 12),
+                _buildBalanceInfoCurrencies(theme, data.debts),
+                
+        
+                
+              ],
             ),
           ),
         );
@@ -182,10 +169,17 @@ class CustomDebtsOfClientCard extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CustomHugeIcon(
-              icon: icon,
-              color: balanceColor,
-              size: 16,
+            Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: balanceColor,
+                shape: BoxShape.circle,
+              ),
+              child: CustomHugeIcon(
+                icon: icon,
+                color: Colors.white,
+                size: 10,
+              ),
             ),
             ResponsiveSpace(width: 4),
             CustomAutoSizeText(
@@ -193,7 +187,7 @@ class CustomDebtsOfClientCard extends ConsumerWidget {
               fontWeight: FontWeight.w700,
               colorText: theme.colorScheme.onPrimary.withValues(alpha: 0.9),
               style: theme.textTheme.bodySmall,
-              fontSize: 12,
+              fontSize: 10,
             ),
           ],
         ),
@@ -209,7 +203,7 @@ class CustomDebtsOfClientCard extends ConsumerWidget {
             fontWeight: FontWeight.bold,
             colorText: theme.colorScheme.onPrimary,
             style: theme.textTheme.bodyMedium,
-            fontSize: 12,
+            fontSize: 10,
             maxLines: 1,
           ),
         ),
@@ -219,32 +213,7 @@ class CustomDebtsOfClientCard extends ConsumerWidget {
 
   
 
-  Widget _buildDebtStatusIcon(bool isInDebt, ThemeData theme) {
-    return CircleAvatar(
-      backgroundColor: isInDebt ? Colors.red.shade700 : Colors.green.shade700,
-      radius: 12,
-      child: Icon(
-        isInDebt
-            ? HugeIcons.strokeRoundedArrowUpRight01
-            : HugeIcons.strokeRoundedArrowDownRight01,
-        size: 14,
-        color: Colors.white,
-      ),
-    );
-  }
+  
 
-  Widget _buildCallToActionButton(BuildContext context, ThemeData theme) {
-    return ResponsiveSpace(
-      width: double.infinity,
-      child: CustomButton(
-        
-        onPressed: () {
-          // Add navigation or action here.
-        },
-        text: 'عرض تفاصيل الدين',
-        backgroundColor:theme.colorScheme.onPrimary,
-        textColor: theme.colorScheme.primary,
-      ),
-    );
-  }
+  
 }

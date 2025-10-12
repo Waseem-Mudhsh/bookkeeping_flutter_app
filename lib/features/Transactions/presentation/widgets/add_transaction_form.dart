@@ -139,9 +139,10 @@ class _AddTransactionFormState extends ConsumerState<AddTransactionForm> {
                   ? 'تم إضافة العملية بنجاح!'
                   : 'تم تعديل العملية بنجاح!',
                 fontSize: 10,
-                colorText: Colors.white,
+                colorText: ref.theme.colorScheme.onPrimary,
+                style: ref.theme.textTheme.bodySmall,
             ),
-            backgroundColor: Colors.green,
+            backgroundColor:ref.theme.colorScheme.primary,
           ),
         );
         Navigator.pop(context);

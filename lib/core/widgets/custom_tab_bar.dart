@@ -75,7 +75,6 @@ class CustomTabBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.theme;
-    final responsive = ref.responsive;
 
     return Container(
       decoration: BoxDecoration(

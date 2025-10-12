@@ -52,6 +52,7 @@ class AccountsListSection extends ConsumerWidget {
             child: CustomEmptyState(
               message: 'لا يوجد حسابات',
               subMessage: 'يمكنك إضافة حسابات جديدة من خلال زر الإضافة',
+              icon: HugeIcons.strokeRoundedUserAdd02,
               
             ),
           ),

@@ -2,7 +2,6 @@ import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_expansion_tile.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
-import 'package:bookkeeping_flutter_app/features/Accounts/domain/entities/main_account.dart';
 import 'package:bookkeeping_flutter_app/features/Transactions/domain/entities/transaction_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -49,12 +48,12 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
   late TextEditingController _balanceController;
   late TextEditingController _notesController;
 
-  late List<MainAccountModel> listMockAccountTypes = [];
+  
   late List<Currency> currencies = [];
 
   // State Variables
   late Currency currencySelected;
-  MainAccountModel? accountTypeSelected;
+  
   String? categorySelected;
   TransactionType? debtorOption;
   String? currentOption;
@@ -76,7 +75,7 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
   }
 
   void _initializeState() {
-    listMockAccountTypes = mainAccounts;
+    
     categorySelected = categories.first;
 
     // Currency setup
@@ -101,7 +100,7 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
     );
 
     // Default or existing account setup
-    accountTypeSelected = listMockAccountTypes.first;
+    
     debtorOption = widget.existingAccount?.debtor != 0
         ? TransactionType.debit
         : TransactionType.credit;
@@ -138,7 +137,7 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
         debtor: debtorOption == TransactionType.debit ? double.tryParse(_balanceController.text) ?? 0 : 0,
         creditor: debtorOption == TransactionType.credit ? double.tryParse(_balanceController.text) ?? 0 : 0,
         createdAt: DateTime.now(),
-        mainAccountId: accountTypeSelected!.id,
+        
         phoneNumber: _phoneController.text,
       );
 
@@ -285,91 +284,88 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
       ),
       
       margin: EdgeInsets.zero,
-      child: Padding(
-        padding: responsive.paddingAll(4),
-        child: CustomExpansionTile(
-          title: 'البيانات الإضافية',
-          subtitle: 'اختياري',
-          leading: HugeIcons.strokeRoundedInformationSquare,
-          isExpanded: false,
-          children: [
-            const ResponsiveSpace(height: 12),
-            CustomTextField(
-              controller: _notesController,
-              label: 'العنوان',
-              hint: 'أضف العنوان...',
-              keyboardType: TextInputType.text,
-              suffixIcon: CustomHugeIcon(icon: HugeIcons.strokeRoundedLocation01, color: theme.colorScheme.primary),
-            ),
-            const ResponsiveSpace(height: 16),
-        
-            // Notification Switch & Options (using AnimatedSwitcher)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Switch Tile
-                Padding(
-                  padding:  responsive.paddingSym(h: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomAutoSizeText(
-                        text: 'تفعيل خدمة الإشعارات',
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        colorText: theme.colorScheme.onSurface,
-                      ),
-                      Switch(
-                        value: _isNotificationEnabled,
-                        onChanged: (value) => setState(() => _isNotificationEnabled = value),
-                        
-                      ),
-                    ],
-                  ),
+      child: CustomExpansionTile(
+        title: 'البيانات الإضافية',
+        subtitle: 'اختياري',
+        leading: HugeIcons.strokeRoundedInformationSquare,
+        isExpanded: false,
+        children: [
+          const ResponsiveSpace(height: 12),
+          CustomTextField(
+            controller: _notesController,
+            label: 'العنوان',
+            hint: 'أضف العنوان...',
+            keyboardType: TextInputType.text,
+            suffixIcon: CustomHugeIcon(icon: HugeIcons.strokeRoundedLocation01, color: theme.colorScheme.primary),
+          ),
+          const ResponsiveSpace(height: 16),
+      
+          // Notification Switch & Options (using AnimatedSwitcher)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Switch Tile
+              Padding(
+                padding:  responsive.paddingSym(h: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomAutoSizeText(
+                      text: 'تفعيل خدمة الإشعارات',
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      colorText: theme.colorScheme.onSurface,
+                    ),
+                    Switch(
+                      value: _isNotificationEnabled,
+                      onChanged: (value) => setState(() => _isNotificationEnabled = value),
+                      
+                    ),
+                  ],
                 ),
-            
-                // Animated Notification Options
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  transitionBuilder: (child, animation) => SizeTransition(sizeFactor: animation, child: FadeTransition(opacity: animation, child: child)),
-                  child: _isNotificationEnabled
-                      ? Column(
-                          key: const ValueKey('notification_options'),
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomAutoSizeText(
-                              text: 'إرسال الإشعارات عبر:',
-                              style: theme.textTheme.bodySmall,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                              colorText: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                            ),
-                            ResponsiveSpace(height: 8),
-                            Row(
-                              children: [
-                                _NotificationOption(
-                                  label: 'الواتساب',
-                                  value: 'الواتساب',
-                                  groupValue: currentOption,
-                                  onChanged: (value) => setState(() => currentOption = value),
-                                ),
-                                _NotificationOption(
-                                  label: 'رسائل SMS',
-                                  value: 'رسائل SMS',
-                                  groupValue: currentOption,
-                                  onChanged: (value) => setState(() => currentOption = value),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink(key: ValueKey('empty')),
-                ),
-              ],
-            ),
-            
-          ],
-        ),
+              ),
+          
+              // Animated Notification Options
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                transitionBuilder: (child, animation) => SizeTransition(sizeFactor: animation, child: FadeTransition(opacity: animation, child: child)),
+                child: _isNotificationEnabled
+                    ? Column(
+                        key: const ValueKey('notification_options'),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomAutoSizeText(
+                            text: 'إرسال الإشعارات عبر:',
+                            style: theme.textTheme.bodySmall,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                            colorText: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                          ),
+                          ResponsiveSpace(height: 8),
+                          Row(
+                            children: [
+                              _NotificationOption(
+                                label: 'الواتساب',
+                                value: 'الواتساب',
+                                groupValue: currentOption,
+                                onChanged: (value) => setState(() => currentOption = value),
+                              ),
+                              _NotificationOption(
+                                label: 'رسائل SMS',
+                                value: 'رسائل SMS',
+                                groupValue: currentOption,
+                                onChanged: (value) => setState(() => currentOption = value),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : const SizedBox.shrink(key: ValueKey('empty')),
+              ),
+            ],
+          ),
+          
+        ],
       ),
     );
   }

@@ -72,7 +72,8 @@ class SettingsScreen extends ConsumerWidget {
         RadioListTile<String>(
           title: CustomAutoSizeText( text: 'العربية',
            style: theme.textTheme.bodySmall,
-           fontSize: 12,
+           fontSize: 10,
+           fontWeight: FontWeight.w700
            ),
           value: 'ar',
           groupValue: selectedLanguage,
@@ -81,7 +82,8 @@ class SettingsScreen extends ConsumerWidget {
         RadioListTile<String>(
            title: CustomAutoSizeText( text: 'English',
             style: theme.textTheme.bodySmall,
-            fontSize: 12,
+            fontSize: 10,
+            fontWeight: FontWeight.w700
             ),
           value: 'en',
           groupValue: selectedLanguage,
@@ -102,7 +104,9 @@ class SettingsScreen extends ConsumerWidget {
         RadioListTile<bool>(
           title: CustomAutoSizeText( text: 'فاتح',
           style: theme.textTheme.bodySmall,
-          fontSize: 12,),
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+          ),
           value: false,
           groupValue: isDark,
           onChanged: (value) => ref.read(settingsProvider.notifier).toggleDarkMode(value!),
@@ -110,7 +114,8 @@ class SettingsScreen extends ConsumerWidget {
         RadioListTile<bool>(
            title: CustomAutoSizeText( text: 'داكن',
            style: theme.textTheme.bodySmall,
-          fontSize: 12,),
+          fontSize: 10,
+          fontWeight: FontWeight.w700,),
           value: true,
           groupValue: isDark,
           onChanged: (value) => ref.read(settingsProvider.notifier).toggleDarkMode(value!),
@@ -142,7 +147,8 @@ class SettingsScreen extends ConsumerWidget {
         RadioListTile<String>(
           title: CustomAutoSizeText( text: 'ريال سعودي (SAR)',
           style: theme.textTheme.bodySmall,
-          fontSize: 12,),
+          fontSize: 10,
+          fontWeight: FontWeight.w700,),
           value: 'SAR',
           groupValue: selectedCurrency,
           onChanged: (value) => ref.read(currencyProvider.notifier).state = value!,
@@ -150,7 +156,8 @@ class SettingsScreen extends ConsumerWidget {
         RadioListTile<String>(
           title: CustomAutoSizeText( text: 'دولار امريكي (USD)', 
           style: theme.textTheme.bodySmall,
-          fontSize: 12,),
+          fontSize: 10,
+          fontWeight: FontWeight.w700,),
           value: 'USD',
           groupValue: selectedCurrency,
           onChanged: (value) => ref.read(currencyProvider.notifier).state = value!,
@@ -158,7 +165,8 @@ class SettingsScreen extends ConsumerWidget {
         RadioListTile<String>(
            title: CustomAutoSizeText( text: 'ريال يمني (YER)',
            style: theme.textTheme.bodySmall,
-          fontSize: 12,),
+          fontSize: 10,
+          fontWeight: FontWeight.w700,),
           value: 'YER',
           groupValue: selectedCurrency,
           onChanged: (value) => ref.read(currencyProvider.notifier).state = value!,
@@ -273,11 +281,14 @@ class _SettingsSection extends ConsumerWidget {
             fontSize: 12,
           ),
           const ResponsiveSpace(height: 12),
-          Card(
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+          Container(
+            decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.5), width: 0.5),
+        color: theme.colorScheme.surface,
+      ),
+      margin: EdgeInsets.zero,
+
             child: Column(
               children: children.map((item) {
                 return Column(
@@ -360,7 +371,7 @@ class _SettingsListTile extends ConsumerWidget {
             Expanded(
               child: CustomAutoSizeText(
                 text: title,
-                fontSize: 12,
+                fontSize: 10,
                 fontWeight: FontWeight.w700,
                 colorText: theme.colorScheme.onSurface,
               ),

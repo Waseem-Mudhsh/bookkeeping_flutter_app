@@ -132,7 +132,7 @@ class CustomTextField extends ConsumerWidget {
             labelStyle ??
             theme.textTheme.bodySmall!.copyWith(
               color: theme.colorScheme.onSurface,
-              fontSize: 12,
+              fontSize: 10,
               fontWeight: FontWeight.w300,
             ),
         hintText: hint,
@@ -140,7 +140,8 @@ class CustomTextField extends ConsumerWidget {
             hintStyle ??
             theme.textTheme.bodySmall!.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-              fontSize: 12,
+              fontSize: 10,
+              fontWeight: FontWeight.w300,
             ),
         suffixIcon: Container(
           

@@ -1,8 +1,10 @@
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 
 class CustomEmptyState extends ConsumerWidget {
@@ -26,12 +28,12 @@ class CustomEmptyState extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-           Icon(icon ?? Icons.people_alt_outlined, size: 64, color: Colors.grey),
+           CustomHugeIcon(icon:  icon ?? HugeIcons.strokeRoundedUserAdd02, size: 64, color: Colors.grey),
           const ResponsiveSpace(height: 16),
           CustomAutoSizeText(
           text:  message,
           colorText: theme.colorScheme.onSurface,
-          style: theme.textTheme.headlineSmall,
+          style: theme.textTheme.bodyMedium,
           textAlign: TextAlign.center,
            maxLines: 3,
           ),

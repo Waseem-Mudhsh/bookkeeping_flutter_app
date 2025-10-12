@@ -126,29 +126,7 @@ class MerchantLedgerScreen extends ConsumerWidget {
 
    
     return BaseLayoutScreen(
-      // body: BuildNonTabbarLayout(
-
-      //   // Custom Header with client name
-      //   titleWidget:_buildHeader(theme,merchantProfile),
-       
-      //   slivers: [
-      //     SliverToBoxAdapter(
-      //       child: ResponsiveSpace( height: 16,),
-      //     ),
-      //     SliverToBoxAdapter(
-      //       child: CustomSegmentedButton(
-      //         nameButtons: ['يمني', 'سعودي', 'دولار',],
-      //         contentButtons:[
-      //           _buildMershantListByCurrency(),
-      //           _buildMershantListByCurrency(),
-      //           _buildMershantListByCurrency(),
-              
-      //         ] ,
-      //          ),
-      //     ),
-          
-      //   ],
-      // ),
+      
       body: BuildTabBarLayout(
         
              titleWidget: _buildHeader(theme,merchantProfile),
@@ -226,9 +204,7 @@ class MerchantLedgerScreen extends ConsumerWidget {
       children: [
         // 1. Remaining Balance Card (The "Countdown" section)
          ResponsiveSpace(height: 8),
-              //  BalanceCard(ceilingAmount: merchantProfile.ceilingAmount??20200,
-              //   remainingBalance: merchantProfile.remainingBalance,),
-              //    ResponsiveSpace(height: 16),
+             
 
                 // 2. Client Actions Row
                 _ClientActionsRow(

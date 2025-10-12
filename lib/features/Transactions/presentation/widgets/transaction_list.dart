@@ -90,6 +90,7 @@ class _RecentTransactionsSection extends ConsumerWidget {
                     child: CustomEmptyState(
                       message: 'لا توجد عمليات حديثة.',
                       subMessage: 'يمكنك إضافة عمليات جدد من خلال زر الإضافة ',
+                      icon: HugeIcons.strokeRoundedMoneyAdd01,
                     ),
                   ),
                 ...transactions.reversed.map((transaction) {

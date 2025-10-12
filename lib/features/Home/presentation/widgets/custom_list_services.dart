@@ -31,12 +31,12 @@ class CustomListServices extends ConsumerWidget {
     {
       'name': 'إدارة العقار',
       'icon': HugeIcons.strokeRoundedBuilding01,
-      'route': RouteNames.accounts,
+      'route': RouteNames.finance,
     },
     {
       'name': 'القياسات',
       'icon': HugeIcons.strokeRoundedTapeMeasure,
-      'route': RouteNames.animationList,
+      'route': RouteNames.finance,
     },
     {
       'name': 'الديون الشخصية',
@@ -47,7 +47,7 @@ class CustomListServices extends ConsumerWidget {
     {
       'name': 'إعدادات النظام',
       'icon': HugeIcons.strokeRoundedSettings01,
-      'route': RouteNames.finance,
+      'route': RouteNames.settings,
     },
   ];
 

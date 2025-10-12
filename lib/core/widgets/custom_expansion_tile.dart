@@ -58,7 +58,7 @@ class _CustomExpansionTileState extends ConsumerState<CustomExpansionTile> {
      
       ) : null,
       
-      collapsedShape:  _isBorder! ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)) : null,
+      collapsedShape:  _isBorder! ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)) : null,
       
       backgroundColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.2),
       textColor: theme.colorScheme.onPrimaryContainer,

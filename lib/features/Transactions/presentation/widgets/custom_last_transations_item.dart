@@ -7,8 +7,8 @@ import 'package:hugeicons/hugeicons.dart';
 
 import '../../../../core/widgets/custom_auto_size_text.dart';
 
-class CustomListTransationItem extends ConsumerWidget {
-  const CustomListTransationItem({super.key});
+class CustomLastTransationsItem extends ConsumerWidget {
+  const CustomLastTransationsItem({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -100,7 +100,7 @@ class CustomListTransationItem extends ConsumerWidget {
           style: theme.textTheme.bodyMedium,
           fontSize: 12,
         ),
-        ResponsiveSpace(height: 6),
+        ResponsiveSpace(height: 8),
         CustomAutoSizeText(
           text:
               '2024/6/15',

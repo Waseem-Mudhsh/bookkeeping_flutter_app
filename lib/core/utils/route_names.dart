@@ -3,7 +3,6 @@ import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/a
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/add_new_account_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/beneficiaries_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Home/presentation/screens/home_main_screen.dart';
-import 'package:bookkeeping_flutter_app/features/Home/presentation/widgets/animated_list.dart';
 import 'package:flutter/material.dart';
 
 import '../../features/Accounts/presentation/screens/clientsScreen/debts_of_client_screen.dart';
@@ -24,7 +23,7 @@ enum RouteNames {
   accounts,
   notifications,
   accountDetails,
-  animationList,
+  
   debtsOfClientScreen,
   merchantLedgerScreen,
   accountCeilingScreen,
@@ -46,8 +45,7 @@ enum RouteNames {
         return NotificationsScreen(mockNotifications: []);
       case RouteNames.accountDetails:
         return AccountDetailsScreen();
-      case RouteNames.animationList:
-        return AnimatedListDemo();
+      
       case RouteNames.debtsOfClientScreen:
         return DebtsOfClientScreen();
       case RouteNames.merchantLedgerScreen:
