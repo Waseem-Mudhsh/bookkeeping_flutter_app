@@ -27,7 +27,7 @@ class SettingsScreen extends ConsumerWidget {
       body: BuildNonTabbarLayout(
         titleWidget: CustomAutoSizeText(
           text: 'الإعدادات',
-          fontSize: 14,
+          fontSize: 12,
           style: theme.textTheme.bodyMedium,
           fontWeight: FontWeight.bold,
           colorText: theme.colorScheme.primary,

@@ -1,7 +1,8 @@
+
 import 'package:bookkeeping_flutter_app/core/providers/media_query_provider.dart';
 import 'package:bookkeeping_flutter_app/core/providers/settings_provider.dart';
 import 'package:bookkeeping_flutter_app/core/providers/theme_data_provider.dart';
-import 'package:bookkeeping_flutter_app/features/Home/presentation/screens/home_main_screen.dart';
+import 'package:bookkeeping_flutter_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -110,7 +111,7 @@ class _BookkeepingAppState extends ConsumerState<BookkeepingApp> {
         );
       });
     };
-    return HomeMainScreen();
+    return LoginScreen();
     // return  HomeScreen();
   },
 ),

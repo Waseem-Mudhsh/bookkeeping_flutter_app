@@ -1,8 +1,10 @@
+
 import 'package:bookkeeping_flutter_app/features/Accounts/domain/entities/account.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/account_ceiling_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/add_new_account_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/beneficiaries_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Home/presentation/screens/home_main_screen.dart';
+import 'package:bookkeeping_flutter_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../features/Accounts/presentation/screens/clientsScreen/debts_of_client_screen.dart';
@@ -23,7 +25,7 @@ enum RouteNames {
   accounts,
   notifications,
   accountDetails,
-  
+  loginScreen,
   debtsOfClientScreen,
   merchantLedgerScreen,
   accountCeilingScreen,
@@ -36,6 +38,8 @@ enum RouteNames {
         return HomeMainScreen();
       case RouteNames.profile:
         return ProfileScreen();
+      case RouteNames.loginScreen:
+        return LoginScreen();
      
       case RouteNames.finance:
         return FinanceScreen();

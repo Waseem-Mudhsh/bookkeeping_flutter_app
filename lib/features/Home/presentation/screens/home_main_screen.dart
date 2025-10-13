@@ -25,10 +25,10 @@ class HomeMainScreen extends ConsumerWidget {
       drawer: CustomDrawer(),
       body: BuildNonTabbarLayout(
         titleWidget:CustomAutoSizeText(
-          text: 'فكة',
+          text: 'تابع',
           style: theme.textTheme.bodyMedium,
           fontWeight: FontWeight.bold,
-          fontSize: 14,
+          fontSize: 12,
           colorText: theme.colorScheme.primary,
         ),
         actions: [

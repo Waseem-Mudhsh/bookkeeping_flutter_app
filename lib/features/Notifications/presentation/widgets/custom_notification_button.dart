@@ -20,6 +20,7 @@ class CustomNotificationButton extends ConsumerWidget {
     final theme = ref.theme;
     return Stack(
       clipBehavior: Clip.none,
+      
       children: [
         IconButton(
           icon:  CustomHugeIcon(icon: HugeIcons.strokeRoundedNotification01),

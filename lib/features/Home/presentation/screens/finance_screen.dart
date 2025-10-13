@@ -72,7 +72,8 @@ class FinanceScreen extends ConsumerWidget {
         ],
         slivers: [
           SliverToBoxAdapter(child: ResponsiveSpace(height: 16,),),
-          SliverToBoxAdapter(child: AccountsScreen(),)
+          SliverToBoxAdapter(child: AccountsScreen(),),
+          
           
         ]),
       floatingActionButton: FloatingActionButton.extended(

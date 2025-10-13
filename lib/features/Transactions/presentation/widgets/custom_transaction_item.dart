@@ -172,7 +172,7 @@ class CustomTransactionItem extends ConsumerWidget {
         SnackBar(
           content: CustomAutoSizeText(
             fontFamily: 'Cairo',
-            text: 'تم حذف الحساب بنجاح!',
+            text: 'تم حذف العملية بنجاح!',
             colorText:theme.colorScheme.onPrimary,
             fontSize: 12,
           ),

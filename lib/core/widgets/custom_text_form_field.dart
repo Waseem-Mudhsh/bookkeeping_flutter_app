@@ -143,16 +143,7 @@ class CustomTextField extends ConsumerWidget {
               fontSize: 10,
               fontWeight: FontWeight.w300,
             ),
-        suffixIcon: Container(
-          
-          margin: responsive.paddingAll(4),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withValues(alpha: 0.1),
-           
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: suffixIcon,
-        ),
+        suffixIcon: suffixIcon,
 
         prefixIcon: prefixIcon,
 

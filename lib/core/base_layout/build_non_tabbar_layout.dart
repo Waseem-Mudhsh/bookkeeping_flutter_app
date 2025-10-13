@@ -15,6 +15,9 @@ class BuildNonTabbarLayout extends ConsumerWidget {
   final PreferredSize? bottom;
   final bool hasLeading;
   final List<Widget> slivers;
+  final double? padding;
+  final ScrollPhysics? physics;
+
 
   const BuildNonTabbarLayout({
     super.key,
@@ -24,6 +27,8 @@ class BuildNonTabbarLayout extends ConsumerWidget {
     this.bottom,
     this.hasLeading = false,
     required this.slivers,
+    this.padding,
+    this.physics,
   }); 
 
 @override
@@ -33,10 +38,10 @@ Widget build(BuildContext context, WidgetRef ref) {
 
   return CustomScrollView(
    
-    physics: const ClampingScrollPhysics(),
+    physics: physics ?? const ClampingScrollPhysics(),
     slivers: [
       CustomSliverAppBar(
-        toolbarHeight: toolbarHeight ?? responsive.h(50),
+        toolbarHeight:  responsive.h(toolbarHeight ?? 50),
         hasLeading: hasLeading,
         title: titleWidget,
         actions: actions,
@@ -44,7 +49,7 @@ Widget build(BuildContext context, WidgetRef ref) {
       ),
       
       ...slivers.map((sliver) => SliverPadding(
-          padding: responsive.paddingSym(h: 16),
+          padding: responsive.paddingSym(h: padding ?? 16),
           sliver: sliver,
         )),
       

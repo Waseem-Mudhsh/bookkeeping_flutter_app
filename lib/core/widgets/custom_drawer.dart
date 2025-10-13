@@ -130,7 +130,8 @@ class CustomDrawer extends ConsumerWidget {
                   text: 'تسجيل الخروج',
                   onPressed: () {
                     
-                    Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => RouteNames.loginScreen.screen));
                   },
                   backgroundColor: theme.colorScheme.error,
                   textColor: theme.colorScheme.onError,

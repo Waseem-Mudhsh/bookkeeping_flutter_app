@@ -1,4 +1,5 @@
 
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,7 +34,7 @@ class BaseLayoutScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     
-    final responsive = ref.watch(responsiveProvider);
+    final responsive = ref.responsive;
 
     return Scaffold(
       backgroundColor: backgroundColor ,
