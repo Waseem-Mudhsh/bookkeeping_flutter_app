@@ -15,7 +15,7 @@ class SettingsNotifier extends StateNotifier<Map<String, dynamic>> {
       'language': prefs.getString('language') ?? 'ar',
       'isRTL': prefs.getBool('isRTL') ?? true,
       'userName': prefs.getString('userName') ?? 'Waseem User',
-      'userEmail': prefs.getString('userEmail') ?? 'was@gmail.com',
+      'userPhoneNumber': prefs.getString('userPhoneNumber') ?? '123456789',
       'userPassword':prefs.getString('userPassword') ?? '123',
     };
   }
@@ -37,6 +37,14 @@ class SettingsNotifier extends StateNotifier<Map<String, dynamic>> {
     final prefs = await ref.read(sharedPreferencesProvider.future);
     await prefs.setBool('isRTL', value);
     state = {...state, 'isRTL': value};
+  }
+
+  Future<void> registerUser(String username, String phone, String password) async {
+    final prefs = await ref.read(sharedPreferencesProvider.future);
+    await prefs.setString('userName', username);
+    await prefs.setString('userPhoneNumber', phone);
+    await prefs.setString('userPassword', password);
+    state = {...state, 'userName': username, 'userPhoneNumber': phone, 'userPassword': password};
   }
 }
 

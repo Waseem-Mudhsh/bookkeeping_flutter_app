@@ -3,7 +3,6 @@ import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/responsive_notifier.dart';
 
 class BaseLayoutScreen extends ConsumerWidget {
  

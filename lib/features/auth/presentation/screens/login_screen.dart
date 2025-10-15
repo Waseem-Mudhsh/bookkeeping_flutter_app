@@ -238,7 +238,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 CustomTextField(
                   controller: phoneController,
                   label: 'رقم الهاتف',
-                  prefixIcon: Icon(Icons.phone_outlined),
+                  prefixIcon: CustomHugeIcon(icon: HugeIcons.strokeRoundedSmartPhone01,
+                  color: theme.colorScheme.onSurface,),
                   hint: 'ادخل رقم الهاتف',
                   keyboardType: TextInputType.number,
                   // تقييد الإدخال ليكون أرقام فقط وبطول 9
@@ -269,7 +270,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   label: 'كلمة المرور',
                   hint: 'ادخل كلمة المرور',
                   keyboardType: TextInputType.visiblePassword,
-                  prefixIcon: Icon(Icons.lock_outline),
+                  prefixIcon:CustomHugeIcon(icon: HugeIcons.strokeRoundedCircleLock01,
+                  color: theme.colorScheme.onSurface,),
                   suffixIcon: IconButton(
                       icon: CustomHugeIcon(
                        icon: isPasswordVisible ? HugeIcons.strokeRoundedViewOffSlash : HugeIcons.strokeRoundedView,
@@ -293,7 +295,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      // TODO: Implement forgot password logic
+                   
                     },
                     child:CustomAutoSizeText(text: 'هل نسيت كلمة المرور؟',
                       style: theme.textTheme.bodySmall,
@@ -363,9 +365,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       fontSize: 10,
                       colorText: theme.colorScheme.onSurface,
                       ),
+                      const ResponsiveSpace(width: 4),
                       TextButton(
                         onPressed: () {
-                          // TODO: Implement navigation to sign up screen
+                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                            return RouteNames.signUpScreen.screen;
+                          }));
                         },
                         child: CustomAutoSizeText(text:'انشاء حساب جديد',
                           style: theme.textTheme.bodySmall,

@@ -5,6 +5,7 @@ import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/a
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/beneficiaries_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Home/presentation/screens/home_main_screen.dart';
 import 'package:bookkeeping_flutter_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:bookkeeping_flutter_app/features/auth/presentation/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../features/Accounts/presentation/screens/clientsScreen/debts_of_client_screen.dart';
@@ -29,7 +30,8 @@ enum RouteNames {
   debtsOfClientScreen,
   merchantLedgerScreen,
   accountCeilingScreen,
-  beneficiariesScreen;
+  beneficiariesScreen,
+  signUpScreen;
   
 
   Widget get screen {
@@ -58,6 +60,8 @@ enum RouteNames {
         return AccountCeilingScreen();
       case RouteNames.beneficiariesScreen:
         return BeneficiariesScreen();
+      case RouteNames.signUpScreen:
+        return SignUpScreen();
       default:
        return Scaffold(body: Center(child: Text('No screen found')));
     }
@@ -100,4 +104,3 @@ enum TransactionSubRoutes {
     return AddTransactionForm(accountId: accountId, existingTransaction: transaction);
   }
 }
-

@@ -1,15 +1,17 @@
 
 
+import 'package:bookkeeping_flutter_app/core/providers/shared_preferences_provider.dart';
 import 'package:bookkeeping_flutter_app/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:bookkeeping_flutter_app/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:bookkeeping_flutter_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:bookkeeping_flutter_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 // 1. Provider لمصدر البيانات الوهمي
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
-  return MockAuthRemoteDataSource();
+  // قراءة SharedPreferences وتمريرها إلى مصدر البيانات
+  final sharedPrefs = ref.watch(sharedPreferencesProvider).value;
+  return MockAuthRemoteDataSource(sharedPrefs!);
 });
 
 // 2. Provider لمستودع المصادقة الذي يعتمد على مصدر البيانات
