@@ -1,112 +1,132 @@
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_empty_state.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 
-import '../../../../core/utils/responsive_values.dart';
 import '../../../../core/widgets/custom_auto_size_text.dart';
 import '../../../../core/widgets/responsive_space.dart';
-import '../../domain/entities/notification_model.dart' ;
+import '../../domain/entities/notification_model.dart';
 
-class NotificationSection extends StatelessWidget {
-  final List<NotificationModel> mockNotifications;
-  final ThemeData theme;
-  final ResponsiveValues responsive;
+class NotificationSection extends ConsumerWidget {
+  final List<NotificationModel> notifications;
 
-  const NotificationSection({super.key, 
-    required this.mockNotifications,
-    required this.theme,
-    required this.responsive,
-  });
+  const NotificationSection({super.key, required this.notifications});
 
   @override
-  Widget build(BuildContext context) {
-    if (mockNotifications.isEmpty) {
-      return const SizedBox.shrink(); // Hide section if no alerts
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CustomAutoSizeText(
-          text: 'تنبيهات مهمة',
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (notifications.isEmpty) {
+      return SliverFillRemaining(
+        hasScrollBody: false,
+        child: Center(
+          child: CustomEmptyState(
+            icon: HugeIcons.strokeRoundedNotificationOff01,
+            message: 'لا توجد إشعارات',
+            subMessage: 'سيتم عرض الإشعارات الجديدة هنا.',
           ),
         ),
-        ResponsiveSpace(height: responsive.h(12)),
-        // Use a ListView.builder with a fixed height or a Horizontal ListView
-        // if you want multiple alerts in a horizontal scroll.
-        // For simplicity, let's use a Column for vertical display.
-        Column(
-          children: mockNotifications.map((alert) => _buildNotificationDialog(alert)).toList(),
-        ),
-      ],
+      );
+    }
+
+    return SliverList.separated(
+      itemCount: notifications.length,
+      separatorBuilder: (context, index) => const ResponsiveSpace(height: 8),
+      itemBuilder: (context, index) {
+        return _NotificationItemCard(notification: notifications[index]);
+      },
     );
   }
+}
 
+class _NotificationItemCard extends ConsumerWidget {
+  final NotificationModel notification;
 
-  Widget _buildNotificationDialog(NotificationModel notification) {
+  const _NotificationItemCard({required this.notification});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.theme;
+    final responsive = ref.responsive;
+
     Color notificationColor;
     IconData notificationIcon;
+
     switch (notification.type) {
       case NotificationType.critical:
-        notificationColor = Colors.red.shade400;
-        notificationIcon = Icons.error_outline;
+        notificationColor = theme.colorScheme.error;
+        notificationIcon = HugeIcons.strokeRoundedSettingsError01;
         break;
       case NotificationType.warning:
-        notificationColor = Colors.orange.shade400;
-        notificationIcon = Icons.warning_amber_outlined;
+        notificationColor = Colors.orange.shade600;
+        notificationIcon = HugeIcons.strokeRoundedAlert01;
         break;
       case NotificationType.info:
         notificationColor = theme.colorScheme.primary;
-        notificationIcon = Icons.info_outline;
+        notificationIcon = HugeIcons.strokeRoundedHelpCircle;
         break;
     }
 
-    return Card(
-      elevation: 2,
-      color: notificationColor.withValues( alpha: 0.1),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(responsive.w(12))),
-      margin: responsive.paddingOnly(bottom: responsive.h(12)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(responsive.w(12)),
-        onTap: notification.onPressed,
-        child: Padding(
-          padding: responsive.paddingAll(16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(notificationIcon, color: notificationColor, size: responsive.w(28)),
-              ResponsiveSpace(width: responsive.w(12)),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomAutoSizeText(
-                      text: notification.message,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.onSurface,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    if (notification.date != null)
-                      CustomAutoSizeText(
-                        text: 'تاريخ: ${notification.date!.day}/${notification.date!.month}',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues( alpha: 0.6),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              if (notification.onPressed != null)
-                IconButton(
-                  icon: Icon(Icons.arrow_forward_ios_outlined, color: notificationColor, size: responsive.w(20)),
-                  onPressed: notification.onPressed,
-                ),
-            ],
+    return InkWell(
+      onTap: notification.onPressed,
+      borderRadius: BorderRadius.circular(responsive.w(12)),
+      child: Container(
+        padding: responsive.paddingSym(h: 16, v: 12),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(responsive.w(12)),
+          border: Border(
+            right: BorderSide(color: notificationColor, width: 2),
           ),
+          boxShadow: [
+            BoxShadow(
+              color: theme.colorScheme.shadow.withValues(alpha: 0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            )
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CustomHugeIcon(
+              icon: notificationIcon,
+              color: notificationColor,
+              size: 24,
+            ),
+            const ResponsiveSpace(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomAutoSizeText(
+                    text: notification.message,
+                    style: theme.textTheme.bodyMedium,
+                    fontWeight: FontWeight.w600,
+                    colorText: theme.colorScheme.onSurface,
+                    fontSize: 12,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (notification.date != null) ...[
+                    const ResponsiveSpace(height: 4),
+                    CustomAutoSizeText(
+                      text: 'تاريخ: ${notification.date!.day}/${notification.date!.month}',
+                      style: theme.textTheme.bodySmall,
+                      colorText: theme.colorScheme.onSurfaceVariant,
+                      fontSize: 10,
+                    ),
+                  ]
+                ],
+              ),
+            ),
+            if (notification.onPressed != null)
+              CustomHugeIcon(
+                icon: HugeIcons.strokeRoundedArrowLeft01,
+                color: theme.colorScheme.onSurfaceVariant,
+                size: 16,
+              ),
+          ],
         ),
       ),
     );

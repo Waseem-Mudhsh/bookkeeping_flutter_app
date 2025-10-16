@@ -17,15 +17,23 @@ import '../../../Notifications/domain/entities/notification_model.dart';
 final List<NotificationModel> mockNotifications = [
   NotificationModel(
     id: 'al1',
-    message: 'الرصيد في محفظة الكاش منخفض!',
+    message: 'رصيد العميل محمد تجاوز الحد المسموح به!',
     type: NotificationType.warning,
     onPressed: () => debugPrint('Top up cash'),
+    date: DateTime.now(),
   ),
   NotificationModel(
     id: 'al2',
-    message: 'فاتورة الكهرباء مستحقة غدًا.',
+    message: 'تمت إضافة حساب جديد: محمد علي',
     type: NotificationType.info,
     onPressed: () => debugPrint('Pay electricity bill'),
+  ),
+  NotificationModel(
+    id: 'al3',
+    message: 'تنبيه أمني: تم تسجيل دخول من جهاز جديد.',
+    type: NotificationType.critical,
+    onPressed: () => debugPrint('Review security settings'),
+    date: DateTime.now().subtract(const Duration(hours: 2)),
   ),
 ];
 

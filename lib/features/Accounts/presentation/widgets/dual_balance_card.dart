@@ -128,10 +128,11 @@ class DualBalanceCard extends StatelessWidget {
               children: [
                 if(hasFlag)
                CircleAvatar(
+                  radius: 15,
                   child: Image.asset('assets/images/usa.png',
-                  width: 40,
-                  height: 40,
-                  fit: BoxFit.cover,
+                  width: 30,
+                  height: 30,
+                  fit: BoxFit.cover
                    ),),
                 // رصيد "له" (المفروض أن يدفع للعميل)
                 Expanded(
