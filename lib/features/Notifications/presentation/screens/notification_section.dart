@@ -1,21 +1,24 @@
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_empty_state.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
+import 'package:bookkeeping_flutter_app/features/Notifications/presentation/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 import '../../../../core/widgets/custom_auto_size_text.dart';
 import '../../../../core/widgets/responsive_space.dart';
-import '../../domain/entities/notification_model.dart';
+import '../../domain/entities/notification_model.dart' as model;
 
 class NotificationSection extends ConsumerWidget {
-  final List<NotificationModel> notifications;
-
-  const NotificationSection({super.key, required this.notifications});
+  const NotificationSection({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final notifications = ref.watch(notificationProvider);
+    final responsive = ref.responsive;
+    final theme = ref.theme;
+
     if (notifications.isEmpty) {
       return SliverFillRemaining(
         hasScrollBody: false,
@@ -33,14 +36,46 @@ class NotificationSection extends ConsumerWidget {
       itemCount: notifications.length,
       separatorBuilder: (context, index) => const ResponsiveSpace(height: 8),
       itemBuilder: (context, index) {
-        return _NotificationItemCard(notification: notifications[index]);
+        final notification = notifications[index];
+        return Dismissible(
+          key: Key(notification.id),
+          direction: DismissDirection.startToEnd,
+          onDismissed: (direction) {
+            // استدعاء دالة الحذف من الـ provider
+            ref.read(notificationProvider.notifier).removeNotification(notification.id);
+
+            // إظهار رسالة تأكيد
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                 SnackBar(content: CustomAutoSizeText(text:  'تم حذف الإشعار',
+                 style: theme.textTheme.bodySmall,
+                 colorText: theme.colorScheme.onPrimary,
+                 fontSize: 10,
+                 ),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: theme.colorScheme.primary,
+                ),
+              );
+          },
+          background: Container(
+            decoration: BoxDecoration(
+              color: ref.theme.colorScheme.error,
+              borderRadius: BorderRadius.circular(responsive.w(12)),
+            ),
+            alignment: Alignment.centerRight,
+            padding: responsive.paddingSym(h: 20),
+            child: const CustomHugeIcon(icon: HugeIcons.strokeRoundedDelete02, color: Colors.white),
+          ),
+          child: _NotificationItemCard(notification: notification),
+        );
       },
     );
   }
 }
 
 class _NotificationItemCard extends ConsumerWidget {
-  final NotificationModel notification;
+  final model.NotificationModel notification;
 
   const _NotificationItemCard({required this.notification});
 
@@ -53,17 +88,17 @@ class _NotificationItemCard extends ConsumerWidget {
     IconData notificationIcon;
 
     switch (notification.type) {
-      case NotificationType.critical:
+      case model.NotificationType.critical:
         notificationColor = theme.colorScheme.error;
         notificationIcon = HugeIcons.strokeRoundedSettingsError01;
         break;
-      case NotificationType.warning:
+      case model.NotificationType.warning:
         notificationColor = Colors.orange.shade600;
         notificationIcon = HugeIcons.strokeRoundedAlert01;
         break;
-      case NotificationType.info:
+      case model.NotificationType.info:
         notificationColor = theme.colorScheme.primary;
-        notificationIcon = HugeIcons.strokeRoundedHelpCircle;
+        notificationIcon = HugeIcons.strokeRoundedAlertCircle;
         break;
     }
 
@@ -76,7 +111,7 @@ class _NotificationItemCard extends ConsumerWidget {
           color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(responsive.w(12)),
           border: Border(
-            right: BorderSide(color: notificationColor, width: 2),
+            right: BorderSide(color: notificationColor, width: 4),
           ),
           boxShadow: [
             BoxShadow(

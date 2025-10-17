@@ -265,6 +265,7 @@ class _SettingsSection extends ConsumerWidget {
   });
 
   @override
+
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.theme;
     

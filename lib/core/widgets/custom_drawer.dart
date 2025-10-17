@@ -93,7 +93,8 @@ class CustomDrawer extends ConsumerWidget {
                         subTitle: 'تواصل معنا في حال وجود أي مشكلة',
                         icon: HugeIcons.strokeRoundedCustomerService,
                         onTap: () {
-                          Navigator.pop(context); 
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => RouteNames.supportScreen.screen));
                         },
                       ),
                       _buildMenuItem(
