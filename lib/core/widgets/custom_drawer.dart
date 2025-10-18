@@ -104,7 +104,8 @@ class CustomDrawer extends ConsumerWidget {
                         subTitle: 'معلومات عن فريق العمل',
                         icon: HugeIcons.strokeRoundedUserGroup,
                         onTap: () {
-                          Navigator.pop(context);
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => RouteNames.aboutUsScreen.screen));
                         },
                       ),
                       _buildMenuItem(
@@ -114,7 +115,8 @@ class CustomDrawer extends ConsumerWidget {
                         subTitle: 'معلومات عن التطبيق',
                         icon: HugeIcons.strokeRoundedInformationSquare,
                         onTap: () {
-                          Navigator.pop(context); 
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => RouteNames.aboutAppScreen.screen));
                         },
                       ),
                     ],

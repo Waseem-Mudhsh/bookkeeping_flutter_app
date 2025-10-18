@@ -3,8 +3,13 @@ import 'package:bookkeeping_flutter_app/features/Accounts/domain/entities/accoun
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/account_ceiling_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/add_new_account_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/beneficiaries_screen.dart';
+import 'package:bookkeeping_flutter_app/features/Home/presentation/screens/about_app_screen.dart';
+import 'package:bookkeeping_flutter_app/features/Home/presentation/screens/about_us_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Home/presentation/screens/home_main_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Home/presentation/screens/support_screen.dart';
+import 'package:bookkeeping_flutter_app/features/auth/presentation/screens/forgot_password_screen.dart';
+import 'package:bookkeeping_flutter_app/features/auth/presentation/screens/otp_verification_screen.dart';
+import 'package:bookkeeping_flutter_app/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:bookkeeping_flutter_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:bookkeeping_flutter_app/features/auth/presentation/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
@@ -32,8 +37,13 @@ enum RouteNames {
   merchantLedgerScreen,
   accountCeilingScreen,
   beneficiariesScreen,
-  signUpScreen,
-  supportScreen;
+  signUpScreen, 
+  supportScreen, 
+  aboutUsScreen,
+  aboutAppScreen,
+  forgotPasswordScreen,
+  otpVerificationScreen,
+  resetPasswordScreen;
   
 
   Widget get screen {
@@ -66,8 +76,25 @@ enum RouteNames {
         return SignUpScreen();
       case RouteNames.supportScreen:
         return SupportScreen();
+      case RouteNames.aboutUsScreen:
+        return AboutUsScreen();
+      case RouteNames.aboutAppScreen:
+        return AboutAppScreen();
+      case RouteNames.forgotPasswordScreen:
+        return const ForgotPasswordScreen();
       default:
        return Scaffold(body: Center(child: Text('No screen found')));
+    }
+  }
+
+  Widget screenWithArgs(Map<String, dynamic> args) {
+    switch (this) {
+      case RouteNames.otpVerificationScreen:
+        return OtpVerificationScreen(phoneNumber: args['phoneNumber']);
+      case RouteNames.resetPasswordScreen:
+        return ResetPasswordScreen(phoneNumber: args['phoneNumber']);
+      default:
+        return screen; // Fallback to screen without args
     }
   }
   

@@ -46,6 +46,14 @@ class SettingsNotifier extends StateNotifier<Map<String, dynamic>> {
     await prefs.setString('userPassword', password);
     state = {...state, 'userName': username, 'userPhoneNumber': phone, 'userPassword': password};
   }
+
+  Future<void> updatePassword(String phoneNumber, String newPassword) async {
+    final prefs = await ref.read(sharedPreferencesProvider.future);
+    // In a real app, you'd verify the phone number exists first.
+    // Here we assume it's the correct user.
+    await prefs.setString('userPassword', newPassword);
+    state = {...state, 'userPassword': newPassword};
+  }
 }
 
 final settingsProvider = StateNotifierProvider<SettingsNotifier, Map<String, dynamic>>((ref) {

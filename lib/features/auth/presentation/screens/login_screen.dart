@@ -31,7 +31,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
 
-   final formKey = GlobalKey<FormState>();
+   final formKeyLogin = GlobalKey<FormState>();
     // Controllers لحقول الإدخال
     late TextEditingController phoneController;
     late TextEditingController passwordController;
@@ -57,7 +57,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
    Future<void> performLogin( ) async {
       // التحقق من صحة المدخلات في الـ Form
-      if (formKey.currentState?.validate() ?? false) {
+      if (formKeyLogin.currentState?.validate() ?? false) {
         // تفعيل حالة التحميل
         ref.read(loadingStateProvider.notifier).state = true;
 
@@ -80,6 +80,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   text:  'تم تسجيل الدخول بنجاح',
                   colorText:ref.theme.colorScheme.onPrimary,
                   style: ref.theme.textTheme.bodySmall,
+                  fontSize: 10,
                   ),
                 backgroundColor:ref.theme.colorScheme.primary,
               ),
@@ -97,6 +98,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   text:  'فشل تسجيل الدخول. تحقق من رقم الهاتف وكلمة المرور.',
                   colorText:ref.theme.colorScheme.onPrimary,
                   style: ref.theme.textTheme.bodySmall,
+                  fontSize: 10,
                   ),
                 backgroundColor:ref.theme.colorScheme.primary,
               ),
@@ -221,7 +223,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         child: Padding(
           padding: responsive.paddingSym(h: 24, v: 32),
           child: Form(
-            key: formKey,
+            key: formKeyLogin,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -295,7 +297,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                   
+                       Navigator.push(context, MaterialPageRoute(builder: (context) {
+                            return RouteNames.forgotPasswordScreen.screen;
+                          }));
                     },
                     child:CustomAutoSizeText(text: 'هل نسيت كلمة المرور؟',
                       style: theme.textTheme.bodySmall,

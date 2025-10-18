@@ -6,7 +6,6 @@ import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/accounts_list_section.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/account_details_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Notifications/presentation/providers/notification_provider.dart';
-import 'package:bookkeeping_flutter_app/features/Notifications/presentation/providers/notification_provider.dart';
 import 'package:bookkeeping_flutter_app/features/Notifications/presentation/screens/notifications_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Notifications/presentation/widgets/custom_notification_button.dart';
 import 'package:flutter/material.dart';
