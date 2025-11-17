@@ -150,8 +150,8 @@ class DualBalanceCard extends StatelessWidget {
                 
                 // فاصل عمودي أنيق
                 Container(
-                  width: 1,
-                  height: 40,
+                  width: 1.0,
+                  height: 40.0,
                   color: theme.colorScheme.outlineVariant.withAlpha(50),
                   margin: responsive.paddingSym(h: 12.0),
                 ),

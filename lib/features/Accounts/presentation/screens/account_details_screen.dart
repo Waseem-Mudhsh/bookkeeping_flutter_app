@@ -7,7 +7,6 @@ import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_icon_button.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/action_buttons_row.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/financial_bottom_navbar.dart';
-import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/mester_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -42,8 +41,11 @@ class AccountDetailsScreen extends ConsumerWidget {
     return AdaptiveScaffold(
      
       body: BuildTabBarLayout(
+        backgroundColorAppBar: theme.colorScheme.primary,
         hasDrawer: false,
         leadingWidget:  CustomIconButton(hugeIcon: HugeIcons.strokeRoundedArrowRight01,
+        colorIcon: theme.colorScheme.onPrimary,
+        
         onPressed: () => Navigator.pop(context), ),
        
              titleWidget: _buildHeader(context,ref),
@@ -116,15 +118,14 @@ class AccountDetailsScreen extends ConsumerWidget {
               style: theme.textTheme.bodyMedium,
               fontWeight: FontWeight.bold,
               fontSize: 12,
-              colorText: theme.colorScheme.primary,
+              colorText: theme.colorScheme.onPrimary,
             ),
              ResponsiveSpace(height: 4),
              CustomAutoSizeText(
-              text: '+967 ${account.phoneNumber}',
+              text: '${account.phoneNumber}00967 ',
               style: theme.textTheme.bodyMedium,
-              
-              fontSize: 10,
-              colorText: theme.colorScheme.primary,
+              fontSize: 10.0,
+              colorText: theme.colorScheme.onPrimary.withAlpha(200),
             ),
           ],
         );
@@ -136,7 +137,7 @@ class AccountDetailsScreen extends ConsumerWidget {
     final double topPadding = MediaQuery.of(context).padding.top;
     return Container(
       
-      padding: responsive.paddingAll(16.0),
+      padding: responsive.paddingSym(h: 16.0, v: 8.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -202,7 +203,13 @@ class AccountDetailsScreen extends ConsumerWidget {
             ],
            ),
             
-            const ResponsiveSpace(height: 16.0),
+            const ResponsiveSpace(height: 8.0),
+             Divider(
+              color: theme.colorScheme.onPrimary.withAlpha(100),
+              thickness: 0.5,
+            ),
+            const ResponsiveSpace(height: 4.0),
+            
             _accountActionsRow(context, ref)
           ],
         ),
@@ -223,10 +230,12 @@ class AccountDetailsScreen extends ConsumerWidget {
       {
         'icon': HugeIcons.strokeRoundedCall02,
         'onPressed': () => _showCallDialog(context, ref),
+        'label': 'اتصال',
       },
       {
         'icon': HugeIcons.strokeRoundedMessage01,
         'onPressed': () => _showMessageDialog(context, ref),
+        'label': 'رسالة',
       },
       {
         'icon': HugeIcons.strokeRoundedLimitOrder,
@@ -236,10 +245,12 @@ class AccountDetailsScreen extends ConsumerWidget {
                 builder: (context) => RouteNames.accountCeilingScreen.screen,
               ),
             ),
+        'label': 'السقف',
       },
       {
         'icon': HugeIcons.strokeRoundedPdf01,
         'onPressed': () => _showReportDialog(context),
+        'label': 'تقرير الحساب',
       },
     ];
 
@@ -247,6 +258,7 @@ class AccountDetailsScreen extends ConsumerWidget {
       actionButtons: actions.map((action) => ActionButton(
         icon: action['icon'],
         onPressed: action['onPressed'],
+        label: action['label'],
         isCompact: true,
         iconColor: theme.colorScheme.primary,
       )).toList(),
@@ -444,14 +456,14 @@ class _InfoRow extends ConsumerWidget {
         CustomHugeIcon(
           icon: icon,
           size: 16.0,
-          color: theme.colorScheme.onPrimary.withAlpha(80),
+          color: theme.colorScheme.onPrimary.withAlpha(150),
         ),
         const ResponsiveSpace(width: 8.0),
         CustomAutoSizeText(
           text: label,
           style: theme.textTheme.bodyMedium,
-          colorText: theme.colorScheme.onPrimary.withAlpha(80),
-          fontSize: 12.0,
+          colorText: theme.colorScheme.onPrimary.withAlpha(150),
+          fontSize: 10.0,
         ),
         const ResponsiveSpace(width: 4.0),
         Expanded(
@@ -460,7 +472,7 @@ class _InfoRow extends ConsumerWidget {
             style: theme.textTheme.bodyMedium,
             fontWeight: FontWeight.bold,
             colorText: valueColor ?? theme.colorScheme.onPrimary,
-            fontSize: 12.0,
+            fontSize: 10.0,
             overflow: TextOverflow.ellipsis,
           ),
         ),

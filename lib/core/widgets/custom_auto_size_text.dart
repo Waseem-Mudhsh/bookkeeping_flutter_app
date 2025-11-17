@@ -26,6 +26,7 @@ class CustomAutoSizeText extends ConsumerWidget {
   final double? decorationThickness;
   final Paint? foreground;
   final FontStyle? fontStyle;
+  final String? debugLabel;
 
   const CustomAutoSizeText({
     super.key,
@@ -50,6 +51,7 @@ class CustomAutoSizeText extends ConsumerWidget {
     this.decorationThickness,
     this.foreground,
     this.fontStyle,
+    this.debugLabel,
   });
 
   @override
@@ -72,6 +74,8 @@ class CustomAutoSizeText extends ConsumerWidget {
         decorationThickness: decorationThickness ?? style?.decorationThickness,
         foreground: foreground ?? style?.foreground,
         fontStyle: fontStyle ?? style?.fontStyle,
+        debugLabel: debugLabel,
+
       );
     }
 

@@ -21,8 +21,8 @@ class ResponsiveSpace extends ConsumerWidget {
     final responsive = ref.watch(responsiveProvider);
 
     return SizedBox(
-      width: width != null ? responsive.w(width!) : null,
-      height: height != null ? responsive.h(height!) : null,
+      width: width != null ? responsive.w(width!.toDouble()) : null,
+      height: height != null ? responsive.h(height!.toDouble()) : null,
       child: child,
     );
   }

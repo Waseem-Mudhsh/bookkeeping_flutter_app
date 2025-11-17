@@ -178,7 +178,7 @@ class _AnimatedServiceCardState extends State<_AnimatedServiceCard>
       },
       // The child is the part of the tree that doesn't need to rebuild on animation ticks
       child: TweenAnimationBuilder<double>(
-          tween: Tween(begin: 1.0, end: _scale),
+          tween: Tween<double>(begin: 1.0, end: _scale),
           duration: const Duration(milliseconds: 150),
           curve: Curves.easeOutCubic,
           builder: (context, value, child) {
