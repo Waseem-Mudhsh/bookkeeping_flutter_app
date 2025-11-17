@@ -86,7 +86,7 @@ class ActionButtonsRow extends ConsumerWidget {
           CustomAutoSizeText(
            text:  label,
             style: theme.textTheme.labelMedium,
-            colorText: theme.colorScheme.onPrimary,
+            colorText: theme.colorScheme.primary,
             fontSize: 10,
             textAlign: TextAlign.center,
             fontWeight: FontWeight.w600,

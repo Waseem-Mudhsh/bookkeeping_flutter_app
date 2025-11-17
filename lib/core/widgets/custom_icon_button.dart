@@ -41,10 +41,9 @@ class CustomIconButton extends ConsumerWidget {
         
         decoration:  ShapeDecoration(color: backgroundColor ?? Colors.transparent, shape: CircleBorder()),
         child: IconButton(
-          
           tooltip: tooltip,
           iconSize:  ref.responsive.w(iconSize ?? 16),
-          icon: CustomHugeIcon(icon: hugeIcon, color: colorIcon ?? ref.theme.colorScheme.primary,),
+          icon: CustomHugeIcon(icon: hugeIcon,),
           color: colorIcon ?? ref.theme.colorScheme.primary,
           onPressed: onPressed,
            ),
