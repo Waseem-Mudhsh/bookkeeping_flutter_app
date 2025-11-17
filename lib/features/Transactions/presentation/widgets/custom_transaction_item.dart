@@ -1,5 +1,7 @@
+
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_alert_dialog_enhanced.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_button.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 
 import 'package:flutter/material.dart';
@@ -134,7 +136,7 @@ class CustomTransactionItem extends ConsumerWidget {
         context,
         MaterialPageRoute(
           builder:
-              (context) => TransactionSubRoutes.create.screenEdit(
+              (context) => TransactionSubRoutes.edit.screenEdit(
                 transaction.accountId,
                 transaction,
               ),
@@ -147,12 +149,43 @@ class CustomTransactionItem extends ConsumerWidget {
   VoidCallback _onDeleteTransaction(BuildContext context, WidgetRef ref) {
     final theme = ref.theme;
     return () {
-      showCustomAlert(
-        ref: ref,
+      showCustomDialog(
+        
         context: context,
         title: 'تاكيد الحذف',
-        message: 'هل أنت متأكد من حذف هذه العملية؟',
-        onConfirm: () {
+        hugeIconTitle: HugeIcons.strokeRoundedDelete01,
+        content: CustomAutoSizeText(
+          text: 'هل أنت متأكد من رغبتك في حذف هذه العملية؟',
+          fontSize: 12,
+          colorText: theme.colorScheme.onSurface,
+          style: theme.textTheme.bodyMedium,
+        ),
+        barrierDismissible: false,
+        actions: [
+          TextButton(
+            onPressed: () => _onCancelDeleteTransaction(context)(),
+            child: CustomAutoSizeText(
+              text: 'إلغاء',
+              colorText: theme.colorScheme.onSurface,
+            ),
+          ),
+          CustomButton(
+            width: 100,
+            height: 30,
+            text: 'حذف',
+            onPressed: () {
+              _onConfirmDeleteTransaction(context, ref)();
+            },
+          ),
+        ],
+        
+      );
+    };
+  }
+
+  VoidCallback _onConfirmDeleteTransaction(BuildContext context, WidgetRef ref) {
+    final theme = ref.theme;
+    return () {
            Navigator.of(context).pop(); // يغلق الـ AlertDialog أولاً
         if (Navigator.of(context).canPop()) {
           Navigator.of(context).pop(); // يغلق الـ BottomSheet
@@ -181,20 +214,17 @@ class CustomTransactionItem extends ConsumerWidget {
       );
     }
   });
-
-
-},
-        confirmText: 'حذف',
-        cancelText: 'إلغاء',
-        onCancel: () {
+};
+  }
+VoidCallback _onCancelDeleteTransaction(BuildContext context) {
+    return () {
            Navigator.of(context).pop(); // يغلق الـ AlertDialog أولاً
         if (Navigator.of(context).canPop()) {
           Navigator.of(context).pop(); // يغلق الـ BottomSheet
         }
-        },
-      );
-    };
+        };
   }
+
 
 
 
@@ -243,13 +273,16 @@ class CustomTransactionItem extends ConsumerWidget {
                   ? Colors.green.shade600
                   : Colors.red.shade600,
           style: theme.textTheme.bodyMedium,
+          fontSize: 12,
         ),
-        ResponsiveSpace(height: 4),
+        const ResponsiveSpace(height: 4),
+        
         CustomAutoSizeText(
           text:
               '${transaction.date.year}/${transaction.date.month}/${transaction.date.day}',
           colorText: theme.colorScheme.onSurface.withValues(alpha: 0.5),
           fontSize: 10,
+          style: theme.textTheme.bodySmall,
         ),
       ],
     );

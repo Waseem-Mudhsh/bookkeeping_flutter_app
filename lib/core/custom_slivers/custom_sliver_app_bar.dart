@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-
 class CustomSliverAppBar extends ConsumerWidget {
   final Widget? title;
   final double? expandedHeight;
@@ -13,60 +12,86 @@ class CustomSliverAppBar extends ConsumerWidget {
   final bool pinned;
   final bool floating;
   final bool snap;
-  final bool hasLeading;
+  final bool hasDrawer;
   final Color? backgroundColor;
-  final  PreferredSize? bottom;
+  final PreferredSize? bottom;
   final bool centerTitle;
   final ShapeBorder? shape;
   final double? toolbarHeight;
+  final Widget? leadingWidget;
 
   const CustomSliverAppBar({
     super.key,
-     this.title,
+    this.title,
     this.expandedHeight,
     this.actions,
     this.flexibleSpaceContent,
     this.pinned = true,
     this.floating = false,
     this.snap = false,
-    this.hasLeading=false,
+    this.hasDrawer = false,
     this.backgroundColor,
     this.bottom,
-    this.centerTitle = false, 
+    this.centerTitle = false,
     this.shape,
-    this.toolbarHeight
+    this.toolbarHeight,
+    this.leadingWidget,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.theme;
     final responsive = ref.responsive;
+    
     return SliverAppBar(
-      titleSpacing:0.0 ,
-      title:title ,
+      
+      // collapsedHeight: toolbarHeight ?? responsive.h(56),
+      backgroundColor: backgroundColor ?? theme.colorScheme.surface,
+      titleSpacing: 0.0,
+      title: title,
       centerTitle: centerTitle,
-      expandedHeight: expandedHeight ?? 0,
-      toolbarHeight: title != null ? toolbarHeight ?? responsive.h(50) :  0,
+      expandedHeight: expandedHeight,
+      toolbarHeight: toolbarHeight ?? responsive.h(56),
       pinned: pinned,
       floating: floating,
       snap: snap,
-      leading:hasLeading ?  Builder(
-      builder: (context) {
-        return IconButton(
-          icon: const CustomHugeIcon(icon: HugeIcons.strokeRoundedMenuTwoLine),
-          color: theme.colorScheme.primary,
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-        );
-      },
-    ): null,
+      scrolledUnderElevation: 4.0,
+      // يضيف ظلاً خفيفاً عندما يبدأ المحتوى بالتمرير تحته
+      forceElevated: true,
+     
+
+      // primary: false,
+      leading:
+          hasDrawer
+              ? Builder(
+                builder: (context) {
+                  return IconButton(
+                    icon: const CustomHugeIcon(
+                      icon: HugeIcons.strokeRoundedMenuTwoLine,
+                    ),
+                    color: theme.colorScheme.primary,
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                  );
+                },
+              )
+              : leadingWidget,
       actions: actions,
       actionsPadding: responsive.paddingOnly(left: 16),
-      // backgroundColor: backgroundColor ?? theme.colorScheme.secondary,
-      flexibleSpace: flexibleSpaceContent ,
-      bottom: bottom ,
-      shape:shape ?? Border(bottom: BorderSide(color: Colors.grey.shade200, width: 0.5)),
+
+      flexibleSpace: flexibleSpaceContent ?? const FlexibleSpaceBar(),
+      bottom:
+          bottom ??
+          const PreferredSize(preferredSize: Size.zero, child: SizedBox()),
+      shape:
+          shape ??
+          Border(
+            bottom: BorderSide(
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+              width: 0.5,
+            ),
+          ),
     );
   }
 }

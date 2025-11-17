@@ -80,6 +80,7 @@ class CustomLastTransationsItem extends ConsumerWidget {
       colorText: theme.colorScheme.onSurface,
       style: theme.textTheme.bodySmall,
       maxLines: 1,
+      
       overflow: TextOverflow.ellipsis,
       fontSize: 10,
     );

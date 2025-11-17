@@ -1,4 +1,4 @@
-import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
+import 'package:bookkeeping_flutter_app/core/app_scaffold/adaptive_scaffold.dart';
 import 'package:bookkeeping_flutter_app/core/base_layout/build_non_tabbar_layout.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
@@ -18,7 +18,7 @@ class AboutAppScreen extends ConsumerWidget {
     final theme = ref.theme;
     final responsive = ref.responsive;
 
-    return BaseLayoutScreen(
+    return AdaptiveScaffold(
       body: BuildNonTabbarLayout(
         titleWidget: CustomAutoSizeText(
           text: 'حول التطبيق',

@@ -1,4 +1,4 @@
-import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
+import 'package:bookkeeping_flutter_app/core/app_scaffold/adaptive_scaffold.dart';
 import 'package:bookkeeping_flutter_app/core/base_layout/build_non_tabbar_layout.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/utils/route_names.dart';
@@ -65,13 +65,13 @@ class DebtsOfClientScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final responsive = ref.responsive;
+    
 
-    return BaseLayoutScreen(
+    return AdaptiveScaffold(
       // drawer: const CustomDrawer(),
       body: BuildNonTabbarLayout(
         titleWidget: const _HeaderWidget(),
-        toolbarHeight: responsive.h(60),
+        
         slivers: [
           const SliverToBoxAdapter(child: ResponsiveSpace(height: 16)),
           const SliverToBoxAdapter(child: CustomDebtsOfClientCard()),
@@ -312,6 +312,8 @@ class _TransactionsListWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.theme;
+    final responsive = ref.responsive;
+
     // For a real app, this would use a provider to get a list of transactions.
     const transactionCount = 5;
 
@@ -325,7 +327,7 @@ class _TransactionsListWidget extends ConsumerWidget {
           children: [
 
             CustomAutoSizeText(
-              text: 'ديون اليوم ',
+              text: 'ديون الاخيرة ',
               style: theme.textTheme.bodyMedium,
               fontWeight: FontWeight.w600,
               colorText: theme.colorScheme.primary,
@@ -352,8 +354,9 @@ class _TransactionsListWidget extends ConsumerWidget {
             )
           ],
         ),
-        const ResponsiveSpace(height: 12),
+        // const ResponsiveSpace(height: 8),
         ListView.separated(
+          padding: responsive.paddingOnly(top: 8),
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: transactionCount,

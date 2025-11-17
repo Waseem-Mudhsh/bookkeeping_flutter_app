@@ -89,12 +89,11 @@ class CustomAccountCard extends ConsumerWidget {
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => AccountSubRoutes.edit.screenEdit(account!)));
                 },
-                  hugeIcon: HugeIcon(
-                    icon: HugeIcons.strokeRoundedEdit02,
+                  hugeIcon: HugeIcons.strokeRoundedEdit02,
                     
-                    color: theme.colorScheme.onSurface,
-                    size: 20
-                  ),
+                    colorIcon: theme.colorScheme.onSurface,
+                    iconSize: 16
+                  
                  
                 
                  )
@@ -107,9 +106,9 @@ class CustomAccountCard extends ConsumerWidget {
               onPressed: () {
                 _buildDeleteAccountDialog(context,ref);
               },
-              hugeIcon: HugeIcon(icon: HugeIcons.strokeRoundedDelete01,
-               color: theme.colorScheme.error,
-               size: 20),
+              hugeIcon: HugeIcons.strokeRoundedDelete01,
+               colorIcon: theme.colorScheme.error,
+               iconSize: 16
                ),
                
         
@@ -121,11 +120,8 @@ class CustomAccountCard extends ConsumerWidget {
     showCustomDialog(
                   
                   context: context,
-                  titleWidget: CustomAutoSizeText(text: 'حذف الحساب',
-                  style: theme.textTheme.bodyMedium,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  colorText: theme.colorScheme.onPrimary,),
+                  title: 'حذف الحساب',
+                  hugeIconTitle: HugeIcons.strokeRoundedDelete01,
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,

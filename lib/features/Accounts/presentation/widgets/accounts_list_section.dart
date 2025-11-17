@@ -83,9 +83,9 @@ class AccountsListSection extends ConsumerWidget {
             ),
             Spacer(),
             CustomIconButton(
-              hugeIcon:  HugeIcon(icon:HugeIcons.strokeRoundedSearch01,
-               color: theme.colorScheme.primary,
-               size: responsive.h(20),),
+              hugeIcon: HugeIcons.strokeRoundedSearch01,
+               colorIcon: theme.colorScheme.primary,
+               size: 16,
              
               // iconColor: theme.colorScheme.tertiary,
               onPressed: onAddAccount,
@@ -93,9 +93,9 @@ class AccountsListSection extends ConsumerWidget {
             ),
             ResponsiveSpace(width: 8),
             CustomIconButton(
-              hugeIcon: HugeIcon(icon: HugeIcons.strokeRoundedSorting01,
-               color: theme.colorScheme.primary,
-               size: responsive.h(20),),
+              hugeIcon:HugeIcons.strokeRoundedSorting01,
+               colorIcon: theme.colorScheme.primary,
+               iconSize: 16,
             
               onPressed: onAddAccount,
               // backgroundColor: theme.colorScheme.tertiary.withValues(alpha: 0.05),

@@ -1,4 +1,4 @@
-import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
+import 'package:bookkeeping_flutter_app/core/app_scaffold/adaptive_scaffold.dart';
 import 'package:bookkeeping_flutter_app/core/base_layout/build_non_tabbar_layout.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_drawer.dart';
@@ -20,7 +20,7 @@ class HomeMainScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
    final theme = ref.theme;
     
-    return BaseLayoutScreen(
+    return AdaptiveScaffold(
       
       drawer: CustomDrawer(),
       body: BuildNonTabbarLayout(
@@ -32,9 +32,12 @@ class HomeMainScreen extends ConsumerWidget {
           colorText: theme.colorScheme.primary,
         ),
         actions: [
-          CustomIconButton(onPressed: () {},
-           hugeIcon: HugeIcon(icon: HugeIcons.strokeRoundedSearch01,
-            color: theme.colorScheme.primary),),
+          CustomIconButton(
+            onPressed: () {},
+           hugeIcon:HugeIcons.strokeRoundedSearch01,
+            colorIcon: theme.colorScheme.primary,
+            
+            ),
         ],
         slivers: [
            SliverToBoxAdapter(child: ResponsiveSpace(height: 24)),
@@ -55,6 +58,7 @@ class HomeMainScreen extends ConsumerWidget {
         SliverToBoxAdapter(child: ResponsiveSpace(height: 24,))
 
         ]),
+        
 
       
     );
@@ -106,15 +110,36 @@ class HomeMainScreen extends ConsumerWidget {
           children: [
             SizedBox(
               width: responsive.w(300),
-              child: DualBalanceCard(clientCreditBalance: 500, clientDebitBalance: 200000000,  theme: theme, responsive: responsive,hasFlag:true)),
+              child: DualBalanceCard(
+                clientCreditBalance: 500, 
+                clientDebitBalance: 2000000,
+                theme: theme, 
+                responsive: responsive,
+                currencySymbol: '\$',
+                currencyFlagAsset: 'assets/images/usa.png',
+              )),
             ResponsiveSpace(width: 16),
             SizedBox(
               width: responsive.w(300),
-              child: DualBalanceCard(clientCreditBalance: 500, clientDebitBalance: 200000000,  theme: theme, responsive: responsive,hasFlag:true)),
+              child: DualBalanceCard(
+                clientCreditBalance: 15000, 
+                clientDebitBalance: 800,
+                theme: theme, 
+                responsive: responsive,
+                currencySymbol: '€',
+                // currencyFlagAsset: 'assets/images/eu.png', // Example for another flag
+              )),
             ResponsiveSpace(width: 16),
             SizedBox(
               width: responsive.w(300),
-              child: DualBalanceCard(clientCreditBalance: 500, clientDebitBalance: 200000000, ceilingAmount: 250, theme: theme, responsive: responsive,hasFlag:true)),
+              child: DualBalanceCard(
+                clientCreditBalance: 500, 
+                clientDebitBalance: 200, 
+                ceilingAmount: 250, 
+                theme: theme, 
+                responsive: responsive,
+                currencySymbol: 'SAR',
+              )),
            
           ],
           
@@ -122,5 +147,3 @@ class HomeMainScreen extends ConsumerWidget {
     );
   }
 }
-
-

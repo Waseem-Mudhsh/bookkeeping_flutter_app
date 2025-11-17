@@ -1,14 +1,16 @@
+import 'package:bookkeeping_flutter_app/core/app_scaffold/adaptive_scaffold.dart';
 import 'package:bookkeeping_flutter_app/core/base_layout/build_tab_bar_layout.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_alert_dialog_enhanced.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_button.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/custom_tab_view_container.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
+import 'package:bookkeeping_flutter_app/core/widgets/custom_icon_button.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/action_buttons_row.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/financial_bottom_navbar.dart';
+import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/mester_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
-import '../../../../core/base_layout/base_layout_screen.dart';
 import '../../../../core/utils/route_names.dart';
 import '../../../../core/widgets/custom_auto_size_text.dart';
 import '../../../../core/widgets/responsive_space.dart';
@@ -18,9 +20,9 @@ import '../../domain/entities/account.dart';
 
 
 class AccountDetailsScreen extends ConsumerWidget {
-  final Account? account;
+  final Account account;
 
-  const AccountDetailsScreen({super.key, this.account});
+  const AccountDetailsScreen({super.key, required this.account});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,98 +31,88 @@ class AccountDetailsScreen extends ConsumerWidget {
       Tab(text: 'سعودي'),
       Tab(text: 'دولار'),
       
+      
      
     ];
     final theme = ref.theme;
-    final responsive = ref.responsive;
+    
    
     
 
-    return BaseLayoutScreen(
-      // body: BuildNonTabbarLayout(
-       
-      //   titleWidget: _buildHeader(theme),
-      //    toolbarHeight: responsive.h(60),
-        
-      //  slivers: [
-      //     SliverToBoxAdapter(
-      //       child: ResponsiveSpace( height: 16,),
-      //     ),
-      //     SliverToBoxAdapter(
-      //       child: CustomSegmentedButton(
-      //         nameButtons: ['يمني','سعودي', 'دولار'],
-      //         contentButtons:[
-      //           _buildTransactionListByCurrency(ref),
-      //           _buildTransactionListByCurrency(ref),
-      //           _buildTransactionListByCurrency(ref),
-                
-
-              
-      //         ] ,
-      //          ),
-      //     ),
-         
-      //  ],
-        
-       
-      //   hasLeading: false,
-        
-      // ),
+    return AdaptiveScaffold(
+     
       body: BuildTabBarLayout(
-             titleWidget: _buildHeader(theme),
+        hasDrawer: false,
+        leadingWidget:  CustomIconButton(hugeIcon: HugeIcons.strokeRoundedArrowRight01,
+        onPressed: () => Navigator.pop(context), ),
+       
+             titleWidget: _buildHeader(context,ref),
+            //  backgroundWidget: MesterCard( id: account.name,
+            //  balance: '500000',
+            //  color: theme.colorScheme.secondaryContainer,
+
+            //  ),
+             backgroundWidget: _buildInfoAccount(context, account, ref),
+            
+            
          tabs: tabs,
           initialTabIndex: 0,
-           hasLeading: false,
-          //  isScrollableTabs: true,
-            toolbarHeight: 90,
+         
+           
+         
+            expandedHeight:300,
+          
+            
+            
         tabViews: [
-          CustomTabViewContainer(responsive: responsive,
-          child: _buildTransactionListByCurrency(context,ref)),
-          CustomTabViewContainer(responsive: responsive,
-          child: _buildTransactionListByCurrency(context,ref)),
-          CustomTabViewContainer(responsive: responsive,
-          child: _buildTransactionListByCurrency(context,ref)),
+          _buildTransactionListByCurrency(),
+          _buildTransactionListByCurrency(),
+          _buildTransactionListByCurrency(),
+         
         
 
           
         ],
              ),
       // // FloatingActionButton.extended for adding new transactions
-      // floatingActionButton: FloatingActionButton.extended(
-      //   backgroundColor: theme.colorScheme.secondaryContainer,
-      //   onPressed: () {
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //         builder: (context) => TransactionSubRoutes.create.screenAdd(account!.id, ),
-      //       ),
-      //     );
-      //   },
-      //   label: CustomAutoSizeText(
-      //     text: 'إضافة عملية جديدة',
-      //     style: theme.textTheme.bodyMedium,
-      //     fontSize: 12,
-      //     colorText: theme.colorScheme.onSecondaryContainer,
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: theme.colorScheme.secondaryContainer,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TransactionSubRoutes.create.screenAdd(account.id, ),
+            ),
+          );
+        },
+        label: CustomAutoSizeText(
+          text: 'إضافة عملية جديدة',
+          style: theme.textTheme.bodyMedium,
+          fontSize: 12,
+          colorText: theme.colorScheme.onSecondaryContainer,
           
-      //   ),
-      //   icon: CustomHugeIcon(
-      //     icon: HugeIcons.strokeRoundedMoneyAdd01,
-      //     size:20,
-      //     color: theme.colorScheme.onSecondaryContainer,),
-      // ),
+        ),
+        icon: CustomHugeIcon(
+          icon: HugeIcons.strokeRoundedMoneyAdd01,
+          size:20,
+          color: theme.colorScheme.onSecondaryContainer,),
+      ),
       // bottomNavigationBar: AccountBalanceInfo(account: account!),
-      bottomNavigationBar: FinancialBottomNavBar( creditBalance: account?.creditor ?? 0, debitBalance: account?.debtor ?? 0,),
+      widgetBottomNavigationBar: FinancialBottomNavBar( creditBalance: account.creditor , debitBalance: account.debtor,),
      
     );
   }
-  Widget _buildHeader( ThemeData theme){
+  Widget _buildHeader( BuildContext context, WidgetRef ref){
+    final theme = ref.theme;
+    
+    
     return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
+    
             CustomAutoSizeText(
-              text: account?.name ?? 'تفاصيل الحساب',
+              text: account.name ,
               style: theme.textTheme.bodyMedium,
               fontWeight: FontWeight.bold,
               fontSize: 12,
@@ -128,7 +120,7 @@ class AccountDetailsScreen extends ConsumerWidget {
             ),
              ResponsiveSpace(height: 4),
              CustomAutoSizeText(
-              text: 'هاتف الحساب: ${account?.phoneNumber}',
+              text: '+967 ${account.phoneNumber}',
               style: theme.textTheme.bodyMedium,
               
               fontSize: 10,
@@ -137,64 +129,127 @@ class AccountDetailsScreen extends ConsumerWidget {
           ],
         );
   }
+  Widget _buildInfoAccount( BuildContext context, Account account, WidgetRef ref)
+   {
+    final theme = ref.theme;
+    final responsive = ref.responsive;
+    final double topPadding = MediaQuery.of(context).padding.top;
+    return Container(
+      
+      padding: responsive.paddingAll(16.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            theme.colorScheme.primary,
+            theme.colorScheme.primary.withAlpha(70),
+          ],
+        ),
+      ),
+      child: Padding(
+        padding:  EdgeInsets.only(top: topPadding + kToolbarHeight),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _InfoRow(
+              icon: HugeIcons.strokeRoundedUser,
+              label: 'الحساب:',
+              value: account.name,
+            ),
+            ResponsiveSpace(height: 8.0),
+            Row(
+              children: [
+                Expanded(
+                  child: _InfoRow(
+                    icon: HugeIcons.strokeRoundedCall02,
+                    label: 'الهاتف:',
+                    value: account.phoneNumber ?? 'غير متوفر',
+                  ),
+                ),
+                const ResponsiveSpace(width: 16.0),
+                Expanded(
+                  child: _InfoRow(
+                    icon: HugeIcons.strokeRoundedLayer,
+                    label: 'التصنيف:',
+                    value: account.category,
+                  ),
+                ),
+              ],
+            ),
+            const ResponsiveSpace(height: 8.0),
+              
+           Row(
+            children: [
+              Expanded(
+                child: _InfoRow(
+                icon: HugeIcons.strokeRoundedCoinsDollar,
+                label: 'سقف الحساب:',
+                value: account.totalAccountBalance.toStringAsFixed(0),
+                            ),
+              ),
+            const ResponsiveSpace(width: 16.0),
+            Expanded(
+              child: _InfoRow(
+                icon: HugeIcons.strokeRoundedLimitation,
+                label: 'الحالة:',
+                value: 'ضمن حدود السقف', // This seems to be static
+                valueColor: Colors.green.shade200,
+              ),
+            ),
+
+            ],
+           ),
+            
+            const ResponsiveSpace(height: 16.0),
+            _accountActionsRow(context, ref)
+          ],
+        ),
+      ),
+    );
+  }
  
-  Widget _buildTransactionListByCurrency( BuildContext context,WidgetRef ref) {
-    
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-       
-        
-        ResponsiveSpace(height: 8),
-        ResponsiveSpace(
-          height: 60,
-          child: _accountActionsRow(context,ref)),
-        ResponsiveSpace(height: 16),
-        TransactionList(account: account!),
-        ResponsiveSpace(height: 8),
+  Widget _buildTransactionListByCurrency( ) {
     
     
-      ],
-    );  
+    return TransactionList(account: account);
   }
   Widget _accountActionsRow( BuildContext context,WidgetRef ref){ {
     final theme = ref.theme;
+
+    // Data-driven list for action buttons
+    final List<Map<String, dynamic>> actions = [
+      {
+        'icon': HugeIcons.strokeRoundedCall02,
+        'onPressed': () => _showCallDialog(context, ref),
+      },
+      {
+        'icon': HugeIcons.strokeRoundedMessage01,
+        'onPressed': () => _showMessageDialog(context, ref),
+      },
+      {
+        'icon': HugeIcons.strokeRoundedLimitOrder,
+        'onPressed': () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RouteNames.accountCeilingScreen.screen,
+              ),
+            ),
+      },
+      {
+        'icon': HugeIcons.strokeRoundedPdf01,
+        'onPressed': () => _showReportDialog(context),
+      },
+    ];
+
     return ActionButtonsRow(
-      actionButtons: [
-        ActionButton(label: 'إضافة عملية', icon: HugeIcons.strokeRoundedMoneyAdd01,
-         onPressed: (){
-          // Show add transaction dialog
-          Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TransactionSubRoutes.create.screenAdd(account!.id, ),
-                    ),
-                  );
-         },isCompact: true,backgroundColor:theme.colorScheme.primary,iconColor: theme.colorScheme.onPrimary,),
-        ActionButton(label: 'اتصال', icon: HugeIcons.strokeRoundedCall02, onPressed: (){
-          // Show call dialog
-          _showCallDialog(context,ref);
-        },isCompact: true,),
-        ActionButton(label: 'رسالة', icon: HugeIcons.strokeRoundedMessage01, onPressed: (){
-          // Show message dialog
-          _showMessageDialog(context,ref);
-        },isCompact: true,),
-        ActionButton(label: 'سقف الحساب', icon: HugeIcons.strokeRoundedLimitOrder, onPressed: (){
-          // Show account limit dialog
-          // _showAccountLimitDialog(context);
-          Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RouteNames.accountCeilingScreen.screen,
-                    ),
-                  );
-        },isCompact: true,),
-        ActionButton(label: 'تقرير', icon: HugeIcons.strokeRoundedPdf01, onPressed: (){
-          // Show report dialog
-          _showReportDialog(context);
-        },isCompact: true,),
-      ],
+      actionButtons: actions.map((action) => ActionButton(
+        icon: action['icon'],
+        onPressed: action['onPressed'],
+        isCompact: true,
+        iconColor: theme.colorScheme.primary,
+      )).toList(),
     );
   }
   }
@@ -205,42 +260,94 @@ class AccountDetailsScreen extends ConsumerWidget {
   // Dialog for making a call
   void _showCallDialog(BuildContext context,WidgetRef ref) {
     
-    debugPrint(account?.phoneNumber);
+    
 
-      showCustomAlert(context: context, ref: ref,
-       title: 'اتصال',
-        message: 'هل تريد الاتصال بالرقم ${account?.phoneNumber}؟',
-        confirmText: 'اتصال',
-        cancelText: 'اغلاق',
-        onConfirm: () {
-          // Implement call functionality here
-          Navigator.pop(context);
-        },
-        hugeIcon: HugeIcons.strokeRoundedCall02,
-         
-        );
+    final theme = ref.theme;
+    
+
+    showCustomDialog(
+      context: context,
+      barrierDismissible: true,
+      title: 'إجراء مكالمة',
+      hugeIconTitle: HugeIcons.strokeRoundedCall02,
+      content: CustomAutoSizeText(
+        text: 'هل تريد الاتصال بالرقم ${account.phoneNumber}؟',
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
+        maxLines: 2,
+        colorText: theme.colorScheme.onSurface,
+        style: theme.textTheme.bodyMedium,
+      ),
+      actions: [
+        CustomButton(
+          onPressed: () {
+            // Implement call functionality here
+            Navigator.pop(context);
+          },
+          backgroundColor: theme.colorScheme.primary,
+          width: 80,
+          height: 20,
+          text: 'اتصال',
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: CustomAutoSizeText(
+            text: 'إلغاء',
+            colorText: theme.colorScheme.onSurface,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            style: theme.textTheme.bodyMedium,
+          ),
+        ),
+      ]
+     
+      
+    );
 
 
   }
 
   // Dialog for sending a message
   void _showMessageDialog(BuildContext context,WidgetRef ref) {
-    debugPrint(account?.phoneNumber);
+  
+    final theme = ref.theme;
     
 
-    showCustomAlert(
+    showCustomDialog(
       context: context,
-      ref: ref,
-
-
+      barrierDismissible: true,
       title: 'إرسال رسالة',
-      message: 'هل تريد ارسال رسالة للعميل؟',
-      confirmText: 'ارسال',
-      cancelText: 'اغلاق',
-      onConfirm: () {
-        // Implement message functionality here
-        Navigator.pop(context);
-      },
+      hugeIconTitle: HugeIcons.strokeRoundedMessage01,
+      content: CustomAutoSizeText(
+        text: 'هل تريد إرسال رسالة إلى الرقم ${account.phoneNumber}؟',
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
+        maxLines: 2,
+        colorText: theme.colorScheme.onSurface,
+        style: theme.textTheme.bodyMedium,
+      ),
+      actions: [
+        CustomButton(
+          onPressed: () {
+            // Implement message sending functionality here
+            Navigator.pop(context);
+          },
+          backgroundColor: theme.colorScheme.primary,
+          width: 80,
+          height: 20,
+          text: 'إرسال',
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: CustomAutoSizeText(
+            text: 'إلغاء',
+            colorText: theme.colorScheme.onSurface,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            style: theme.textTheme.bodyMedium,
+          ),
+        ),
+      ]
      
       
     );
@@ -254,19 +361,19 @@ class AccountDetailsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
 
     showCustomDialog(
+
       context: context,
       barrierDismissible: true,
-      titleWidget: CustomAutoSizeText(
-        text: 'تقرير الحساب',
-        fontSize: 12,
-        fontWeight: FontWeight.bold,
-        colorText: theme.colorScheme.onPrimary,
-      ),
+      title:'تقرير الحساب' ,
+      hugeIconTitle: HugeIcons.strokeRoundedPdf01,
       content: Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+
         children: [
           CustomAutoSizeText(
-            text: 'هل تريد إنشاء تقرير عن الحساب: ${account?.name ?? "هذا الحساب"}',
+            text: 'هل تريد إنشاء تقرير عن الحساب: ${account.name}',
             fontSize: 12,
             
             colorText: theme.colorScheme.onSurface,
@@ -295,7 +402,7 @@ class AccountDetailsScreen extends ConsumerWidget {
                 },
                  backgroundColor: theme.colorScheme.primary,
                 width: 80,
-                height: 30,
+                height: 20,
                 text: 'إنشاء تقرير',
                 
               ),
@@ -304,6 +411,9 @@ class AccountDetailsScreen extends ConsumerWidget {
             child: CustomAutoSizeText(
               text: 'إلغاء',
               colorText: theme.colorScheme.onSurface,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              style: theme.textTheme.bodyMedium,
             ),
           ),
 
@@ -312,6 +422,52 @@ class AccountDetailsScreen extends ConsumerWidget {
   }
 }
 
+class _InfoRow extends ConsumerWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color? valueColor;
+
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.valueColor,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.theme;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        CustomHugeIcon(
+          icon: icon,
+          size: 16.0,
+          color: theme.colorScheme.onPrimary.withAlpha(80),
+        ),
+        const ResponsiveSpace(width: 8.0),
+        CustomAutoSizeText(
+          text: label,
+          style: theme.textTheme.bodyMedium,
+          colorText: theme.colorScheme.onPrimary.withAlpha(80),
+          fontSize: 12.0,
+        ),
+        const ResponsiveSpace(width: 4.0),
+        Expanded(
+          child: CustomAutoSizeText(
+            text: value,
+            style: theme.textTheme.bodyMedium,
+            fontWeight: FontWeight.bold,
+            colorText: valueColor ?? theme.colorScheme.onPrimary,
+            fontSize: 12.0,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 
 

@@ -1,4 +1,4 @@
-import 'package:bookkeeping_flutter_app/core/utils/responsive_values.dart';
+import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter/material.dart';
@@ -9,15 +9,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class CustomHorizontalListView extends ConsumerStatefulWidget {
   final List<String> nameButtons;
   final List<Widget> contentWidgets;
-  final ThemeData theme;
-  final ResponsiveValues responsive;
+  
 
   const CustomHorizontalListView({
     super.key,
     required this.nameButtons,
     required this.contentWidgets,
-    required this.theme,
-    required this.responsive,
+    
   });
 
   @override
@@ -65,7 +63,8 @@ class _CustomHorizontalListViewState
 
   @override
   Widget build(BuildContext context) {
-    
+    final theme = ref.theme;
+    final responsive = ref.responsive;
     
     
 
@@ -111,11 +110,11 @@ class _CustomHorizontalListViewState
               
               final isSelected = index == selectedIndex;
               return Padding(
-                padding: widget.responsive.paddingOnly(left: 6),
+                padding: responsive.paddingOnly(left: 6),
                 child: ChoiceChip(
                   showCheckmark: false,
                   label: CustomAutoSizeText(text:buttons[index],
-                  style: widget.theme.textTheme.bodyMedium,
+                  style: theme.textTheme.bodyMedium,
                   fontSize: 12,
                   // colorText: isSelected? widget.theme.colorScheme.onPrimaryContainer
                   //       : widget.theme.colorScheme.onSurface,

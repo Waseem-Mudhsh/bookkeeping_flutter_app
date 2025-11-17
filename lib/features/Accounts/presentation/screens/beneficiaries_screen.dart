@@ -1,196 +1,4 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import '../../../../core/base_layout/base_layout_screen.dart';
-// import '../../../../core/base_layout/build_non_tabbar_layout.dart';
-
-
-// class Beneficiary {
-//   final int id;
-//   final String name;
-//   final String relation;
-//   Beneficiary(this.id, this.name, this.relation);
-// }
-
-// class BeneficiariesScreen extends ConsumerStatefulWidget {
-//   const BeneficiariesScreen({super.key});
-//   @override
-//   ConsumerState<BeneficiariesScreen> createState() => _BeneficiariesScreenState();
-// }
-
-// class _BeneficiariesScreenState extends ConsumerState<BeneficiariesScreen> {
-//   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
-//   final TextEditingController _nameController = TextEditingController();
-//   final TextEditingController _relationController = TextEditingController();
-//   final List<Beneficiary> _beneficiaries = [];
-//   int _maxId = 0;
-
-//   void _addBeneficiary() {
-//     final name = _nameController.text.trim();
-//     final relation = _relationController.text.trim();
-//     if (name.isEmpty || relation.isEmpty) return;
-//     final beneficiary = Beneficiary(_maxId++, name, relation);
-//     setState(() {
-//       _beneficiaries.add(beneficiary);
-//       _listKey.currentState?.insertItem(_beneficiaries.length - 1, duration: const Duration(milliseconds: 400));
-//       _nameController.clear();
-//       _relationController.clear();
-//     });
-//   }
-
-//   void _removeBeneficiary(int index) {
-//     final removed = _beneficiaries.removeAt(index);
-//     _listKey.currentState?.removeItem(
-//       index,
-//       (context, animation) => FadeTransition(
-//         opacity: animation,
-//         child: _buildBeneficiaryTile(removed, index),
-//       ),
-//       duration: const Duration(milliseconds: 400),
-//     );
-//     setState(() {});
-//   }
-
-//   void _editBeneficiary(int index) async {
-//     final beneficiary = _beneficiaries[index];
-//     _nameController.text = beneficiary.name;
-//     _relationController.text = beneficiary.relation;
-//     final result = await showDialog<bool>(
-//       context: context,
-//       builder: (context) => AlertDialog(
-//         title: const Text('تعديل مستفيد'),
-//         content: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             TextField(
-//               controller: _nameController,
-//               decoration: const InputDecoration(labelText: 'اسم المستفيد'),
-//             ),
-//             TextField(
-//               controller: _relationController,
-//               decoration: const InputDecoration(labelText: 'نوع العلاقة'),
-//             ),
-//           ],
-//         ),
-//         actions: [
-//           TextButton(
-//             onPressed: () => Navigator.pop(context, false),
-//             child: const Text('إلغاء'),
-//           ),
-//           ElevatedButton(
-//             onPressed: () => Navigator.pop(context, true),
-//             child: const Text('حفظ'),
-//           ),
-//         ],
-//       ),
-//     );
-//     if (result == true) {
-//       setState(() {
-//         _beneficiaries[index] = Beneficiary(
-//           beneficiary.id,
-//           _nameController.text.trim(),
-//           _relationController.text.trim(),
-//         );
-//         _nameController.clear();
-//         _relationController.clear();
-//       });
-//     }
-//   }
-
-//   Widget _buildBeneficiaryTile(Beneficiary beneficiary, int index) {
-//     return Card(
-//       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
-//       child: ListTile(
-//         leading: const CircleAvatar(child: Icon(Icons.person)),
-//         title: Text(beneficiary.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-//         subtitle: Text('العلاقة: ${beneficiary.relation}'),
-//         trailing: Row(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             IconButton(
-//               icon: const Icon(Icons.edit, color: Colors.blueAccent),
-//               onPressed: () => _editBeneficiary(index),
-//               tooltip: 'تعديل',
-//             ),
-//             IconButton(
-//               icon: const Icon(Icons.delete, color: Colors.redAccent),
-//               onPressed: () => _removeBeneficiary(index),
-//               tooltip: 'حذف',
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   @override
-//   void dispose() {
-//     _nameController.dispose();
-//     _relationController.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return BaseLayoutScreen(
-//       body: BuildNonTabbarLayout(
-//         titleWidget: const Text('المستفيدون', style: TextStyle(fontWeight: FontWeight.bold)),
-//         slivers: [
-//           SliverToBoxAdapter(
-//             child: Padding(
-//               padding: const EdgeInsets.symmetric(vertical: 16),
-//               child: Row(
-//                 children: [
-//                   Expanded(
-//                     child: TextField(
-//                       controller: _nameController,
-//                       decoration: const InputDecoration(
-//                         labelText: 'اسم المستفيد',
-//                         border: OutlineInputBorder(),
-//                       ),
-//                     ),
-//                   ),
-//                   const SizedBox(width: 8),
-//                   Expanded(
-//                     child: TextField(
-//                       controller: _relationController,
-//                       decoration: const InputDecoration(
-//                         labelText: 'نوع العلاقة',
-//                         border: OutlineInputBorder(),
-//                       ),
-//                     ),
-//                   ),
-//                   const SizedBox(width: 8),
-//                   ElevatedButton.icon(
-//                     onPressed: _addBeneficiary,
-//                     icon: const Icon(Icons.add),
-//                     label: const Text('إضافة'),
-//                     style: ElevatedButton.styleFrom(
-//                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//           SliverToBoxAdapter(
-//             child: AnimatedList(
-//               key: _listKey,
-//               shrinkWrap: true,
-//               initialItemCount: _beneficiaries.length,
-//               itemBuilder: (context, index, animation) {
-//                 final beneficiary = _beneficiaries[index];
-//                 return FadeTransition(
-//                   opacity: animation,
-//                   child: _buildBeneficiaryTile(beneficiary, index),
-//                 );
-//               },
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+import 'package:bookkeeping_flutter_app/core/app_scaffold/adaptive_scaffold.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_alert_dialog_enhanced.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
@@ -202,9 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-import '../../../../core/base_layout/base_layout_screen.dart';
 import '../../../../core/base_layout/build_non_tabbar_layout.dart';
-
 
 // Assuming you have your custom core files imported here
 
@@ -219,15 +25,162 @@ class Beneficiary {
 class BeneficiariesScreen extends ConsumerStatefulWidget {
   const BeneficiariesScreen({super.key});
   @override
-  ConsumerState<BeneficiariesScreen> createState() => _BeneficiariesScreenState();
+  ConsumerState<BeneficiariesScreen> createState() =>
+      _BeneficiariesScreenState();
 }
 
 class _BeneficiariesScreenState extends ConsumerState<BeneficiariesScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _relationController = TextEditingController();
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _relationFocusNode = FocusNode();
   final List<Beneficiary> _beneficiaries = [];
   int _maxId = 0;
+  // Add a new collection to track all controllers
+  final List<TextEditingController> _tempControllers = [];
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _relationController.dispose();
+    _nameFocusNode.dispose();
+    _relationFocusNode.dispose();
+    // Clean up all temporary controllers
+    for (final controller in _tempControllers) {
+      controller.dispose();
+    }
+    _tempControllers.clear();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = ref.theme;
+
+    return GestureDetector(
+      onTap: () {
+        // Unfocus all fields when tapping outside
+        _nameFocusNode.unfocus();
+        _relationFocusNode.unfocus();
+      },
+      child: AdaptiveScaffold(
+        body: BuildNonTabbarLayout(
+          titleWidget: CustomAutoSizeText(
+            text: 'إدارة المستفيدين',
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            colorText: theme.colorScheme.onSurface,
+            style: theme.textTheme.bodyMedium,
+          ),
+          slivers: [
+            SliverToBoxAdapter(child: const ResponsiveSpace(height: 16)),
+            SliverToBoxAdapter(child: _buildAddBeneficiarySection()),
+            SliverToBoxAdapter(child: const ResponsiveSpace(height: 24)),
+            SliverToBoxAdapter(child: _buildListHeader()),
+            const SliverToBoxAdapter(child: ResponsiveSpace(height: 8)),
+            SliverToBoxAdapter(
+              child: AnimatedList(
+                shrinkWrap: true,
+
+                key: _listKey,
+                initialItemCount: _beneficiaries.length,
+                itemBuilder: (context, index, animation) {
+                  final beneficiary = _beneficiaries[index];
+                  return SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(0, 0.5),
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: _buildBeneficiaryTile(beneficiary, index),
+                  );
+                },
+              ),
+            ),
+            const SliverToBoxAdapter(
+              child: ResponsiveSpace(height: 30),
+            ), // Bottom spacing
+          ],
+        ),
+      ),
+    );
+  }
+
+  // List Header Widget
+  Widget _buildListHeader() {
+    final theme = ref.theme;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        CustomAutoSizeText(
+          text: 'قائمة المستفيدين (${_beneficiaries.length})',
+          style: theme.textTheme.bodyMedium,
+          fontSize: 12,
+        ),
+        if (_beneficiaries.isNotEmpty)
+          TextButton(
+            onPressed: () {
+              /* Sort logic */
+            },
+            child: const Text('فرز'),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildAddBeneficiarySection() {
+    final theme = ref.theme;
+    final responsive = ref.responsive;
+    return Container(
+      padding: responsive.paddingAll(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+          width: 0.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // 1. Name Input
+          CustomTextField(
+            controller: _nameController,
+            label: 'اسم المستفيد',
+            hint: 'اسم المستفيد (مثال: احمد، محمد)',
+            suffixIcon: CustomHugeIcon(icon: HugeIcons.strokeRoundedUser02),
+            focusNode: _nameFocusNode,
+            onFieldSubmitted: (_) {
+              // Move focus to relation field on submit
+              _relationFocusNode.requestFocus();
+            },
+          ),
+          const ResponsiveSpace(height: 12),
+          // 2. Relation Input
+          CustomTextField(
+            controller: _relationController,
+            label: 'نوع القرابة',
+            hint: 'ادخل نوع القرابة',
+            suffixIcon: CustomHugeIcon(
+              icon: HugeIcons.strokeRoundedUserGroup03,
+            ),
+            focusNode: _relationFocusNode,
+            onFieldSubmitted: (_) {
+              _relationFocusNode.unfocus();
+            },
+          ),
+          const ResponsiveSpace(height: 16),
+          CustomButton(
+            text: 'إضافة مستفيد',
+            onPressed: _addBeneficiary,
+            backgroundColor: theme.colorScheme.secondary,
+          ),
+        ],
+      ),
+    );
+  }
 
   void _addBeneficiary() {
     final name = _nameController.text.trim();
@@ -236,95 +189,130 @@ class _BeneficiariesScreenState extends ConsumerState<BeneficiariesScreen> {
     final beneficiary = Beneficiary(_maxId++, name, relation);
     setState(() {
       _beneficiaries.add(beneficiary);
-      _listKey.currentState?.insertItem(_beneficiaries.length - 1, duration: const Duration(milliseconds: 400));
+      _listKey.currentState?.insertItem(
+        _beneficiaries.length - 1,
+        duration: const Duration(milliseconds: 400),
+      );
       _nameController.clear();
       _relationController.clear();
     });
+    // Hide keyboard and unfocus fields
+    _nameFocusNode.unfocus();
+    _relationFocusNode.unfocus();
   }
 
   void _removeBeneficiary(int index) async {
     // التحقق من أن الفهرس لا يزال صالحًا
     if (index < 0 || index >= _beneficiaries.length) {
-        return;
+      return;
     }
-    
+
     final removed = _beneficiaries[index];
-    final result = await showCustomAlert<bool>(
-        context: context, 
-        ref: ref,
-        title: 'حذف مستفيد',
-        message: 'هل أنت متأكد أنك تريد حذف المستفيد ${removed.name}؟',
-        confirmText: 'نعم',
-        cancelText: 'لا',
-        onConfirm: () => Navigator.pop(context, true),
-        onCancel: () => Navigator.pop(context, false),
+    final result = await showCustomDialog<bool>(
+      context: context,
+      title: 'حذف مستفيد',
+      hugeIconTitle: HugeIcons.strokeRoundedDelete02,
+      content: CustomAutoSizeText(
+        text: 'هل أنت متأكد من حذف المستفيد ${removed.name}؟',
+        fontSize: 12,
+        style: ref.theme.textTheme.bodyMedium,
+        fontWeight: FontWeight.bold,
+        colorText: ref.theme.colorScheme.onSurface,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('إلغاء', style: TextStyle(color: Colors.grey)),
+        ),
+        CustomButton(
+          onPressed: () => Navigator.pop(context, true),
+          backgroundColor: ref.theme.colorScheme.error,
+          text: 'حذف',
+          width: 100,
+          height: 30,
+        ),
+      ],
     );
-    
+
     if (result == true) {
-        // التحقق مرة أخرى من صحة الفهرس قبل الحذف
-        if (index < _beneficiaries.length && _beneficiaries[index].id == removed.id) {
-            _listKey.currentState?.removeItem(
-                index,
-                (context, animation) => FadeTransition(
-                    opacity: animation,
-                    child: _buildBeneficiaryTile(removed, index),
-                ),
-                duration: const Duration(milliseconds: 400),
-            );
-            setState(() {
-                _beneficiaries.removeAt(index);
-            });
-        }
+      // التحقق مرة أخرى من صحة الفهرس قبل الحذف
+      if (index < _beneficiaries.length &&
+          _beneficiaries[index].id == removed.id) {
+        _listKey.currentState?.removeItem(
+          index,
+          (context, animation) => FadeTransition(
+            opacity: animation,
+            child: _buildBeneficiaryTile(removed, index),
+          ),
+          duration: const Duration(milliseconds: 400),
+        );
+        setState(() {
+          _beneficiaries.removeAt(index);
+        });
+      }
     }
-}
+  }
 
   // --- ENHANCED EDIT DIALOG ---
   void _editBeneficiary(int index) async {
-     final theme = ref.theme;
+    final theme = ref.theme;
     final Beneficiary beneficiary = _beneficiaries[index];
     // Use fresh controllers for the dialog to avoid clearing main ones if cancelled
     final tempNameController = TextEditingController(text: beneficiary.name);
-    final tempRelationController = TextEditingController(text: beneficiary.relation);
+    final tempRelationController = TextEditingController(
+      text: beneficiary.relation,
+    );
+    final tempNameFocusNode = FocusNode();
+    final tempRelationFocusNode = FocusNode();
+    // Add temporary controllers to the tracking list
+    _tempControllers.addAll([tempNameController, tempRelationController]);
 
     final result = await showCustomDialog<bool>(
       barrierDismissible: false,
       context: context,
-      titleWidget: CustomAutoSizeText(
-        text: 'تعديل مستفيد',
-      style: theme.textTheme.bodyMedium,
-      fontSize: 12,
-      colorText: theme.colorScheme.onPrimary,
-      fontWeight: FontWeight.bold,
-      ),
+      title: 'تعديل مستفيد',
+      hugeIconTitle: HugeIcons.strokeRoundedEdit02,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-            CustomTextField(controller: tempNameController,
-                   label: 'اسم المستفيد',
-                   hint: 'اسم المستفيد (مثال: احمد، محمد)',
-                   suffixIcon: CustomHugeIcon(icon: HugeIcons.strokeRoundedUser02,),
-                   validator: (p0) {
-                    if (p0 == null || p0.isEmpty) {
-                      return 'الرجاء إدخال اسم المستفيد';
-                    }
-                    return null;
-                   },
-                   ),
-                  const ResponsiveSpace(height: 12,),
-                  // 2. Relation Input
-                 CustomTextField(controller: tempRelationController,
-                  label: 'نوع القرابة',
-                  hint: 'ادخل نوع القرابة',
-                 suffixIcon: CustomHugeIcon(icon: HugeIcons.strokeRoundedUserGroup03,),
-                  validator: (p0) {
-                    if (p0 == null || p0.isEmpty) {
-                      return 'الرجاء إدخال نوع القرابة';
-                    }
-                    return null;
-                  },
-                 ),
-         
-        
+          CustomTextField(
+            controller: tempNameController,
+            focusNode: tempNameFocusNode,
+            onFieldSubmitted: (_) {
+              // Move focus to relation field on submit
+              _relationFocusNode.requestFocus();
+            },
+            label: 'اسم المستفيد',
+            hint: 'اسم المستفيد (مثال: احمد، محمد)',
+            suffixIcon: CustomHugeIcon(icon: HugeIcons.strokeRoundedUser02),
+            validator: (p0) {
+              if (p0 == null || p0.isEmpty) {
+                return 'الرجاء إدخال اسم المستفيد';
+              }
+              return null;
+            },
+          ),
+          const ResponsiveSpace(height: 12),
+          // 2. Relation Input
+          CustomTextField(
+            controller: tempRelationController,
+            focusNode: tempRelationFocusNode,
+            onFieldSubmitted: (value) {
+              // Hide keyboard when submitting the last field
+              tempRelationFocusNode.unfocus();
+            },
+            label: 'نوع القرابة',
+            hint: 'ادخل نوع القرابة',
+            suffixIcon: CustomHugeIcon(
+              icon: HugeIcons.strokeRoundedUserGroup03,
+            ),
+            validator: (p0) {
+              if (p0 == null || p0.isEmpty) {
+                return 'الرجاء إدخال نوع القرابة';
+              }
+              return null;
+            },
+          ),
         ],
       ),
       actions: [
@@ -333,13 +321,13 @@ class _BeneficiariesScreenState extends ConsumerState<BeneficiariesScreen> {
           child: const Text('إلغاء', style: TextStyle(color: Colors.grey)),
         ),
         CustomButton(
-          onPressed: (){
+          onPressed: () {
             Navigator.pop(context, true);
-
           },
-         backgroundColor: theme.colorScheme.secondary,
-         text: 'حفظ',
-          width: 100, height: 30,
+          backgroundColor: theme.colorScheme.secondary,
+          text: 'حفظ',
+          width: 100,
+          height: 30,
         ),
       ],
     );
@@ -353,33 +341,35 @@ class _BeneficiariesScreenState extends ConsumerState<BeneficiariesScreen> {
         );
       });
     }
-
-    // Dispose temporary controllers
-    tempNameController.dispose();
-    tempRelationController.dispose();
   }
   // -----------------------------
 
   // --- ENHANCED TILE WIDGET ---
-  Widget _buildBeneficiaryTile(Beneficiary beneficiary, int index, {bool isRemoved = false}) {
+  Widget _buildBeneficiaryTile(
+    Beneficiary beneficiary,
+    int index, {
+    bool isRemoved = false,
+  }) {
     final theme = ref.theme;
     final responsive = ref.responsive;
     return Card(
-    
       elevation: isRemoved ? 0 : 4, // Reduce elevation during removal
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         // Subtle border for definition
-        side: BorderSide(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5), width: 0.5),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+          width: 0.5,
+        ),
       ),
       child: ListTile(
         contentPadding: responsive.paddingSym(h: 16, v: 4),
         leading: CircleAvatar(
           backgroundColor: theme.colorScheme.primaryContainer,
-          child: CustomHugeIcon(icon:HugeIcons.strokeRoundedUser02, ),
+          child: CustomHugeIcon(icon: HugeIcons.strokeRoundedUser02),
         ),
         title: CustomAutoSizeText(
-        text:   beneficiary.name,
+          text: beneficiary.name,
           style: theme.textTheme.bodyMedium,
           fontSize: 14,
           fontWeight: FontWeight.w700,
@@ -392,24 +382,28 @@ class _BeneficiariesScreenState extends ConsumerState<BeneficiariesScreen> {
           fontSize: 10,
           style: theme.textTheme.bodySmall,
           fontWeight: FontWeight.w500,
-          colorText: theme.colorScheme.onSurfaceVariant,),
+          colorText: theme.colorScheme.onSurfaceVariant,
+        ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             // Edit Button (Blue)
             IconButton(
-              icon: CustomHugeIcon(icon:HugeIcons.strokeRoundedEdit02,
-              color: theme.colorScheme.secondary,
-              size: 20,
+              icon: CustomHugeIcon(
+                icon: HugeIcons.strokeRoundedEdit02,
+                color: theme.colorScheme.secondary,
+                size: 20,
               ),
               onPressed: () => _editBeneficiary(index),
               tooltip: 'تعديل',
             ),
             // Delete Button (Red)
             IconButton(
-              icon: CustomHugeIcon(icon: HugeIcons.strokeRoundedDelete02,
-              color: theme.colorScheme.error,
-              size: 20,),
+              icon: CustomHugeIcon(
+                icon: HugeIcons.strokeRoundedDelete02,
+                color: theme.colorScheme.error,
+                size: 20,
+              ),
               onPressed: () => _removeBeneficiary(index),
               tooltip: 'حذف',
             ),
@@ -418,116 +412,6 @@ class _BeneficiariesScreenState extends ConsumerState<BeneficiariesScreen> {
       ),
     );
   }
+
   // -----------------------------
-
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _relationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    
-     final theme = ref.theme;
-
-    return BaseLayoutScreen(
-      body: BuildNonTabbarLayout(
-        titleWidget:  CustomAutoSizeText(
-          text: 'إدارة المستفيدين',
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  colorText: theme.colorScheme.onSurface,
-                  style: theme.textTheme.bodyMedium,
-                ),
-        slivers: [
-          SliverToBoxAdapter(child: const ResponsiveSpace(height: 16)),
-          SliverToBoxAdapter(
-            child: _buildAddBeneficiarySection(),
-          ),
-          SliverToBoxAdapter(child: const ResponsiveSpace(height: 24)),
-           SliverToBoxAdapter(child: _buildListHeader()),
-          const SliverToBoxAdapter(child: ResponsiveSpace(height: 8)),
-          SliverToBoxAdapter(
-            child: AnimatedList(
-              shrinkWrap: true,
-             
-              key: _listKey,
-              initialItemCount: _beneficiaries.length,
-              itemBuilder: (context, index, animation) {
-                final beneficiary = _beneficiaries[index];
-                return SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0, 0.5),
-                    end: Offset.zero,
-                  ).animate(animation),
-                  child: _buildBeneficiaryTile(beneficiary, index),
-                );
-              },
-            ),
-          ),
-          const SliverToBoxAdapter(child: ResponsiveSpace(height: 30)), // Bottom spacing
-        ],
-      ),
-    );
-  }
-  // List Header Widget
-  Widget _buildListHeader() {
-      final theme = ref.theme;
-    return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomAutoSizeText(text:  'قائمة المستفيدين (${_beneficiaries.length})', 
-                         style: theme.textTheme.bodyMedium,
-                         fontSize: 12,),
-                    if (_beneficiaries.isNotEmpty)
-                      TextButton(
-                        onPressed: () { /* Sort logic */ },
-                        child: const Text('فرز'),
-                      ),
-                  ],
-                );
-  }
-  Widget _buildAddBeneficiarySection() {
-     final theme = ref.theme;
-     final responsive = ref.responsive;
-    return Container(
-      padding: responsive.paddingAll(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5), width: 0.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-            // 1. Name Input
-                  CustomTextField(controller: _nameController,
-                   label: 'اسم المستفيد',
-                   hint: 'اسم المستفيد (مثال: احمد، محمد)',
-                   suffixIcon: CustomHugeIcon(icon: HugeIcons.strokeRoundedUser02,)
-                   ),
-                  const ResponsiveSpace(height: 12,),
-                  // 2. Relation Input
-                 CustomTextField(controller: _relationController, label: 'نوع القرابة', hint: 'ادخل نوع القرابة',
-                 suffixIcon: CustomHugeIcon(icon: HugeIcons.strokeRoundedUserGroup03,)
-                 ),
-                  const ResponsiveSpace(height: 16,),
-                  CustomButton(
-                    text:  'إضافة مستفيد',
-                    onPressed: _addBeneficiary,
-                    backgroundColor: theme.colorScheme.secondary,
-                    ),
-                  
-                  
-                 
-        ],
-      ),
-
-
-    );
-  }
 }

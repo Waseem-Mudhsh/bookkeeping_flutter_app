@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
+import 'package:bookkeeping_flutter_app/core/app_scaffold/adaptive_scaffold.dart';
 import 'package:bookkeeping_flutter_app/core/base_layout/build_non_tabbar_layout.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/utils/route_names.dart';
@@ -97,7 +97,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
       ),
     );
 
-    return BaseLayoutScreen(
+    return AdaptiveScaffold(
       body: BuildNonTabbarLayout(
         titleWidget: CustomAutoSizeText(
           text: 'التحقق من الرمز',

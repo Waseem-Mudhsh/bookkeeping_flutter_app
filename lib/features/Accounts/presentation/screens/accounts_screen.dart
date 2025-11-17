@@ -1,8 +1,6 @@
-import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_horizontal_list_view.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/account_details_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../widgets/accounts_list_section.dart';
 
@@ -11,7 +9,7 @@ import '../widgets/accounts_list_section.dart';
 
 
 // Main Screen Widget
-class AccountsScreen extends ConsumerWidget {
+class AccountsScreen extends StatelessWidget {
 
   const AccountsScreen({
     super.key,
@@ -19,7 +17,7 @@ class AccountsScreen extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     
     final List<String> categorices = [
       'العملاء',
@@ -29,8 +27,7 @@ class AccountsScreen extends ConsumerWidget {
       'المصروفات',
     ];
 
-    final theme = ref.theme;
-    final responsive = ref.responsive;
+   
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -39,8 +36,7 @@ class AccountsScreen extends ConsumerWidget {
       
 
         CustomHorizontalListView(
-          responsive: responsive,
-          theme: theme,
+          
           nameButtons: categorices,
           contentWidgets: [
             

@@ -27,6 +27,8 @@ class CustomTextField extends ConsumerWidget {
   final int? maxLines;
   final bool? hasBorder;
   final List<TextInputFormatter>? inputFormatters;
+  final dynamic focusNode;
+  final Function(String)? onFieldSubmitted;
 
 
   const CustomTextField({
@@ -52,6 +54,8 @@ class CustomTextField extends ConsumerWidget {
     this.maxLines = 1,
     this.hasBorder = true,
     this.inputFormatters,
+    this.focusNode,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -63,7 +67,8 @@ class CustomTextField extends ConsumerWidget {
       obscuringCharacter: '*',
       inputFormatters: [
         ...?inputFormatters,],
-      focusNode: FocusNode(),
+      focusNode: focusNode ?? FocusNode(),
+      onFieldSubmitted: onFieldSubmitted, 
 
       keyboardType: keyboardType ?? TextInputType.text,
       style: style ?? theme.textTheme.bodyMedium,

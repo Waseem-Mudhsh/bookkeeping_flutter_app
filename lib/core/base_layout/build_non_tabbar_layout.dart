@@ -13,10 +13,15 @@ class BuildNonTabbarLayout extends ConsumerWidget {
   final List<Widget>? actions;
   final double? toolbarHeight;
   final PreferredSize? bottom;
-  final bool hasLeading;
+  final bool hasDrawer;
   final List<Widget> slivers;
   final double? padding;
   final ScrollPhysics? physics;
+  final double? expandedHeight;
+  final bool? floating;
+  final bool? snap;
+  final bool? pinned;
+  final FlexibleSpaceBar? flexibleSpaceContent;
 
 
   const BuildNonTabbarLayout({
@@ -25,10 +30,16 @@ class BuildNonTabbarLayout extends ConsumerWidget {
     this.actions,
     this.toolbarHeight,
     this.bottom,
-    this.hasLeading = false,
+    this.hasDrawer = false,
     required this.slivers,
     this.padding,
     this.physics,
+    this.expandedHeight,
+    this.floating,
+    this.snap,
+    this.pinned,
+    this.flexibleSpaceContent,
+
   }); 
 
 @override
@@ -41,11 +52,16 @@ Widget build(BuildContext context, WidgetRef ref) {
     physics: physics ?? const ClampingScrollPhysics(),
     slivers: [
       CustomSliverAppBar(
-        toolbarHeight:  responsive.h(toolbarHeight ?? 50),
-        hasLeading: hasLeading,
+        toolbarHeight:  responsive.h(toolbarHeight ?? 56),
+        hasDrawer: hasDrawer,
         title: titleWidget,
         actions: actions,
         bottom: bottom,
+        expandedHeight: expandedHeight,
+        floating: floating ?? false,
+        snap: snap ?? false,
+        pinned: pinned ?? true,
+        flexibleSpaceContent: flexibleSpaceContent,
       ),
       
       ...slivers.map((sliver) => SliverPadding(

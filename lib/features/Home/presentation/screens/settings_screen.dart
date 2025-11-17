@@ -1,4 +1,4 @@
-import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
+import 'package:bookkeeping_flutter_app/core/app_scaffold/adaptive_scaffold.dart';
 import 'package:bookkeeping_flutter_app/core/base_layout/build_non_tabbar_layout.dart';
 import 'package:bookkeeping_flutter_app/core/providers/settings_provider.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
@@ -23,7 +23,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.theme;
 
-    return BaseLayoutScreen(
+    return AdaptiveScaffold(
       body: BuildNonTabbarLayout(
         titleWidget: CustomAutoSizeText(
           text: 'الإعدادات',
@@ -207,12 +207,8 @@ class SettingsScreen extends ConsumerWidget {
     showCustomDialog(
         context: context,
         barrierDismissible: false,
-        titleWidget: CustomAutoSizeText(
-          text: 'إنشاء نسخة احتياطية',
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          colorText: theme.colorScheme.onPrimary,
-        ),
+        title: 'إنشاء نسخة احتياطية',
+        hugeIconTitle: HugeIcons.strokeRoundedCloudUpload,
         content: CustomAutoSizeText(
           text: 'هل أنت متأكد من رغبتك في إنشاء نسخة احتياطية الآن؟',
           fontSize: 12,

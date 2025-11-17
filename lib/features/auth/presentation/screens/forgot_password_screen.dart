@@ -1,4 +1,4 @@
-import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
+import 'package:bookkeeping_flutter_app/core/app_scaffold/adaptive_scaffold.dart';
 import 'package:bookkeeping_flutter_app/core/base_layout/build_non_tabbar_layout.dart';
 import 'package:bookkeeping_flutter_app/core/providers/shared_preferences_provider.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
@@ -53,7 +53,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     final isLoading = ref.watch(loadingStateProvider);
     final phoneNumber = ref.watch(sharedPreferencesProvider).value?.getString('userPhoneNumber') ?? '';
 
-    return BaseLayoutScreen(
+    return AdaptiveScaffold(
       body: BuildNonTabbarLayout(
         titleWidget: CustomAutoSizeText(
           text: 'استعادة كلمة المرور',

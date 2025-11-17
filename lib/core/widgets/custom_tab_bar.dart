@@ -64,19 +64,25 @@ class CustomTabBar extends ConsumerWidget implements PreferredSizeWidget {
   final List<Tab> tabs;
   final TabController? tabController;
   final bool isScrollable;
+  final double height;
 
   const CustomTabBar({
     required this.tabs,
     this.tabController,
     this.isScrollable = false,
+    this.height= kToolbarHeight,
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.theme;
+    final responsive = ref.responsive;
 
     return Container(
+      height: height,
+      padding: responsive.paddingSym(h: 16),
+      
       decoration: BoxDecoration(
         color: theme.colorScheme.surface, // لون الخلفية
         border: Border(
@@ -87,6 +93,8 @@ class CustomTabBar extends ConsumerWidget implements PreferredSizeWidget {
         ),
       ),
       child: TabBar(
+         
+        tabAlignment: TabAlignment.start,
         controller: tabController,
         isScrollable: isScrollable,
         dividerColor: Colors.transparent,
@@ -118,5 +126,5 @@ class CustomTabBar extends ConsumerWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => throw UnimplementedError();
+  Size get preferredSize => Size.fromHeight(height);
 }

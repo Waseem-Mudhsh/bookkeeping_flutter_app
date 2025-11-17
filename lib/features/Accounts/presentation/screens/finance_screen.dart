@@ -1,10 +1,10 @@
-import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
+import 'package:bookkeeping_flutter_app/core/app_scaffold/adaptive_scaffold.dart';
+
 import 'package:bookkeeping_flutter_app/core/base_layout/build_non_tabbar_layout.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/accounts_list_section.dart';
-import 'package:bookkeeping_flutter_app/features/Accounts/presentation/screens/account_details_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Notifications/presentation/providers/notification_provider.dart';
 import 'package:bookkeeping_flutter_app/features/Notifications/presentation/screens/notifications_screen.dart';
 import 'package:bookkeeping_flutter_app/features/Notifications/presentation/widgets/custom_notification_button.dart';
@@ -23,7 +23,7 @@ class FinanceScreen extends ConsumerWidget {
     final notificationCount = ref.watch(notificationProvider).length;
     final theme = ref.theme;
 
-    return BaseLayoutScreen(
+    return AdaptiveScaffold(
      
       body: BuildNonTabbarLayout(
         titleWidget: CustomAutoSizeText(
@@ -53,7 +53,7 @@ class FinanceScreen extends ConsumerWidget {
           SliverToBoxAdapter(child: ResponsiveSpace(height: 16,),),
           SliverToBoxAdapter(child: AccountsListSection(
             onAccountTap: (account) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AccountDetailsScreen(account: account)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AccountSubRoutes.details.screenDetails(account)));
             },
             onAddAccount: () {
               // TODO: Implement search or filter logic

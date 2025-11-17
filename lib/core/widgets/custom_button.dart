@@ -38,9 +38,9 @@ class CustomButton extends ConsumerWidget {
       style: ElevatedButton.styleFrom(
         minimumSize: Size(
           responsive.w(width ?? double.infinity),
-          responsive.h(height ?? 48),
+          responsive.h(height ?? 40),
         ),
-        padding: responsive.paddingSym(h: 16, v: 16),
+        padding: responsive.paddingSym(h: 16, v: 8),
         // استخدام اللون الافتراضي إذا لم يتم تحديده
         backgroundColor: backgroundColor ?? theme.colorScheme.primary, // جعل اللون الرئيسي هو الافتراضي
         shape: RoundedRectangleBorder(

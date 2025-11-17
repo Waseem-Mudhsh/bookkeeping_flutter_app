@@ -1,3 +1,4 @@
+import 'package:bookkeeping_flutter_app/core/app_scaffold/adaptive_scaffold.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_expansion_tile.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
-import '../../../../core/base_layout/base_layout_screen.dart';
+
 import '../../../../core/base_layout/build_non_tabbar_layout.dart';
 import '../../../../core/utils/id_generator.dart';
 import '../../../../core/widgets/custom_button.dart';
@@ -151,8 +152,8 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: CustomAutoSizeText(
-            text:   widget.existingAccount == null ? 'تم إضافة الحساب بنجاح!' : 'تم تعديل الحساب بنجاح!',
-             fontSize: 10,
+            text: widget.existingAccount == null ? 'تم إضافة الحساب بنجاح!' : 'تم تعديل الحساب بنجاح!',
+             fontSize: 10.0,
              style: ref.theme.textTheme.bodySmall,
              colorText: Colors.white,
             ),
@@ -201,17 +202,17 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
     final theme = ref.theme;
     final responsive = ref.responsive;
 
-    return BaseLayoutScreen(
+    return AdaptiveScaffold(
       body: BuildNonTabbarLayout(
         titleWidget: CustomAutoSizeText(
           text: widget.existingAccount == null ? 'إضافة حساب جديد' : 'تعديل حساب',
           style: theme.textTheme.bodyMedium,
-          fontWeight: FontWeight.bold,
-          fontSize: 12,
+          fontWeight: FontWeight.w800,
+          fontSize: 12.0,
           colorText: theme.colorScheme.primary,
         ),
         slivers: [
-          SliverToBoxAdapter(child: ResponsiveSpace(height: 16,),),
+          const SliverToBoxAdapter(child: ResponsiveSpace(height: 16.0)),
           SliverToBoxAdapter(
             child: Form(
               key: _formKey,
@@ -229,14 +230,14 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
                     validatePhone: _validatePhone,
                   ),
               
-                  ResponsiveSpace(height: responsive.h(20)),
+                  ResponsiveSpace(height: responsive.h(20.0)),
               
                   
               
                   // 3. Additional Info Section (Refactored for style)
                   _buildAdditionalInfo(),
               
-                  ResponsiveSpace(height: responsive.h(48)),
+                  ResponsiveSpace(height: responsive.h(48.0)),
               
                   // Action Buttons
                   Row(
@@ -250,7 +251,7 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
                           onPressed: () => Navigator.pop(context),
                         ),
                       ),
-                      ResponsiveSpace(width: responsive.w(16)),
+                      ResponsiveSpace(width: responsive.w(16.0)),
                       Expanded(
                         child: CustomButton(
                           text: "حفظ",
@@ -262,7 +263,7 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
                       ),
                     ],
                   ),
-                  ResponsiveSpace(height: responsive.h(8)),
+                  ResponsiveSpace(height: responsive.h(8.0)),
                 ],
               ),
             ),
@@ -278,8 +279,8 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
     final theme = ref.theme;
     return Container(
      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.5), width: 0.5),
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.5)!, width: 0.5),
         color: theme.colorScheme.surface,
       ),
       
@@ -289,13 +290,13 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
         subtitle: 'اختياري',
         leading: HugeIcons.strokeRoundedInformationSquare,
         isExpanded: false,
+        
         children: [
-          const ResponsiveSpace(height: 12),
           CustomTextField(
             controller: _notesController,
             label: 'العنوان',
             hint: 'أضف العنوان...',
-            keyboardType: TextInputType.text,
+            keyboardType: TextInputType.streetAddress,
             suffixIcon: CustomHugeIcon(icon: HugeIcons.strokeRoundedLocation01, color: theme.colorScheme.primary),
           ),
           const ResponsiveSpace(height: 16),
@@ -306,13 +307,13 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
             children: [
               // Switch Tile
               Padding(
-                padding:  responsive.paddingSym(h: 8),
+                padding: responsive.paddingSym(h: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomAutoSizeText(
-                      text: 'تفعيل خدمة الإشعارات',
-                      fontSize: 12,
+                      text: 'تفعيل خدمة الإشعارات', // "Enable notification service"
+                      fontSize: 12.0,
                       fontWeight: FontWeight.bold,
                       colorText: theme.colorScheme.onSurface,
                     ),
@@ -336,12 +337,12 @@ class _AddNewAccountScreenState extends ConsumerState<AddNewAccountScreen> {
                         children: [
                           CustomAutoSizeText(
                             text: 'إرسال الإشعارات عبر:',
-                            style: theme.textTheme.bodySmall,
-                            fontSize: 10,
+                            style: theme.textTheme.bodySmall!,
+                            fontSize: 10.0,
                             fontWeight: FontWeight.w600,
-                            colorText: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                            colorText: theme.colorScheme.onSurface.withOpacity(0.7),
                           ),
-                          ResponsiveSpace(height: 8),
+                          const ResponsiveSpace(height: 8.0),
                           Row(
                             children: [
                               _NotificationOption(
@@ -402,18 +403,18 @@ class _AccountBasicInfoSection extends ConsumerWidget {
 
     return Container(
        decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.5), width: 0.5),
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.5)!, width: 0.5),
         color: theme.colorScheme.surface,
       ),
       margin: EdgeInsets.zero,
       child: Padding(
-        padding: responsive.paddingAll(16),
+        padding: responsive.paddingAll(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomAutoSizeText(
-              text: 'البيانات الأساسية',
+              text: 'البيانات الأساسية', // "Basic Information"
               style: theme.textTheme.titleMedium,
               fontSize: 12,
               fontWeight: FontWeight.bold,
@@ -456,7 +457,7 @@ class _AccountBasicInfoSection extends ConsumerWidget {
                       value: type,
                       child: CustomAutoSizeText(
                         text: type,
-                        fontSize: 12,
+                        fontSize: 12.0,
                         colorText: theme.colorScheme.onSurface,
                       ),
                     ),
@@ -512,7 +513,7 @@ class _NotificationOption extends StatelessWidget {
               ),
               CustomAutoSizeText(
                 text: label,
-                fontSize: 12,
+                fontSize: 12.0,
                 fontWeight: FontWeight.w500,
                 colorText: theme.colorScheme.onSurface,
               ),

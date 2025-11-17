@@ -1,4 +1,4 @@
-import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
+import 'package:bookkeeping_flutter_app/core/app_scaffold/adaptive_scaffold.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
@@ -104,7 +104,7 @@ class _AddTransactionFormState extends ConsumerState<AddTransactionForm> {
 
   // --- BUSINESS LOGIC ---
 
-  Future<void> _saveTransaction() async {
+  Future<void> _saveTransaction(TransactionType type) async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     setState(() => _isSaving = true);
 
@@ -116,7 +116,7 @@ class _AddTransactionFormState extends ConsumerState<AddTransactionForm> {
         amount: double.parse(_amountController.text),
         date: dateFormat.parse(_dateController.text),
         description: _detailsController.text,
-        type: transactionTypeSelected!,
+        type: type,
         currency: currencySelected.code,
         referenceNumber: widget.existingTransaction?.referenceNumber ?? '',
         buyer: buyerSelected
@@ -223,7 +223,7 @@ class _AddTransactionFormState extends ConsumerState<AddTransactionForm> {
     final responsive = ref.watch(responsiveProvider);
     final theme = ref.watch(themeDataProvider);
 
-    return BaseLayoutScreen(
+    return AdaptiveScaffold(
       body: BuildNonTabbarLayout(
         // Modern Typography: Use a larger, bolder title
         titleWidget: _TransactionHeader(
@@ -264,8 +264,8 @@ class _AddTransactionFormState extends ConsumerState<AddTransactionForm> {
                       theme: theme,
                       responsive: responsive,
                       isSaving: _isSaving,
-                      onCancel: () => Navigator.pop(context),
-                      onSave: _saveTransaction,
+                      onDebit: () => _saveTransaction(TransactionType.debit),
+                      onCredit: () => _saveTransaction(TransactionType.credit),
                     ),
 
                     ResponsiveSpace(height: responsive.h(8)),
@@ -433,7 +433,7 @@ class _TransactionInputSection extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                  flex: 1,
+                  flex: 3,
                   child: CustomTextField(
                     controller: dateController,
                     validator: validateDate,
@@ -449,13 +449,14 @@ class _TransactionInputSection extends ConsumerWidget {
                   ),
                 ),
                 ResponsiveSpace(width: 8),
-                Expanded(
-                  flex: 1,
-                  child: _TransactionTypeSelector(
-                    transactionTypeSelected: transactionTypeSelected,
-                    onChanged: onTransactionTypeChanged,
-                  ),
-                ),
+                // Expanded(
+                //   flex: 1,
+                //   child: _TransactionTypeSelector(
+                //     transactionTypeSelected: transactionTypeSelected,
+                //     onChanged: onTransactionTypeChanged,
+                //   ),
+                // ),
+                Spacer(flex: 2,)
               ],
             ),
           ],
@@ -513,83 +514,7 @@ class _TransactionInputSection extends ConsumerWidget {
 
 
 // ---
-// 3. Transaction Type Selector (Enhanced with better design)
-class _TransactionTypeSelector extends StatelessWidget {
-  final TransactionType? transactionTypeSelected;
-  final ValueChanged<TransactionType?> onChanged;
 
-  const _TransactionTypeSelector({
-    required this.transactionTypeSelected,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-   
-    
-    return Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        _TransactionTypeOption(
-          label: 'عليه', // دائن
-          value: TransactionType.debit,
-          groupValue: transactionTypeSelected,
-          onChanged: onChanged,
-          
-        ),
-        const ResponsiveSpace(width: 4),
-        _TransactionTypeOption(
-          label: 'له', // مدين
-          value: TransactionType.credit,
-          groupValue: transactionTypeSelected,
-          onChanged: onChanged,
-         
-        ),
-      ],
-    );
-  }
-}
-
-// ---
-// 4. Reusable Animated Transaction Type Option
-class _TransactionTypeOption extends StatelessWidget {
-  final String label;
-  final TransactionType value;
-  final TransactionType? groupValue;
-  final ValueChanged<TransactionType?> onChanged;
-
-  const _TransactionTypeOption({
-    required this.label,
-    required this.value,
-    required this.groupValue,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Expanded(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Radio<TransactionType>(
-            value: value,
-            groupValue: groupValue,
-            activeColor: theme.colorScheme.secondary,
-            onChanged: onChanged,
-          ),
-          CustomAutoSizeText(
-            text: label,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            colorText: theme.colorScheme.onSurface,
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 // ---
 // 5. Action Buttons Section
@@ -597,15 +522,15 @@ class _ActionButtons extends StatelessWidget {
   final ThemeData theme;
   final ResponsiveValues responsive;
   final bool isSaving;
-  final VoidCallback onCancel;
-  final VoidCallback onSave;
+  final VoidCallback onDebit;
+  final VoidCallback onCredit;
 
   const _ActionButtons({
     required this.theme,
     required this.responsive,
     required this.isSaving,
-    required this.onCancel,
-    required this.onSave,
+    required this.onDebit,
+    required this.onCredit,
   });
 
   @override
@@ -615,21 +540,22 @@ class _ActionButtons extends StatelessWidget {
       children: [
         Expanded(
           child: CustomButton(
-            text: "إلغاء",
-            textColor: theme.colorScheme.onSurface,
-            backgroundColor: theme.colorScheme.surfaceContainerHighest,
-            onPressed: onCancel,
+            text: "دين",
+            textColor: theme.colorScheme.onErrorContainer,
+            isLoading: isSaving,
+            backgroundColor: theme.colorScheme.errorContainer,
+            onPressed: () => onDebit(),
             // Subtle Animation: The InkWell ripple effect is provided by CustomButton/Material widget
           ),
         ),
         ResponsiveSpace(width: responsive.w(16)),
         Expanded(
           child: CustomButton(
-            text: "حفظ",
+            text: "سداد",
             textColor: theme.colorScheme.onPrimary,
             backgroundColor: theme.colorScheme.primary,
             isLoading: isSaving,
-            onPressed: onSave,
+            onPressed: () => onCredit(),
             // Subtle Animation: Loading state provided by CustomButton
           ),
         ),

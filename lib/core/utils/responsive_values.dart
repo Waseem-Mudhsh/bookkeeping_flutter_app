@@ -34,22 +34,22 @@ class ResponsiveValues {
           ));
   double p(double value) => w(value);
 
-  EdgeInsets paddingAll(double value) => EdgeInsets.all(p(value));
+  EdgeInsets paddingAll(num value) => EdgeInsets.all(p(value.toDouble()));
   EdgeInsets paddingOnly({
-    double left = 0,
-    double right = 0,
-    double top = 0,
-    double bottom = 0,
+    num left = 0.0,
+    num right = 0.0,
+    num top = 0.0,
+    num bottom = 0.0,
   }) =>
       EdgeInsets.only(
-        left: p(left),
-        right: p(right),
-        top: p(top),
-        bottom: p(bottom),
+        left: p(left.toDouble()),
+        right: p(right.toDouble()),
+        top: p(top.toDouble()),
+        bottom: p(bottom.toDouble()),
       );
 
-  EdgeInsets paddingSym({double h = 0, double v = 0}) =>
-      EdgeInsets.symmetric(horizontal: p(h), vertical: p(v));
+  EdgeInsets paddingSym({num h = 0.0, num v = 0.0}) =>
+      EdgeInsets.symmetric(horizontal: p(h.toDouble()), vertical: p(v.toDouble()));
 
  double get designWidth {
     if (deviceSize.shortestSide > DesignConstants.designWidthDesktop) {

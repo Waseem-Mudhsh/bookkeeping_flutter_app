@@ -92,6 +92,7 @@ class CustomTransactionItemOfClient extends ConsumerWidget {
                   ? Colors.green.shade600
                   : Colors.red.shade600,
           style: theme.textTheme.bodyMedium,
+          fontSize: 12,
         ),
         ResponsiveSpace(height: 4),
         CustomAutoSizeText(
@@ -99,6 +100,7 @@ class CustomTransactionItemOfClient extends ConsumerWidget {
               '${transaction.date.year}/${transaction.date.month}/${transaction.date.day}',
           colorText: theme.colorScheme.onSurface.withValues(alpha: 0.5),
           fontSize: 10,
+          style: theme.textTheme.bodySmall,
         ),
       ],
     );

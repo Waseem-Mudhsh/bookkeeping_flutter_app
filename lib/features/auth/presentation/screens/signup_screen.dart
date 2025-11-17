@@ -1,4 +1,4 @@
-import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
+import 'package:bookkeeping_flutter_app/core/app_scaffold/adaptive_scaffold.dart';
 import 'package:bookkeeping_flutter_app/core/base_layout/build_non_tabbar_layout.dart';
 import 'package:bookkeeping_flutter_app/core/providers/settings_provider.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
@@ -85,7 +85,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     final responsive = ref.responsive;
     final theme = ref.theme;
 
-    return BaseLayoutScreen(
+    return AdaptiveScaffold(
       backgroundColor: theme.colorScheme.surface,
       body: BuildNonTabbarLayout(
         padding: 0,

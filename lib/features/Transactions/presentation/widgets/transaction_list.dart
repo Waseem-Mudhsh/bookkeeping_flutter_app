@@ -59,22 +59,18 @@ class _RecentTransactionsSection extends ConsumerWidget {
             ),
             Spacer(),
             CustomIconButton(
-              hugeIcon: HugeIcon(
-                icon: HugeIcons.strokeRoundedSearch01,
-                color: theme.colorScheme.primary,
-                size: responsive.h(20),
-              ),
+              hugeIcon: HugeIcons.strokeRoundedSearch01,
+               colorIcon: theme.colorScheme.primary,
+                
+              
 
               onPressed: () {},
             ),
             ResponsiveSpace(width: 8),
             CustomIconButton(
-              hugeIcon: HugeIcon(
-                icon: HugeIcons.strokeRoundedSorting01,
-                color: theme.colorScheme.primary,
-                size: responsive.h(20),
-              ),
-
+               hugeIcon: HugeIcons.strokeRoundedSorting01,
+               colorIcon: theme.colorScheme.primary,
+                
               onPressed: () {},
             ),
           ],

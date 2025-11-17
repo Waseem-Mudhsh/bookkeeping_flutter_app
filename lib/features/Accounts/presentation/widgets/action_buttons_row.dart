@@ -29,6 +29,7 @@ class ActionButtonsRow extends ConsumerWidget {
     final theme = ref.theme;
 
     return Row(
+      // mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: actionButtons.map((actionButton) {
@@ -70,12 +71,12 @@ class ActionButtonsRow extends ConsumerWidget {
             borderRadius: BorderRadius.circular(responsive.w(12)),
             onTap: onPressed,
             child: Container(
-              padding: responsive.paddingAll(8),
+              padding: responsive.paddingAll(6),
               decoration: BoxDecoration(
-                color:backgroundColor ?? theme.colorScheme.primary.withValues(alpha: 0.04),
+                color:backgroundColor ?? theme.colorScheme.onPrimary,
                 borderRadius: BorderRadius.circular(responsive.w(12)),
             
-                border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.6),width: 0.5),
+                
               ),
               child: CustomHugeIcon(icon: icon, size:20, color: iconColor ?? theme.colorScheme.primary),),
           ),
@@ -84,11 +85,11 @@ class ActionButtonsRow extends ConsumerWidget {
           ResponsiveSpace(height: responsive.h(6)),
           CustomAutoSizeText(
            text:  label,
-            style: theme.textTheme.bodyMedium,
+            style: theme.textTheme.labelMedium,
             colorText: theme.colorScheme.primary,
             fontSize: 10,
             textAlign: TextAlign.center,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
           ),
         }
       ],

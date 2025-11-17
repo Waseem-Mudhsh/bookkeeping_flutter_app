@@ -1,11 +1,11 @@
 
 
-import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
+import 'package:bookkeeping_flutter_app/core/app_scaffold/adaptive_scaffold.dart';
+
 import 'package:bookkeeping_flutter_app/core/base_layout/build_tab_bar_layout.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_icon_button.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/custom_tab_view_container.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:bookkeeping_flutter_app/features/Accounts/presentation/widgets/action_buttons_row.dart';
 import 'package:flutter/material.dart';
@@ -125,9 +125,10 @@ class MerchantLedgerScreen extends ConsumerWidget {
     final Color colorText = balance > ceilingAmount  ? theme.colorScheme.error : theme.colorScheme.primary;
 
    
-    return BaseLayoutScreen(
+    return AdaptiveScaffold(
       
       body: BuildTabBarLayout(
+        
         
              titleWidget: _buildHeader(theme,merchantProfile),
              actions: [
@@ -135,21 +136,15 @@ class MerchantLedgerScreen extends ConsumerWidget {
              ],
          tabs: tabs,
         tabViews: [
-          CustomTabViewContainer(
-          responsive: ref.responsive,
-          child: _buildMershantListByCurrency( transactions)),
-         CustomTabViewContainer(
-          responsive: ref.responsive,
-          child: _buildMershantListByCurrency(transactions)),
-          CustomTabViewContainer(
-          responsive: ref.responsive,
-          child: _buildMershantListByCurrency(transactions)),
+          _buildMershantListByCurrency( transactions),
+         _buildMershantListByCurrency(transactions),
+          _buildMershantListByCurrency(transactions),
          
         ],
           initialTabIndex: 0,
-           hasLeading: false,
-            toolbarHeight: 90,),
-       bottomNavigationBar: FinancialBottomNavBar( creditBalance: merchantProfile.creditBalance, debitBalance: merchantProfile.debitBalance,),
+           
+           ),
+       widgetBottomNavigationBar: FinancialBottomNavBar( creditBalance: merchantProfile.creditBalance, debitBalance: merchantProfile.debitBalance,),
     );
   }
    Widget _buildHeader( ThemeData theme,MerchantProfileEntity merchantProfile){
@@ -201,6 +196,7 @@ class MerchantLedgerScreen extends ConsumerWidget {
   }
   Widget _buildMershantListByCurrency( List<TransactionModel> transactions){
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         // 1. Remaining Balance Card (The "Countdown" section)
          ResponsiveSpace(height: 8),
@@ -295,9 +291,9 @@ class _TransactionTable extends ConsumerWidget {
             ),
             Spacer(),
             CustomIconButton(
-              hugeIcon:  HugeIcon(icon:HugeIcons.strokeRoundedSearch01,
-               color: theme.colorScheme.secondary,
-               size: responsive.h(20),),
+              hugeIcon: HugeIcons.strokeRoundedSearch01,
+               colorIcon: theme.colorScheme.secondary,
+               iconSize: 16,
              
               
               onPressed: (){},
@@ -305,9 +301,9 @@ class _TransactionTable extends ConsumerWidget {
             ),
             ResponsiveSpace(width: 8),
             CustomIconButton(
-              hugeIcon: HugeIcon(icon: HugeIcons.strokeRoundedSorting01,
-               color: theme.colorScheme.secondary,
-               size: responsive.h(20),),
+              hugeIcon: HugeIcons.strokeRoundedSorting01,
+               colorIcon: theme.colorScheme.secondary,
+               iconSize: 16,
             
               onPressed:(){},
               

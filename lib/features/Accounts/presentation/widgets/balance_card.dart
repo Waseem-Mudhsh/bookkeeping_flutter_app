@@ -129,13 +129,12 @@ class _BalanceCardState extends ConsumerState<BalanceCard> {
                       child: _buildBalanceDisplay(theme, responsive)),
                     ResponsiveSpace(width: 12),
                     CustomIconButton(
-                      hugeIcon: HugeIcon(
-                        icon: _obscureText
+                      hugeIcon: _obscureText
                             ? HugeIcons.strokeRoundedEye
                             : HugeIcons.strokeRoundedViewOffSlash,
-                        size: 20,
-                        color: theme.colorScheme.onPrimary,
-                      ),
+                        iconSize: 16,
+                        colorIcon: theme.colorScheme.onPrimary,
+                      
                       // لون الأيقونة من primary,
                      
                       onPressed: _toggleBalanceVisibility,

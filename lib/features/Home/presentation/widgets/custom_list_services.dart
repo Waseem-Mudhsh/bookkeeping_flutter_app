@@ -1,5 +1,6 @@
 
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
+import 'package:bookkeeping_flutter_app/core/utils/responsive_values.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:flutter/material.dart';
@@ -31,12 +32,12 @@ class CustomListServices extends ConsumerWidget {
     {
       'name': 'إدارة العقار',
       'icon': HugeIcons.strokeRoundedBuilding01,
-      'route': RouteNames.finance,
+      'route': RouteNames.advancedSliverAppBar,
     },
     {
       'name': 'القياسات',
       'icon': HugeIcons.strokeRoundedTapeMeasure,
-      'route': RouteNames.finance,
+      'route': RouteNames.financeServiceScreen,
     },
     {
       'name': 'الديون الشخصية',
@@ -61,8 +62,8 @@ class CustomListServices extends ConsumerWidget {
     return SliverGrid(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        crossAxisSpacing: responsive.w(16), // Reduced spacing for density
-        mainAxisSpacing: responsive.w(16),
+        crossAxisSpacing: responsive.w(16.0), // Reduced spacing for density
+        mainAxisSpacing: responsive.w(16.0),
         childAspectRatio: 0.9,
       ),
       delegate: SliverChildBuilderDelegate(
@@ -97,7 +98,7 @@ class _AnimatedServiceCard extends StatefulWidget {
   final IconData icon;
   final VoidCallback onTap;
   final ThemeData theme;
-  final dynamic responsive;
+  final ResponsiveValues responsive;
   final int index;
 
   const _AnimatedServiceCard({
@@ -115,16 +116,23 @@ class _AnimatedServiceCard extends StatefulWidget {
 
 class _AnimatedServiceCardState extends State<_AnimatedServiceCard>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _animationController;
-  late final Animation<double> _fadeInAnimation;
+  late AnimationController _animationController;
+  late Animation<double> _curvedAnimation;
   double _scale = 1.0;
 
   @override
   void initState() {
     super.initState();
+    
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 700),
+    );
+
+    // Use a more dynamic curve like easeOutBack for a "pop" effect
+    _curvedAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOutBack, // This creates a satisfying bounce
     );
 
     // Staggered animation: delay based on the card's index
@@ -133,12 +141,6 @@ class _AnimatedServiceCardState extends State<_AnimatedServiceCard>
         _animationController.forward();
       }
     });
-
-    // Use a premium, fluid curve for initial appearance (e.g., Decelerate)
-    _fadeInAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.decelerate, // More professional and smooth fade/slide in
-    );
   }
 
   @override
@@ -154,16 +156,28 @@ class _AnimatedServiceCardState extends State<_AnimatedServiceCard>
 
   @override
   Widget build(BuildContext context) {
-    // 1. Initial Staggered Appearance Animation
-    return FadeTransition(
-      opacity: _fadeInAnimation,
-      child: SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(0, 0.5), // Starts slightly below
-          end: Offset.zero,
-        ).animate(_fadeInAnimation),
-        // 2. Tap Scale/Interaction Animation
-        child: TweenAnimationBuilder<double>(
+    // Use AnimatedBuilder for more complex, synchronized animations (fade, slide, scale)
+    return AnimatedBuilder(
+      animation: _curvedAnimation,
+      builder: (context, child) {
+        // Define tweens for opacity, slide, and scale based on the single curved animation
+        final opacity = Tween<double>(begin: 0.0, end: 1.0).evaluate(_curvedAnimation).clamp(0.0, 1.0);
+        final slideOffset = Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).evaluate(_curvedAnimation);
+        final scale = Tween<double>(begin: 0.8, end: 1.0).evaluate(_curvedAnimation);
+
+        return Opacity(
+          opacity: opacity,
+          child: Transform.translate(
+            offset: slideOffset,
+            child: Transform.scale(
+              scale: scale,
+              child: child,
+            ),
+          ),
+        );
+      },
+      // The child is the part of the tree that doesn't need to rebuild on animation ticks
+      child: TweenAnimationBuilder<double>(
           tween: Tween(begin: 1.0, end: _scale),
           duration: const Duration(milliseconds: 150),
           curve: Curves.easeOutCubic,
@@ -177,25 +191,25 @@ class _AnimatedServiceCardState extends State<_AnimatedServiceCard>
                 onTapCancel: _onTapCancel,
                 // 3. Modern Design (Neumorphic/Elevated Glass look)
                 child: Container(
-                  padding: widget.responsive.paddingAll(16),
+                  padding: widget.responsive.paddingAll(16.0),
                   decoration: BoxDecoration(
                     // Use a slightly darker background for a premium feel
                     color: widget.theme.colorScheme.surfaceContainerLowest,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.0),
 
                     // Subtle, modern shadow for depth
                     boxShadow: [
                       BoxShadow(
-                        color: widget.theme.colorScheme.primary.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
+                        color: widget.theme.colorScheme.primary.withValues(alpha: 0.05)!,
+                        blurRadius: 10.0,
+                        offset: const Offset(0.0, 5.0),
                       ),
                       // Inner shadow/border for 'depth' (Neumorphic effect)
                       BoxShadow(
-                        color: Colors.white.withValues(alpha: 0.5),
-                        blurRadius: 1,
-                        spreadRadius: -1,
-                        offset: const Offset(1, 1),
+                        color: Colors.white.withValues(alpha: 0.5)!,
+                        blurRadius: 1.0,
+                        spreadRadius: -1.0,
+                        offset: const Offset(1.0, 1.0),
                       ),
                     ],
                   ),
@@ -207,7 +221,7 @@ class _AnimatedServiceCardState extends State<_AnimatedServiceCard>
                       // Icon with slight scale animation on tap
                       CustomHugeIcon(
                         icon: widget.icon,
-                        size: 24, // Larger icon for impact
+                        size: 24.0, // Larger icon for impact
                         color: widget.theme.colorScheme.primary,
                       ),
                      
@@ -215,8 +229,8 @@ class _AnimatedServiceCardState extends State<_AnimatedServiceCard>
                       // Modern Typography: Bold and primary colored
                       CustomAutoSizeText(
                         text: widget.name,
-                        style: widget.theme.textTheme.bodyMedium,
-                        fontSize: 12, // Slightly larger font
+                        style: widget.theme.textTheme.bodyMedium!,
+                        fontSize: 12.0, // Slightly larger font
                         fontWeight: FontWeight.w700,
                         colorText: widget.theme.colorScheme.onSurface, // Using onSurface for better readability
                         maxLines: 2,
@@ -230,7 +244,6 @@ class _AnimatedServiceCardState extends State<_AnimatedServiceCard>
             );
           },
         ),
-      ),
     );
   }
 }

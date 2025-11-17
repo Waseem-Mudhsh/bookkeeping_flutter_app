@@ -198,13 +198,12 @@ class RemainingBalanceCard extends ConsumerWidget {
               ),
               ResponsiveSpace(width: 8),
               CustomIconButton(
-                        hugeIcon: HugeIcon(
-                          icon: obscureText
+                        hugeIcon: obscureText
                               ? HugeIcons.strokeRoundedViewOffSlash
                               : HugeIcons.strokeRoundedEye,
-                          size: 20,
-                          color: theme.colorScheme.primary,
-                        ),
+                         iconSize:16,
+                          colorIcon: theme.colorScheme.primary,
+                        
                         onPressed: () => ref.read(obscureTextProvider.notifier).state = !obscureText,
                       ),
             ],

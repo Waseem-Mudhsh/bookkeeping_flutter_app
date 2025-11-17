@@ -1,3 +1,4 @@
+import 'package:bookkeeping_flutter_app/core/utils/responsive_values.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/responsive_space.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +9,9 @@ class DualBalanceCard extends StatelessWidget {
   final double clientDebitBalance;  // الرصيد عليه (المفروض أن يدفعه التاجر/الشركة)
   final double? ceilingAmount;
   final ThemeData theme;
-  final dynamic responsive; 
-  final bool? hasFlag;
+  final ResponsiveValues responsive;
+  final String? currencySymbol;
+  final String? currencyFlagAsset;
 
   const DualBalanceCard({super.key, 
     required this.clientCreditBalance,
@@ -17,7 +19,8 @@ class DualBalanceCard extends StatelessWidget {
      this.ceilingAmount,
     required this.theme,
     required this.responsive,
-    this.hasFlag =false,
+    this.currencySymbol,
+    this.currencyFlagAsset,
   });
   
 
@@ -38,28 +41,28 @@ class DualBalanceCard extends StatelessWidget {
     final progressBarColor = clientDebitBalance > (ceilingAmount ?? 0) ? debitColor : creditColor;
 
     return Card(
-      elevation: 4,
+      elevation: 4.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: EdgeInsets.zero,
       child: Padding(
-        padding: responsive.paddingAll(16),
+        padding: responsive.paddingAll(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.min,
           children: [
             // السطر 1: عرض رصيد "له" ورصيد "عليه" بشكل متساوٍ
-            _buildBalanceValueView(creditColor, debitColor, hasFlag!),
+            _buildBalanceValueView(creditColor, debitColor),
             
-            ResponsiveSpace(height: 12),
+            const ResponsiveSpace(height: 12.0),
             
              // إضافة شرط لعرض مؤشر التقدم فقط إذا كان ceilingAmount موجوداً
             if (ceilingAmount != null) ...[
               ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
-                  value: debtPercentage,
-                  minHeight: 6,
+                  value: debtPercentage, // Value between 0.0 and 1.0
+                  minHeight: 6.0, // Thicker bar for better visibility
                   backgroundColor: theme.colorScheme.surfaceContainerHigh,
                   valueColor: AlwaysStoppedAnimation<Color>(progressBarColor),
                 ),
@@ -91,13 +94,13 @@ class DualBalanceCard extends StatelessWidget {
                   
                       CustomAutoSizeText(
                         text: 'الرصيد:',
-                        fontSize: 10,
+                        fontSize: 10.0,
                         fontWeight: FontWeight.w600,
                         colorText: theme.colorScheme.onSurfaceVariant,
                       ),
-                      ResponsiveSpace(width: 6),
+                      const ResponsiveSpace(width: 6.0),
                       CustomAutoSizeText(
-                                        text: '$netBalanceAbsolute  ${isClientInDebt ? ' (عليه)' : ' (له)'}',
+                                        text: '$netBalanceAbsolute ${currencySymbol ?? ''} ${isClientInDebt ? ' (عليه)' : ' (له)'}',
                                         
                                         presetFontSizes: [12, 14, 16],
                                         fontWeight: FontWeight.w900,
@@ -112,24 +115,25 @@ class DualBalanceCard extends StatelessWidget {
                  // إضافة شرط لعرض الحد الأقصى فقط إذا كان موجوداً
                 if (ceilingAmount != null)
                 CustomAutoSizeText(
-                  text: 'الحد الأقصى: ${ceilingAmount!.toStringAsFixed(0)}',
-                  fontSize: 10,
+                  text: 'الحد الأقصى: ${ceilingAmount!.toStringAsFixed(0)} ${currencySymbol ?? ''}',
+                  fontSize: 10.0,
                   fontWeight: FontWeight.w500,
                   colorText: theme.colorScheme.onSurfaceVariant,
                 ),
               ],
             );
   }
-  Widget _buildBalanceValueView( Color creditColor, Color debitColor, bool hasFlag) {
+  Widget _buildBalanceValueView( Color creditColor, Color debitColor) {
     return Row(
      
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if(hasFlag)
+                if(currencyFlagAsset != null)
                CircleAvatar(
                   radius: 15,
-                  child: Image.asset('assets/images/usa.png',
+                  backgroundColor: Colors.transparent, // To prevent default background color
+                  child: Image.asset(currencyFlagAsset!,
                   width: 30,
                   height: 30,
                   fit: BoxFit.cover
@@ -138,7 +142,7 @@ class DualBalanceCard extends StatelessWidget {
                 Expanded(
                   child: _buildSingleBalance(
                     label: 'له (مدين)',
-                    amount: clientCreditBalance.toStringAsFixed(0),
+                    amount: '${clientCreditBalance.toStringAsFixed(0)} ${currencySymbol ?? ''}',
                     color: creditColor,
                     theme: theme,
                   ),
@@ -148,15 +152,15 @@ class DualBalanceCard extends StatelessWidget {
                 Container(
                   width: 1,
                   height: 40,
-                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
-                  margin: responsive.paddingSym(h: 12),
+                  color: theme.colorScheme.outlineVariant.withAlpha(50),
+                  margin: responsive.paddingSym(h: 12.0),
                 ),
 
                 // رصيد "عليه" (المفروض أن يدفع العميل)
                 Expanded(
                   child: _buildSingleBalance(
                     label: 'عليه (دائن)',
-                    amount: clientDebitBalance.toStringAsFixed(0),
+                    amount: '${clientDebitBalance.toStringAsFixed(0)} ${currencySymbol ?? ''}',
                     color: debitColor,
                     theme: theme,
                   ),
@@ -177,14 +181,14 @@ class DualBalanceCard extends StatelessWidget {
       children: [
         CustomAutoSizeText(
           text: label,
-          fontSize: 10,
+          fontSize: 10.0,
           fontWeight: FontWeight.w500,
           colorText: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
         ),
-        ResponsiveSpace(height: 4),
+        const ResponsiveSpace(height: 4.0),
         CustomAutoSizeText(
           text: amount,
-          presetFontSizes: [  16,18],
+          presetFontSizes: const [16.0, 18.0],
           fontWeight: FontWeight.w800,
           colorText: color,
         ),

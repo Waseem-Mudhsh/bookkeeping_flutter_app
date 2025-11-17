@@ -1,6 +1,6 @@
 // lib/features/auth/presentation/screens/login_screen.dart
 
-import 'package:bookkeeping_flutter_app/core/base_layout/base_layout_screen.dart';
+import 'package:bookkeeping_flutter_app/core/app_scaffold/adaptive_scaffold.dart';
 import 'package:bookkeeping_flutter_app/core/base_layout/build_non_tabbar_layout.dart';
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
 import 'package:bookkeeping_flutter_app/core/utils/route_names.dart';
@@ -124,12 +124,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     // دالة لتنفيذ عملية تسجيل الدخول
     
 
-    return BaseLayoutScreen(
+    return AdaptiveScaffold(
       // 1. الجزء العلوي من الشاشة (Header)
      
       backgroundColor: theme.colorScheme.surface, // لون خلفية للشاشة يتناسب مع الهيدر
       // 2. محتوى الشاشة
       body: BuildNonTabbarLayout(
+        hasDrawer: false,
         padding: 0,
         physics: responsive.orientation == Orientation.portrait ? const NeverScrollableScrollPhysics() : const ClampingScrollPhysics(),
         slivers: [
@@ -327,8 +328,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         
                       ),
                     ),
-                    const ResponsiveSpace(width: 16),
-                    Expanded(
+                    const ResponsiveSpace(width: 24),
+                    Flexible(
                       child: CustomIconButton
                       (onPressed: () {
                         Navigator.push(
@@ -336,9 +337,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           MaterialPageRoute(builder: (context) => RouteNames.home.screen),
                         );
                       },
-                        hugeIcon: HugeIcon(icon: HugeIcons.strokeRoundedFingerPrintScan,
-                        size: 32,
-                          color: theme.colorScheme.primary),
+                        hugeIcon: HugeIcons.strokeRoundedFingerPrintScan,
+                        iconSize: 32,
+                          colorIcon: theme.colorScheme.primary,
       
                        )
                     ),

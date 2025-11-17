@@ -1,5 +1,4 @@
 import 'package:bookkeeping_flutter_app/core/utils/extensions.dart';
-import 'package:bookkeeping_flutter_app/core/widgets/custom_auto_size_text.dart';
 import 'package:bookkeeping_flutter_app/core/widgets/custom_huge_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,39 +17,21 @@ class CustomNotificationButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.theme;
-    return Stack(
-      clipBehavior: Clip.none,
-      
-      children: [
-        IconButton(
-          icon:  CustomHugeIcon(icon: HugeIcons.strokeRoundedNotification01),
-          onPressed: onPressed,
-        ),
-        if (notificationCount > 0)
-          Positioned(
-            right: 0,
-            top: 0,
-            child: Container(
-              padding: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              constraints: const BoxConstraints(
-                minWidth: 18,
-                minHeight: 18,
-              ),
-              child: CustomAutoSizeText(
-               text:  '$notificationCount',
-                style:  theme.textTheme.bodySmall,
-                fontSize: 10,
-                colorText: theme.colorScheme.onPrimaryContainer,
-                textAlign: TextAlign.center,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-      ],
-    );
+    return Badge.count(
+      count: notificationCount,
+      textColor: theme.colorScheme.onPrimary,
+      textStyle: theme.textTheme.bodySmall,
+      offset: Offset(-12, 8),
+      smallSize: 6,
+      largeSize: 10,
+
+      backgroundColor: theme.colorScheme.primary,
+      alignment: Alignment.topRight,
+      child: IconButton(
+        icon: CustomHugeIcon(icon: HugeIcons.strokeRoundedNotification01,
+         color: theme.colorScheme.primary,),
+        onPressed: onPressed,
+      ),
+      );
   }
 }
